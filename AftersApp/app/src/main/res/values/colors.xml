@@ -5,4 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="gridBorder">#c6e4e3e3</color>
+    <color name="primaryText">#eb2f3031</color>
+    <color name="accentText">#FF4081</color>
+    <color name="secondaryText">#d863666b</color>
+    <color name="bottom_strip_color">#643596</color>
+
+    <color name="findPartyTabBack">#773eb8</color>
+    <color name="hostTabBack">#513669</color>
+    <color name="editProfTabBack">#9a6bd1</color>
 </resources>

@@ -9,4 +9,11 @@
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="str_home">Home</string>
+    <string name="str_find">Find</string>
+    <string name="str_host">Host</string>
+    <string name="str_more">More</string>
+    <string name="str_find_party">Find Party</string>
+    <string name="str_host_party">Host Party</string>
+    <string name="str_edit_profile">Edit Profile</string>
 </resources>

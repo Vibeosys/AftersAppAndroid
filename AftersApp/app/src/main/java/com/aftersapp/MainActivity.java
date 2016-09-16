@@ -12,9 +12,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+
+import com.aftersapp.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+    private LinearLayout mHomeLay, mSearchLay, mHostLay, mMoreLay;
+    private static final String HOME_FRAGMENT = "home";
+    private static final String SEARCH_FRAGMENT = "search";
+    private static final String HOST_FRAGMENT = "host";
+    private static final String MORE_FRAGMENT = "more";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +31,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -40,6 +48,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mHomeLay = (LinearLayout) findViewById(R.id.homeLay);
+        mSearchLay = (LinearLayout) findViewById(R.id.searchLay);
+        mHostLay = (LinearLayout) findViewById(R.id.hostLay);
+        mMoreLay = (LinearLayout) findViewById(R.id.moreLay);
+
+        mHomeLay.setOnClickListener(this);
+        mSearchLay.setOnClickListener(this);
+        mHostLay.setOnClickListener(this);
+        mMoreLay.setOnClickListener(this);
     }
 
     @Override
@@ -97,5 +115,35 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setUpFragment(int i) {
+
+        switch (i) {
+            case R.id.homeLay:
+                HomeFragment homeFragment = new HomeFragment();
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
+                break;
+            case R.id.searchLay:
+
+                break;
+            case R.id.hostLay:
+
+                break;
+            case R.id.moreLay:
+
+
+                break;
+            default:
+
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        setUpFragment(id);
     }
 }
