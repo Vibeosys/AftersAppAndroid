@@ -16,4 +16,6 @@
     <color name="editProfTabBack">#9a6bd1</color>
     <color name="loginBackgroundTransperant">#96663399</color>
     <color name="splashbackground">#694387</color>
+    <color name="navBarHeader">#7F83D3</color>
+
 </resources>

@@ -14,11 +14,12 @@ import com.aftersapp.R;
  */
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
-    private LinearLayout mLayoutFindParty,mLayoutHostParty,mLayoutEditProfile;
+    private LinearLayout mLayoutFindParty, mLayoutHostParty, mLayoutEditProfile;
     private static final String HOME_FRAGMENT = "home";
     private static final String SEARCH_FRAGMENT = "search";
     private static final String HOST_FRAGMENT = "host";
     private static final String MORE_FRAGMENT = "more";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,19 +43,21 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id)
-        {
+        switch (id) {
             case R.id.layoutFindParty:
+                FindPartyFragment partyFragment = new FindPartyFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
                 break;
             case R.id.layoutHostParty:
                 HostPartyFragment hostPartyFragment = new HostPartyFragment();
                 getFragmentManager().beginTransaction().
-                        replace(R.id.fragment_frame_lay,hostPartyFragment,HOST_FRAGMENT).commit();
+                        replace(R.id.fragment_frame_lay, hostPartyFragment, HOST_FRAGMENT).commit();
                 break;
             case R.id.layoutEditProfile:
                 EditMyProfileFragment editMyProfileFragment = new EditMyProfileFragment();
                 getFragmentManager().beginTransaction().
-                        replace(R.id.fragment_frame_lay,editMyProfileFragment,MORE_FRAGMENT).commit();
+                        replace(R.id.fragment_frame_lay, editMyProfileFragment, MORE_FRAGMENT).commit();
 
         }
 

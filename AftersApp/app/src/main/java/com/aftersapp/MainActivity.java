@@ -14,8 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.aftersapp.fragments.EditMyProfileFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
+import com.aftersapp.fragments.HostPartyFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -31,7 +33,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity
         mSearchLay.setOnClickListener(this);
         mHostLay.setOnClickListener(this);
         mMoreLay.setOnClickListener(this);
+        setUpFragment(R.id.homeLay);
     }
 
     @Override
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_filter) {
             return true;
         }
 
@@ -101,7 +103,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
+            HomeFragment homeFragment = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
         } else if (id == R.id.nav_profile) {
+            EditMyProfileFragment editMyProfileFragment = new EditMyProfileFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, editMyProfileFragment, MORE_FRAGMENT).commit();
 
         } else if (id == R.id.nav_feed) {
 
@@ -130,7 +138,9 @@ public class MainActivity extends AppCompatActivity
                         replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
                 break;
             case R.id.hostLay:
-
+                HostPartyFragment hostPartyFragment = new HostPartyFragment();
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, hostPartyFragment, HOST_FRAGMENT).commit();
                 break;
             case R.id.moreLay:
 
