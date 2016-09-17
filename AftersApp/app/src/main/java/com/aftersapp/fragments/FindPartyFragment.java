@@ -72,8 +72,11 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
         mListParties.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PartyData party = (PartyData) mPartyAdapter.getItem(position);
-                drawMarker(party.getId());
+               /* PartyData party = (PartyData) mPartyAdapter.getItem(position);
+                drawMarker(party.getId());*/
+                PartyDetailsFragment partyDetailsFragment = new PartyDetailsFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, partyDetailsFragment, "PartDetails").commit();
             }
         });
         return rootView;
