@@ -7,21 +7,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.aftersapp.R;
 
 
-public class PartyDetailsFragment extends Fragment {
+public class PartyDetailsFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String CHAT_HOST_FRAGMENT = "Chat with host";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-
+    private Button mBtnChatHost;
 
     public PartyDetailsFragment() {
         // Required empty public constructor
@@ -59,16 +61,21 @@ public class PartyDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_party_details, container, false);
-
+        mBtnChatHost = (Button) view.findViewById(R.id.chatHost);
+        mBtnChatHost.setOnClickListener(this);
         return view;
     }
 
 
-
-
-
-
-
-
-
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.chatHost:
+                ChatWithHostFragment chatWithHostFragment = new ChatWithHostFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, chatWithHostFragment, CHAT_HOST_FRAGMENT).commit();
+                break;
+        }
+    }
 }

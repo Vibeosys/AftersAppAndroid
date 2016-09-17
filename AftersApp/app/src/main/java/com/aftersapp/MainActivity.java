@@ -18,6 +18,7 @@ import com.aftersapp.fragments.EditMyProfileFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
+import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
     private static final String SEARCH_FRAGMENT = "search";
     private static final String HOST_FRAGMENT = "host";
     private static final String MORE_FRAGMENT = "more";
+    private static final String USER_FRAGMENT = "user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +115,14 @@ public class MainActivity extends AppCompatActivity
                     replace(R.id.fragment_frame_lay, editMyProfileFragment, MORE_FRAGMENT).commit();*/
             ViewProfileFragment viewProfileFragment = new ViewProfileFragment();
             getSupportFragmentManager().beginTransaction().
-                    replace(R.id.fragment_frame_lay,viewProfileFragment,MORE_FRAGMENT).commit();
+                    replace(R.id.fragment_frame_lay, viewProfileFragment, MORE_FRAGMENT).commit();
 
         } else if (id == R.id.nav_feed) {
 
         } else if (id == R.id.nav_messages) {
+            UserListFragment userListFragment = new UserListFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, userListFragment, USER_FRAGMENT).commit();
 
         } else if (id == R.id.nav_setting) {
 
