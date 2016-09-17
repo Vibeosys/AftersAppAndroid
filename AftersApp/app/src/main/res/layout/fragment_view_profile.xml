@@ -1,0 +1,228 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.EditMyProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/circleView"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/profile_new_test" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <com.aftersapp.views.RobotoBoldTextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="Milie Onclick"
+                        android:textSize="18sp" />
+
+
+
+                    <com.aftersapp.views.RobotoTextView
+                        android:id="@+id/userAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text=" y.a.24,Hollywood"
+                        android:textColor="@color/secondaryText"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#e2e0e0" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <com.aftersapp.views.RobotoTextView
+                    android:id="@+id/userFullNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Full name"
+                    android:textSize="14sp" />
+
+                <com.aftersapp.views.RobotoBoldTextView
+                    android:id="@+id/userFullName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="4dp"
+                    android:singleLine="true"
+                    android:text="Milie Onclick"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#e2e0e0" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <com.aftersapp.views.RobotoTextView
+                    android:id="@+id/userEmailIdTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Email"
+                    android:textSize="14sp" />
+
+                <com.aftersapp.views.RobotoBoldTextView
+                    android:id="@+id/userEmailId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:inputType="textEmailAddress"
+                    android:padding="4dp"
+                    android:text="hi@gmail.com"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#e2e0e0" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <com.aftersapp.views.RobotoTextView
+                    android:id="@+id/userGenderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Gender"
+                    android:textSize="14sp" />
+                <com.aftersapp.views.RobotoBoldTextView
+                    android:id="@+id/userGendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:inputType="textEmailAddress"
+                    android:padding="4dp"
+                    android:text="Male"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="18sp" />
+
+                <!--<Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />-->
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#e2e0e0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <com.aftersapp.views.RobotoTextView
+                    android:id="@+id/userDOBTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Date of birth"
+                    android:textSize="14sp" />
+
+                <com.aftersapp.views.RobotoBoldTextView
+                    android:id="@+id/userDOB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="4dp"
+                    android:text="21-09-1995"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#e2e0e0" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_margin="12dp"
+                android:orientation="horizontal">
+
+                <Switch
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="start" />
+
+                <com.aftersapp.views.RobotoTextView
+                    android:id="@+id/sendMeNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Send me notifications via Email"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

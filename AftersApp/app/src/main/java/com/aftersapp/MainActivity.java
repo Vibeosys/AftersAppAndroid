@@ -18,6 +18,7 @@ import com.aftersapp.fragments.EditMyProfileFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
+import com.aftersapp.fragments.ViewProfileFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -107,9 +108,12 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
         } else if (id == R.id.nav_profile) {
-            EditMyProfileFragment editMyProfileFragment = new EditMyProfileFragment();
+            /*EditMyProfileFragment editMyProfileFragment = new EditMyProfileFragment();
             getSupportFragmentManager().beginTransaction().
-                    replace(R.id.fragment_frame_lay, editMyProfileFragment, MORE_FRAGMENT).commit();
+                    replace(R.id.fragment_frame_lay, editMyProfileFragment, MORE_FRAGMENT).commit();*/
+            ViewProfileFragment viewProfileFragment = new ViewProfileFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay,viewProfileFragment,MORE_FRAGMENT).commit();
 
         } else if (id == R.id.nav_feed) {
 

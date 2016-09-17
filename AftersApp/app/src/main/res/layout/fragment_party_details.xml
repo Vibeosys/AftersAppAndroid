@@ -15,63 +15,57 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/viewPartyDetailsImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/demo_image" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="#e2e0e0" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
                 android:orientation="vertical">
 
-                <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/viewPartyTitleTextView"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:text="Party Title"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal">
 
-                <com.aftersapp.views.RobotoTextView
-                    android:id="@+id/viewPartyTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:text="After Party Wine"
-                    android:background="@android:color/transparent"
-                    android:singleLine="true"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="14sp" />
+                    <ImageView
+                        android:id="@+id/imgPartyImage"
+                        android:layout_width="120dp"
+                        android:layout_height="110dp"
+                        android:layout_margin="4dp"
+                        android:src="@drawable/party1" />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:orientation="vertical">
+
+                        <com.aftersapp.views.RobotoBoldTextView
+                            android:id="@+id/txtPartyName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="2dp"
+                            android:text="Chilled House Party"
+                            android:textSize="21sp" />
+
+                        <com.aftersapp.views.RobotoTextView
+                            android:id="@+id/txtDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxEms="50"
+                            android:padding="2dp"
+                            android:text="Join us for a relaxed house party with some friends feel free to bring some more winel"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:background="#e2e0e0" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,25 +75,24 @@
                 android:orientation="vertical">
 
                 <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/viewPartyDescTitleTextView"
+                    android:id="@+id/viewPartyAddressTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:text="Party Description"
+                    android:text="Party Address"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
 
-                <com.aftersapp.views.RobotoTextView
-                    android:id="@+id/viewPartyDescription"
+                <TextView
+                    android:id="@+id/viewPartyAddressTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:background="@android:color/transparent"
-                    android:text="Come over and have some wine with us.We list to some relaxing music and get to know each other "
+                    android:text="Dummy party Address,4th cross,queens street"
                     android:textColor="@color/secondaryText"
-                    android:textSize="14sp"
-                    />
-
+                    android:background="@android:color/transparent"
+                    android:textSize="16sp"
+                    android:digits="1234567890+"/>
             </LinearLayout>
 
             <View
@@ -177,41 +170,28 @@
                     android:layout_height="wrap_content" />-->
 
             </LinearLayout>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="#e2e0e0" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:orientation="vertical">
-
-                <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/viewPartyAddressTitleTextView"
-                    android:layout_width="wrap_content"
+                android:layout_margin="12dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <Button
+                    android:id="@+id/chatHost"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="60dp"
+                    android:layout_marginStart="60dp"
+                    android:layout_weight="1"
+                    android:background="#FF78BC"
                     android:padding="4dp"
-                    android:text="Party Address"
-                    android:textColor="@color/colorPrimary"
+                    android:text="Chat with host"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/viewPartyAddressTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:text="Dummy party Address,4th cross,queens street"
-                    android:textColor="@color/secondaryText"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"
-                    android:digits="1234567890+"/>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -240,32 +220,12 @@
                     android:layout_weight="1"
                     android:background="@drawable/cancel_btn_border"
                     android:padding="4dp"
-                    android:text="Add favourite"
+                    android:text="Add to favourite"
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
-                <Button
-                    android:id="@+id/chatHost"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="60dp"
-                    android:layout_marginStart="60dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:padding="4dp"
-                    android:text="Chat with host"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
 
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

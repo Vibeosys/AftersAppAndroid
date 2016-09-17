@@ -39,7 +39,6 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
     private String mParam2;
 
     private Spinner mSpinner;
-
     private TextView mGoogleMapTextView;
      MapView mMapView;
     GoogleMap mGoogleMap;
