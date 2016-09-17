@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layoutGame"
+            android:id="@+id/layoutFindParty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -33,7 +33,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutCocktails"
+            android:id="@+id/layoutHostParty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -55,7 +55,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutCures"
+            android:id="@+id/layoutEditProfile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
