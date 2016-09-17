@@ -16,4 +16,7 @@
     <string name="str_find_party">Find Party</string>
     <string name="str_host_party">Host Party</string>
     <string name="str_edit_profile">Edit Profile</string>
+    <string name="google_maps_key">AIzaSyA9g3URalt8bKMpR3aac_7vuzbMi-BG4gM</string>
+    <string name="str_age">Age:</string>
+    <string name="str_attending">Attending:</string>
 </resources>

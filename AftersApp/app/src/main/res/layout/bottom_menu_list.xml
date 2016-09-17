@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/imgGames"
@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/imgCocktails"
@@ -67,7 +67,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/imgCures"
@@ -94,7 +94,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/imgSearch"

@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -126,7 +127,9 @@ public class MainActivity extends AppCompatActivity
                         replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
                 break;
             case R.id.searchLay:
-
+                FindPartyFragment partyFragment = new FindPartyFragment();
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
                 break;
             case R.id.hostLay:
 
