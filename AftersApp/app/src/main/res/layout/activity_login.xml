@@ -1,0 +1,63 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_back"
+    tools:context="com.aftersapp.activities.LoginActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/loginBackgroundTransperant"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:layout_marginRight="48dp"
+                android:layout_weight="1"
+                android:src="@drawable/after_logo_white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="57dp"
+                    android:layout_margin="8dp"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:src="@drawable/facebook_btn_img" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    android:layout_margin="8dp"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:src="@drawable/gplus_btn_img" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    android:layout_margin="8dp"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:src="@drawable/twitter_btn_img" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

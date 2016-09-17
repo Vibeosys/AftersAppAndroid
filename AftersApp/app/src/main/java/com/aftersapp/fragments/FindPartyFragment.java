@@ -85,9 +85,9 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
         mGoogleMap = googleMap;
         // For showing a move to my location button
         mGoogleMap.setMyLocationEnabled(true);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(18.5536022, 73.7942691)).zoom(15).build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         drawMarker(0);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(18.5536022, 73.7942691)).zoom(13).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     private void drawMarker(long selectedId) {

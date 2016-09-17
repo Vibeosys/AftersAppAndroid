@@ -19,4 +19,6 @@
     <string name="google_maps_key">AIzaSyA9g3URalt8bKMpR3aac_7vuzbMi-BG4gM</string>
     <string name="str_age">Age:</string>
     <string name="str_attending">Attending:</string>
+
+    <string name="title_activity_login">LoginActivity</string>
 </resources>
