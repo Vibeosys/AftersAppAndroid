@@ -17,5 +17,6 @@
     <color name="loginBackgroundTransperant">#96663399</color>
     <color name="splashbackground">#694387</color>
     <color name="navBarHeader">#7F83D3</color>
+    <color name="transparentWhite">#66FFFFFF</color>
 
 </resources>

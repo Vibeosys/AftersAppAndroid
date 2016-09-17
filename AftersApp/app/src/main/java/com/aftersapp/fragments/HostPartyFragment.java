@@ -1,19 +1,28 @@
 package com.aftersapp.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aftersapp.R;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +39,10 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
     private String mParam2;
 
     private Spinner mSpinner;
-    private EditText mNoOfPartyAttender;
+
+    private TextView mGoogleMapTextView;
+     MapView mMapView;
+    GoogleMap mGoogleMap;
 
     public HostPartyFragment() {
         // Required empty public constructor
@@ -65,12 +77,13 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                            final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_host_party, container, false);
         mSpinner =(Spinner) rootView.findViewById(R.id.Agespinner);
-        mNoOfPartyAttender =(EditText) rootView.findViewById(R.id.attendingTextView);
-        mNoOfPartyAttender.setRawInputType(Configuration.KEYBOARD_12KEY);
+
+        mGoogleMapTextView = (TextView) rootView.findViewById(R.id.partyAddressTextView);
+
         List<String> spineerData =  new ArrayList<>();
         spineerData.add("10+");
         spineerData.add("20+");
@@ -85,6 +98,13 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
                 (android.R.layout.simple_spinner_dropdown_item);
 
         mSpinner.setAdapter(dataAdapter);
+        mGoogleMapTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showTakeawayDialog(savedInstanceState);
+            }
+        });
         return rootView;
     }
 
@@ -96,6 +116,35 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private void showTakeawayDialog(Bundle savedInstanceState) {
+        final Dialog dlg = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+
+        View view = getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_google_map, null);
+        dlg.setContentView(view);
+        dlg.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+        mMapView = (MapView)dlg.findViewById(R.id.mapViewParty);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mGoogleMap = googleMap;
+                // For showing a move to my location button
+                mGoogleMap.setMyLocationEnabled(true);
+            }
+        });
+        dlg.show();
 
     }
 }
