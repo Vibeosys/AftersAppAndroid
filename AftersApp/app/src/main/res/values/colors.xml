@@ -15,4 +15,5 @@
     <color name="hostTabBack">#513669</color>
     <color name="editProfTabBack">#9a6bd1</color>
     <color name="loginBackgroundTransperant">#96663399</color>
+    <color name="splashbackground">#694387</color>
 </resources>
