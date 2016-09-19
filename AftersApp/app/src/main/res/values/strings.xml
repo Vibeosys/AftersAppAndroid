@@ -22,4 +22,10 @@
 
     <string name="title_activity_login">LoginActivity</string>
     <string name="action_filter">Filter</string>
+    <string name="str_radius">Radius</string>
+    <string name="raduis_selected">Default radius selected</string>
+    <string name="str_age_filter">Age</string>
+    <string name="str_age_selected">Default age selected</string>
+    <string name="show_result">Show result</string>
+    <string name="reset_all_filters">Reset all filters</string>
 </resources>

@@ -18,5 +18,6 @@
     <color name="splashbackground">#694387</color>
     <color name="navBarHeader">#7F83D3</color>
     <color name="transparentWhite">#66FFFFFF</color>
+    <color name="layout_background">#f0f2f2f5</color>
 
 </resources>

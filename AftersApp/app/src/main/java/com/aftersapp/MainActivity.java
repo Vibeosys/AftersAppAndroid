@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.aftersapp.activities.LogoutActivity;
 import com.aftersapp.fragments.EditMyProfileFragment;
+import com.aftersapp.fragments.FilterFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_filter) {
+            FilterFragment filterFragment = new FilterFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, filterFragment, MORE_FRAGMENT).commit();
             return true;
         }
 
@@ -128,9 +132,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_setting) {
 
-        }
-        else if(id == R.id.nav_logout)
-        {
+        } else if (id == R.id.nav_logout) {
             Intent logout = new Intent(MainActivity.this, LogoutActivity.class);
             startActivity(logout);
             finish();
