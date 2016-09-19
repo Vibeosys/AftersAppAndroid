@@ -1,5 +1,6 @@
 package com.aftersapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.aftersapp.activities.LogoutActivity;
 import com.aftersapp.fragments.EditMyProfileFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
@@ -127,7 +129,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_setting) {
 
         }
-
+        else if(id == R.id.nav_logout)
+        {
+            Intent logout = new Intent(MainActivity.this, LogoutActivity.class);
+            startActivity(logout);
+            finish();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

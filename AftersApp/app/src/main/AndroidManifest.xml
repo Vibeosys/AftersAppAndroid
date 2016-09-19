@@ -10,9 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -33,9 +31,8 @@
             android:name=".activities.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity android:name=".activities.LogoutActivity"></activity>
     </application>
 
 </manifest>
