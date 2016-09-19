@@ -19,16 +19,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aftersapp.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class HostPartyFragment extends BaseFragment implements AdapterView.OnItemSelectedListener  {
+public class HostPartyFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,OnMapReadyCallback  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -132,6 +137,7 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
         mMapView.onResume();
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,11 +145,26 @@ public class HostPartyFragment extends BaseFragment implements AdapterView.OnIte
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
+                LatLng DemoLatLong =  new LatLng(35.0958634, 33.338747);
                 // For showing a move to my location button
                 mGoogleMap.setMyLocationEnabled(true);
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(35.0958634, 33.338747)).zoom(12).build();
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                Marker marker =mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("Latsia,cyprus"));
             }
         });
         dlg.show();
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng DemoLatLong =  new LatLng(35.1264, 33.4299);
+        mGoogleMap.setMyLocationEnabled(true);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(35.1264, 33.4299)).zoom(13).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+       // Marker marker =mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("cyprus"));
+        //mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }
