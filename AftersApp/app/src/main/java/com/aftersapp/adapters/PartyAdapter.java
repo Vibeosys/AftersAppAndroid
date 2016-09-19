@@ -1,7 +1,6 @@
 package com.aftersapp.adapters;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.aftersapp.R;
-import com.aftersapp.data.PartyData;
-import com.aftersapp.data.responsedata.PartyResponseDTO;
+import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.utils.CustomVolleyRequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -22,11 +20,11 @@ import java.util.ArrayList;
  */
 public class PartyAdapter extends BaseAdapter {
 
-    private ArrayList<PartyResponseDTO> mData;
+    private ArrayList<PartyDataDTO> mData;
     private Context mContext;
     private ImageLoader mImageLoader;
 
-    public PartyAdapter(ArrayList<PartyResponseDTO> mData, Context mContext) {
+    public PartyAdapter(ArrayList<PartyDataDTO> mData, Context mContext) {
         this.mData = mData;
         this.mContext = mContext;
     }
@@ -65,7 +63,7 @@ public class PartyAdapter extends BaseAdapter {
 
         } else
             viewHolder = (ViewHolder) convertView.getTag();
-        PartyResponseDTO partyData = mData.get(position);
+        PartyDataDTO partyData = mData.get(position);
         String partyName = partyData.getTitle();
         String partyDesc = partyData.getDesc();
         String age = partyData.getAge();

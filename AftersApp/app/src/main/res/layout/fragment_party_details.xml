@@ -26,7 +26,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/imgPartyImage"
                         android:layout_width="120dp"
                         android:layout_height="110dp"
@@ -60,18 +60,20 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:background="#e2e0e0" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
                 <com.aftersapp.views.RobotoBoldTextView
@@ -84,30 +86,30 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/viewPartyAddressTextView"
+                    android:id="@+id/txtAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:digits="1234567890+"
                     android:padding="4dp"
                     android:text="Dummy party Address,4th cross,queens street"
                     android:textColor="@color/secondaryText"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"
-                    android:digits="1234567890+"/>
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:background="#e2e0e0" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
                 <com.aftersapp.views.RobotoBoldTextView
@@ -120,7 +122,7 @@
                     android:textSize="16sp" />
 
                 <com.aftersapp.views.RobotoTextView
-                    android:id="@+id/ageTextView"
+                    android:id="@+id/txtAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
@@ -133,18 +135,20 @@
                     android:layout_height="wrap_content" />-->
 
             </LinearLayout>
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:background="#e2e0e0" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
                 <com.aftersapp.views.RobotoBoldTextView
@@ -157,7 +161,7 @@
                     android:textSize="16sp" />
 
                 <com.aftersapp.views.RobotoTextView
-                    android:id="@+id/viewNoofAttendeTextView"
+                    android:id="@+id/txtAttending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
@@ -174,9 +178,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_margin="12dp"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/chatHost"
                     android:layout_width="match_parent"
@@ -192,6 +197,7 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

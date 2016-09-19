@@ -3,13 +3,12 @@ package com.aftersapp.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.aftersapp.data.responsedata.PartyResponseDTO;
+import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.SessionManager;
 
@@ -79,7 +78,7 @@ public class DbRepository extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertParty(List<PartyResponseDTO> partyResponseDTOs) {
+    public boolean insertParty(List<PartyDataDTO> partyDataDTOs) {
         boolean flagError = false;
         String errorMessage = "";
         SQLiteDatabase sqLiteDatabase = null;
@@ -90,34 +89,34 @@ public class DbRepository extends SQLiteOpenHelper {
             sqLiteDatabase = getWritableDatabase();
             synchronized (sqLiteDatabase) {
                 contentValues = new ContentValues();
-                for (PartyResponseDTO partyResponseDTO : partyResponseDTOs) {
-                    contentValues.put(SqlContract.Party.PARTY_ID, partyResponseDTO.getPartyId());
-                    contentValues.put(SqlContract.Party.PARTY_TITLE, partyResponseDTO.getTitle());
-                    contentValues.put(SqlContract.Party.DESCRIPTION, partyResponseDTO.getDesc());
-                    contentValues.put(SqlContract.Party.LATITUDE, partyResponseDTO.getLatitude());
-                    contentValues.put(SqlContract.Party.LONGITUDE, partyResponseDTO.getLongitude());
-                    contentValues.put(SqlContract.Party.LOCATION, partyResponseDTO.getLocation());
-                    contentValues.put(SqlContract.Party.MUSIC, partyResponseDTO.getMusic());
-                    contentValues.put(SqlContract.Party.AGE_RANGE, partyResponseDTO.getAge());
-                    contentValues.put(SqlContract.Party.INTEREST, partyResponseDTO.getInterest());
-                    contentValues.put(SqlContract.Party.ATTENDING, partyResponseDTO.getAttending());
+                for (PartyDataDTO partyDataDTO : partyDataDTOs) {
+                    contentValues.put(SqlContract.Party.PARTY_ID, partyDataDTO.getPartyId());
+                    contentValues.put(SqlContract.Party.PARTY_TITLE, partyDataDTO.getTitle());
+                    contentValues.put(SqlContract.Party.DESCRIPTION, partyDataDTO.getDesc());
+                    contentValues.put(SqlContract.Party.LATITUDE, partyDataDTO.getLatitude());
+                    contentValues.put(SqlContract.Party.LONGITUDE, partyDataDTO.getLongitude());
+                    contentValues.put(SqlContract.Party.LOCATION, partyDataDTO.getLocation());
+                    contentValues.put(SqlContract.Party.MUSIC, partyDataDTO.getMusic());
+                    contentValues.put(SqlContract.Party.AGE_RANGE, partyDataDTO.getAge());
+                    contentValues.put(SqlContract.Party.INTEREST, partyDataDTO.getInterest());
+                    contentValues.put(SqlContract.Party.ATTENDING, partyDataDTO.getAttending());
                     contentValues.put(SqlContract.Party.PARTY_DATE,
-                            dateUtils.getDateAndTimeFromLong(partyResponseDTO.getPdate()));
+                            dateUtils.getDateAndTimeFromLong(partyDataDTO.getPdate()));
                     contentValues.put(SqlContract.Party.CREATED_DATE,
-                            dateUtils.getDateAndTimeFromLong(partyResponseDTO.getCreatedDate()));
-                    contentValues.put(SqlContract.Party.IMAGE, partyResponseDTO.getImage());
-                    contentValues.put(SqlContract.Party.HOST_BY_ID, partyResponseDTO.getHost());
-                    contentValues.put(SqlContract.Party.HOST_NAME, partyResponseDTO.getHostName());
-                    contentValues.put(SqlContract.Party.IS_FAV, partyResponseDTO.getIsFavourite());
-                    contentValues.put(SqlContract.Party.IS_LIKE, partyResponseDTO.getIsLike());
-                    boolean checkId = checkDataAvailable(partyResponseDTO.getPartyId(), sqLiteDatabase);
+                            dateUtils.getDateAndTimeFromLong(partyDataDTO.getCreatedDate()));
+                    contentValues.put(SqlContract.Party.IMAGE, partyDataDTO.getImage());
+                    contentValues.put(SqlContract.Party.HOST_BY_ID, partyDataDTO.getHost());
+                    contentValues.put(SqlContract.Party.HOST_NAME, partyDataDTO.getHostName());
+                    contentValues.put(SqlContract.Party.IS_FAV, partyDataDTO.getIsFavourite());
+                    contentValues.put(SqlContract.Party.IS_LIKE, partyDataDTO.getIsLike());
+                    boolean checkId = checkDataAvailable(partyDataDTO.getPartyId(), sqLiteDatabase);
                     if (!sqLiteDatabase.isOpen()) sqLiteDatabase = getWritableDatabase();
                     if (!checkId)
                         count = sqLiteDatabase.insert(SqlContract.Party.TABLE_NAME, null, contentValues);
                     else
                         count = sqLiteDatabase.update(SqlContract.Party.TABLE_NAME, contentValues,
                                 SqlContract.Party.PARTY_ID + "=?",
-                                new String[]{String.valueOf(partyResponseDTO.getPartyId())});
+                                new String[]{String.valueOf(partyDataDTO.getPartyId())});
                     contentValues.clear();
                     Log.d(TAG, "## Party is Added Successfully");
                     flagError = true;
@@ -159,5 +158,59 @@ public class DbRepository extends SQLiteOpenHelper {
                 cursor.close();
         }
         return flag;
+    }
+
+    public PartyDataDTO getPartyData(long partyId) {
+        SQLiteDatabase sqLiteDatabase = null;
+        Cursor cursor = null;
+        PartyDataDTO partyDataDTO = null;
+        DateUtils dateUtils = new DateUtils();
+        try {
+            String[] whereClause = new String[]{String.valueOf(partyId)};
+            sqLiteDatabase = getReadableDatabase();
+            synchronized (sqLiteDatabase) {
+                cursor = sqLiteDatabase.rawQuery("SELECT * From " + SqlContract.Party.TABLE_NAME + " where " +
+                        SqlContract.Party.PARTY_ID + "=?", whereClause);
+                if (cursor != null) {
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToFirst();
+                        long id = cursor.getLong(cursor.getColumnIndex(SqlContract.Party.PARTY_ID));
+                        String title = cursor.getString(cursor.getColumnIndex(SqlContract.Party.PARTY_TITLE));
+                        String desc = cursor.getString(cursor.getColumnIndex(SqlContract.Party.DESCRIPTION));
+                        double latitude = cursor.getDouble(cursor.getColumnIndex(SqlContract.Party.LATITUDE));
+                        double longitude = cursor.getDouble(cursor.getColumnIndex(SqlContract.Party.LONGITUDE));
+                        String location = cursor.getString(cursor.getColumnIndex(SqlContract.Party.LOCATION));
+                        String music = cursor.getString(cursor.getColumnIndex(SqlContract.Party.MUSIC));
+                        String age = cursor.getString(cursor.getColumnIndex(SqlContract.Party.AGE_RANGE));
+                        int interest = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.INTEREST));
+                        int attending = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.ATTENDING));
+                        String image = cursor.getString(cursor.getColumnIndex(SqlContract.Party.IMAGE));
+                        int host = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.HOST_BY_ID));
+                        String pdate = cursor.getString(cursor.getColumnIndex(SqlContract.Party.PARTY_DATE));
+                        String createdDate = cursor.getString(cursor.getColumnIndex(SqlContract.Party.CREATED_DATE));
+                        String hostName = cursor.getString(cursor.getColumnIndex(SqlContract.Party.HOST_NAME));
+                        int isFavourite = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.IS_FAV));
+                        int isLike = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.IS_LIKE));
+
+                        long partyDate = dateUtils.getFormattedDate(pdate).getTime();
+                        long cDate = dateUtils.getFormattedDate(createdDate).getTime();
+                        partyDataDTO = new PartyDataDTO(partyId, title, desc, latitude, longitude, location,
+                                music, age, interest, attending, image, host, partyDate,
+                                cDate, hostName, isFavourite, isLike);
+                    }
+                } else {
+                    partyDataDTO = new PartyDataDTO();
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
+                sqLiteDatabase.close();
+        }
+        return partyDataDTO;
     }
 }

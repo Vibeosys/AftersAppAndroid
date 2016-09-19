@@ -1,8 +1,7 @@
-package com.aftersapp.data.responsedata;
+package com.aftersapp.data;
 
 import android.util.Log;
 
-import com.aftersapp.data.BaseDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by akshay on 19-09-2016.
  */
-public class PartyResponseDTO extends BaseDTO {
+public class PartyDataDTO extends BaseDTO {
 
     private long partyId;
     private String title;
@@ -30,6 +29,32 @@ public class PartyResponseDTO extends BaseDTO {
     private String hostName;
     private int isFavourite;
     private int isLike;
+
+    public PartyDataDTO() {
+    }
+
+    public PartyDataDTO(long partyId, String title, String desc, double latitude,
+                        double longitude, String location, String music, String age,
+                        int interest, int attending, String image, int host, long pdate,
+                        long createdDate, String hostName, int isFavourite, int isLike) {
+        this.partyId = partyId;
+        this.title = title;
+        this.desc = desc;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.location = location;
+        this.music = music;
+        this.age = age;
+        this.interest = interest;
+        this.attending = attending;
+        this.image = image;
+        this.host = host;
+        this.pdate = pdate;
+        this.createdDate = createdDate;
+        this.hostName = hostName;
+        this.isFavourite = isFavourite;
+        this.isLike = isLike;
+    }
 
     public long getPartyId() {
         return partyId;
@@ -167,20 +192,20 @@ public class PartyResponseDTO extends BaseDTO {
         this.isLike = isLike;
     }
 
-    public static ArrayList<PartyResponseDTO> deserializeToArray(String serializedString) {
+    public static ArrayList<PartyDataDTO> deserializeToArray(String serializedString) {
         Gson gson = new Gson();
-        ArrayList<PartyResponseDTO> partyResponseDTOs = null;
+        ArrayList<PartyDataDTO> partyDataDTOs = null;
         try {
-            PartyResponseDTO[] deserializeObject = gson.fromJson(serializedString, PartyResponseDTO[].class);
-            partyResponseDTOs = new ArrayList<>();
-            for (PartyResponseDTO signalDTO : deserializeObject) {
-                partyResponseDTOs.add(signalDTO);
+            PartyDataDTO[] deserializeObject = gson.fromJson(serializedString, PartyDataDTO[].class);
+            partyDataDTOs = new ArrayList<>();
+            for (PartyDataDTO signalDTO : deserializeObject) {
+                partyDataDTOs.add(signalDTO);
             }
         } catch (JsonSyntaxException e) {
             Log.e("deserialize", "Response Party DTO error" + e.toString());
         }
 
 
-        return partyResponseDTOs;
+        return partyDataDTOs;
     }
 }

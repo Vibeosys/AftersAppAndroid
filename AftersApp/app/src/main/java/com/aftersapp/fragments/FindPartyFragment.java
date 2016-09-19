@@ -10,15 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.aftersapp.R;
 import com.aftersapp.adapters.PartyAdapter;
-import com.aftersapp.data.PartyData;
-import com.aftersapp.data.PartyLocation;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.GetPartyDTO;
-import com.aftersapp.data.responsedata.PartyResponseDTO;
+import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
@@ -46,7 +43,7 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
     private GoogleMap mGoogleMap;
     private PartyAdapter mPartyAdapter;
     private ListView mListParties;
-    private ArrayList<PartyResponseDTO> partyResponseDTOs = new ArrayList<>();
+    private ArrayList<PartyDataDTO> partyDataDTOs = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,9 +67,12 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
         mListParties.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               /* PartyData party = (PartyData) mPartyAdapter.getItem(position);
-                drawMarker(party.getId());*/
+                PartyDataDTO party = (PartyDataDTO) mPartyAdapter.getItem(position);
+                // drawMarker(party.getId());*/
                 PartyDetailsFragment partyDetailsFragment = new PartyDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putLong(PartyDetailsFragment.PARTY_ID, party.getPartyId());
+                partyDetailsFragment.setArguments(bundle);
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, partyDetailsFragment, "PartDetails").commit();
             }
@@ -100,8 +100,8 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
     private void drawMarker(long selectedId) {
         // Creating an instance of MarkerOptions
         mGoogleMap.clear();
-        for (int i = 0; i < partyResponseDTOs.size(); i++) {
-            PartyResponseDTO partyData = partyResponseDTOs.get(i);
+        for (int i = 0; i < partyDataDTOs.size(); i++) {
+            PartyDataDTO partyData = partyDataDTOs.get(i);
             LatLng location = new LatLng(partyData.getLatitude(), partyData.getLongitude());
             String partyName = partyData.getTitle();
             if (partyData.getPartyId() == selectedId) {
@@ -118,7 +118,7 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
             }
 
         }
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(18.5536022, 73.7942691)).zoom(13).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(18.520430, 73.856744)).zoom(13).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
@@ -144,11 +144,11 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_GET_PARTY:
-                partyResponseDTOs = PartyResponseDTO.deserializeToArray(data);
-                mPartyAdapter = new PartyAdapter(partyResponseDTOs, getContext());
+                partyDataDTOs = PartyDataDTO.deserializeToArray(data);
+                mPartyAdapter = new PartyAdapter(partyDataDTOs, getContext());
                 mListParties.setAdapter(mPartyAdapter);
                 drawMarker(0);
-                AsyncInsertDB asyncInsertDB = new AsyncInsertDB(partyResponseDTOs);
+                AsyncInsertDB asyncInsertDB = new AsyncInsertDB(partyDataDTOs);
                 asyncInsertDB.execute();
                 Log.d(TAG, "##Volley Response" + data);
                 break;
@@ -157,15 +157,15 @@ public class FindPartyFragment extends BaseFragment implements OnMapReadyCallbac
 
     private class AsyncInsertDB extends AsyncTask<Void, Void, Boolean> {
 
-        List<PartyResponseDTO> partyResponseDTOs;
+        List<PartyDataDTO> partyDataDTOs;
 
-        AsyncInsertDB(List<PartyResponseDTO> partyResponseDTOs) {
-            this.partyResponseDTOs = partyResponseDTOs;
+        AsyncInsertDB(List<PartyDataDTO> partyDataDTOs) {
+            this.partyDataDTOs = partyDataDTOs;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            boolean flagQuery = mDbRepository.insertParty(partyResponseDTOs);
+            boolean flagQuery = mDbRepository.insertParty(partyDataDTOs);
             return flagQuery;
         }
 
