@@ -22,7 +22,7 @@ import com.aftersapp.R;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView imgFb, imgGPlus, imgTwitter;
+    private ImageView imgFb, imgGPlus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +36,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         imgFb = (ImageView) findViewById(R.id.fbImg);
         imgGPlus = (ImageView) findViewById(R.id.gpImg);
-        imgTwitter = (ImageView) findViewById(R.id.twitterImg);
+
 
         imgFb.setOnClickListener(this);
         imgGPlus.setOnClickListener(this);
-        imgGPlus.setOnClickListener(this);
+
     }
 
     @Override

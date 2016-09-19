@@ -204,14 +204,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_margin="12dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <Switch
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
 
-                    android:layout_gravity="start" />
 
                 <com.aftersapp.views.RobotoTextView
                     android:id="@+id/sendMeNotification"
@@ -221,6 +216,14 @@
                     android:text="Send me notifications via Email"
                     android:textColor="@color/secondaryText"
                     android:textSize="14sp" />
+                <com.aftersapp.views.RobotoBoldTextView
+                    android:id="@+id/notificationStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Enabled"
+                    android:textColor="@color/secondaryText"
+                    androidtextSize="14sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

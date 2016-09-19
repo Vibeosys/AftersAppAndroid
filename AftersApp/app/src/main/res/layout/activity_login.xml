@@ -40,14 +40,7 @@
                     android:layout_marginRight="48dp"
                     android:src="@drawable/facebook_btn_img" />
 
-                <ImageView
-                    android:id="@+id/twitterImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="58dp"
-                    android:layout_margin="8dp"
-                    android:layout_marginLeft="48dp"
-                    android:layout_marginRight="48dp"
-                    android:src="@drawable/twitter_btn_img" />
+
 
                 <ImageView
                     android:id="@+id/gpImg"

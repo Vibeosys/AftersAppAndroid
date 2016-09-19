@@ -92,7 +92,6 @@
                     android:padding="4dp"
                     android:singleLine="true"
                     android:text="Milie Onclick"
-                    android:textColor="@color/secondaryText"
                     android:textSize="18sp" />
 
                 <View
@@ -126,7 +125,6 @@
                     android:inputType="textEmailAddress"
                     android:padding="4dp"
                     android:text="hi@gmail.com"
-                    android:textColor="@color/secondaryText"
                     android:textSize="18sp" />
 
                 <View
@@ -186,7 +184,6 @@
                     android:background="@android:color/transparent"
                     android:padding="4dp"
                     android:text="21-09-1995"
-                    android:textColor="@color/secondaryText"
                     android:textSize="18sp" />
 
                 <View
@@ -210,13 +207,12 @@
 
                     android:layout_gravity="start" />
 
-                <com.aftersapp.views.RobotoTextView
+                <com.aftersapp.views.RobotoBoldTextView
                     android:id="@+id/sendMeNotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:text="Send me notifications via Email"
-                    android:textColor="@color/secondaryText"
                     android:textSize="14sp" />
             </LinearLayout>
 
