@@ -8,14 +8,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/imgPartyImage"
             android:layout_width="120dp"
-            android:layout_height="110dp"
-            android:layout_margin="4dp"
-            android:src="@drawable/party1" />
+            android:layout_height="match_parent"
+            android:layout_margin="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,17 +76,24 @@
                     android:padding="2dp"
                     android:text="5+"
                     android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|right"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:padding="4dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="6dp"
                     android:src="@drawable/thumb_color" />
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:padding="4dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="6dp"
                     android:src="@drawable/heart_colour" />
             </LinearLayout>
         </LinearLayout>

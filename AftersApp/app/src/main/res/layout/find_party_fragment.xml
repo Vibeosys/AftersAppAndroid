@@ -16,6 +16,14 @@
             android:layout_height="match_parent" />
     </RelativeLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/listParties"
