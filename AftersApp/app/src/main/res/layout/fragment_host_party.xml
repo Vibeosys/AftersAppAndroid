@@ -26,6 +26,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
+                    android:tag="thumnel"
                     android:src="@drawable/demo_image" />
                 <Button
                     android:id="@+id/removeImage1"
@@ -65,9 +66,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:text="After Party Wine"
                     android:background="@android:color/transparent"
                     android:singleLine="true"
+                    android:hint="Enter party title"
                     android:textColor="@color/secondaryText"
                     android:textSize="14sp" />
 
@@ -103,10 +104,44 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:background="@android:color/transparent"
-                    android:text="Come over and have some wine with us.We list to some relaxing music and get to know each other "
                     android:textColor="@color/secondaryText"
                     android:textSize="14sp"
+                    android:hint="Enter party description"
                     />
+
+            </LinearLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="#e2e0e0" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:orientation="vertical">
+
+                <com.aftersapp.views.RobotoBoldTextView
+                    android:id="@+id/musicTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="Music Gener"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/musicGenerationDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="14sp"
+                    android:hint="Enter music generation"/>
 
             </LinearLayout>
 
