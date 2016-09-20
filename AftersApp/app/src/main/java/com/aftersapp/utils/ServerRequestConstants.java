@@ -8,4 +8,5 @@ public class ServerRequestConstants {
     public static final int REQUEST_LIKE_PARTY = 112;
     public static final int REQUEST_REMOVE_FAV_PARTY = 113;
     public static final int REQUEST_ADD_FAV_PARTY = 114;
+    public static final int REQUEST_POST_PART=115;
 }

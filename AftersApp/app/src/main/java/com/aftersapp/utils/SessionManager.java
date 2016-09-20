@@ -60,6 +60,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.LIKE_PARTY_URL, mPropertyFileReader.getLikePartyUrl());
         editor.putString(PropertyTypeConstants.REMOVE_FAV_PARTY_URL, mPropertyFileReader.getRemoveFav());
         editor.putString(PropertyTypeConstants.ADD_FAV_PARTY_URL, mPropertyFileReader.getAddFav());
+        editor.putString(PropertyTypeConstants.POST_PART_URL,mPropertyFileReader.getHostPartyUrl());
         editor.apply();
         return true;
     }
@@ -99,4 +100,9 @@ public class SessionManager {
     public String addFavPartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.ADD_FAV_PARTY_URL, null);
     }
+    public String getHostPartyUrl()
+    {
+        return mProjectSharedPref.getString(PropertyTypeConstants.POST_PART_URL, null);
+    }
+
 }
