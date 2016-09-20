@@ -60,7 +60,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.LIKE_PARTY_URL, mPropertyFileReader.getLikePartyUrl());
         editor.putString(PropertyTypeConstants.REMOVE_FAV_PARTY_URL, mPropertyFileReader.getRemoveFav());
         editor.putString(PropertyTypeConstants.ADD_FAV_PARTY_URL, mPropertyFileReader.getAddFav());
-        editor.putString(PropertyTypeConstants.POST_PART_URL,mPropertyFileReader.getHostPartyUrl());
+        editor.putString(PropertyTypeConstants.POST_PART_URL, mPropertyFileReader.getHostPartyUrl());
         editor.apply();
         return true;
     }
@@ -85,6 +85,38 @@ public class SessionManager {
         return mProjectSharedPref.getString(PropertyTypeConstants.USER_EMAIL, null);
     }
 
+    public String getName() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_NAME, null);
+    }
+
+    public String getEmail2() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_EMAIL2, null);
+    }
+
+    public String getPhone() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_PHONE, null);
+    }
+
+    public String getGender() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_GENDER, null);
+    }
+
+    public String getProfImg() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_PROF_IMG, null);
+    }
+
+    public String getDob() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_DOB, null);
+    }
+
+    public String getToken() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.USER_TOKEN, null);
+    }
+
+    public int getEmailNotify() {
+        return mProjectSharedPref.getInt(PropertyTypeConstants.USER_EMAIL_NOTIFY, 0);
+    }
+
     public String getPartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.PARTY_URL, null);
     }
@@ -100,9 +132,60 @@ public class SessionManager {
     public String addFavPartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.ADD_FAV_PARTY_URL, null);
     }
-    public String getHostPartyUrl()
-    {
+
+    public String getHostPartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.POST_PART_URL, null);
     }
 
+    public void setUserId(long userId) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_ID, userId);
+    }
+
+    private static void setValuesInSharedPrefs(String sharedPrefKey, long sharedPrefValue) {
+        SharedPreferences.Editor editor = mProjectSharedPref.edit();
+        editor.putLong(sharedPrefKey, sharedPrefValue);
+        editor.apply();
+    }
+
+    private static void setValuesInSharedPrefs(String sharedPrefKey, String sharedPrefValue) {
+        SharedPreferences.Editor editor = mProjectSharedPref.edit();
+        editor.putString(sharedPrefKey, sharedPrefValue);
+        editor.apply();
+    }
+
+    public void setName(String name) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_NAME, name);
+    }
+
+    public void setEmail(String email) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_EMAIL, email);
+    }
+
+    public void setEmail2(String email) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_EMAIL2, email);
+    }
+
+    public void setPhone(String phone) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_PHONE, phone);
+    }
+
+    public void setGender(String gender) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_GENDER, gender);
+    }
+
+    public void setProfileImg(String profileImg) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_PROF_IMG, profileImg);
+    }
+
+    public void setDob(String dob) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_DOB, dob);
+    }
+
+    public void setToken(String token) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_TOKEN, token);
+    }
+
+    public void setEmailNotify(int emailNotify) {
+        setValuesInSharedPrefs(PropertyTypeConstants.USER_EMAIL_NOTIFY, emailNotify);
+    }
 }

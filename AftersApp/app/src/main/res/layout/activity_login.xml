@@ -33,22 +33,21 @@
 
                 <ImageView
                     android:id="@+id/fbImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="57dp"
-                    android:layout_margin="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="77dp"
                     android:layout_marginLeft="48dp"
                     android:layout_marginRight="48dp"
+                    android:padding="8dp"
                     android:src="@drawable/facebook_btn_img" />
-
 
 
                 <ImageView
                     android:id="@+id/gpImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="58dp"
-                    android:layout_margin="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="77dp"
                     android:layout_marginLeft="48dp"
                     android:layout_marginRight="48dp"
+                    android:padding="8dp"
                     android:src="@drawable/gplus_btn_img" />
 
 
