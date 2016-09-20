@@ -20,6 +20,7 @@ import com.aftersapp.data.requestdata.GetPartyDTO;
 import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.LikePartyRequest;
 import com.aftersapp.utils.AppConstants;
+import com.aftersapp.utils.NetworkUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
@@ -76,14 +77,22 @@ public class FindPartyFragment extends BaseFragment implements
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
 
-        showProgress(true, mListParties, progressBar);
-        GetPartyDTO getPartyDTO = new GetPartyDTO(2, 18.520430, 73.856744);
-        Gson gson = new Gson();
-        String serializedJsonString = gson.toJson(getPartyDTO);
-        BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
-        baseRequestDTO.setData(serializedJsonString);
-        mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_GET_PARTY,
-                mSessionManager.getPartyUrl(), baseRequestDTO);
+
+        if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
+            showProgress(true, mListParties, progressBar);
+            GetPartyDTO getPartyDTO = new GetPartyDTO(2, 18.520430, 73.856744);
+            Gson gson = new Gson();
+            String serializedJsonString = gson.toJson(getPartyDTO);
+            BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
+            baseRequestDTO.setData(serializedJsonString);
+            mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_GET_PARTY,
+                    mSessionManager.getPartyUrl(), baseRequestDTO);
+        } else {
+            partyDataDTOs = mDbRepository.getParties();
+            setAdapter(false);
+        }
+
+
         return rootView;
 
     }
@@ -194,22 +203,34 @@ public class FindPartyFragment extends BaseFragment implements
 
     @Override
     public void onLikeClickListener(PartyDataDTO partyDataDTO, int position, int value) {
-        if (value == AppConstants.ATTENDING_PARTY) {
-            Toast.makeText(getContext(), getContext().getResources().
-                    getString(R.string.str_already_like), Toast.LENGTH_SHORT).show();
+        if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
+            if (value == AppConstants.ATTENDING_PARTY) {
+                Toast.makeText(getContext(), getContext().getResources().
+                        getString(R.string.str_already_like), Toast.LENGTH_SHORT).show();
+            } else {
+                attendancePartyMark(partyDataDTO);
+            }
         } else {
-            attendancePartyMark(partyDataDTO);
+            Toast.makeText(getContext(), getContext().getResources().
+                    getString(R.string.str_connect_internet), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
     @Override
     public void onFavClickListener(PartyDataDTO partyDataDTO, int position, int value) {
-        if (value == AppConstants.NOT_FAV_PARTY) {
-            addToFavParty(partyDataDTO);
-        } else if (value == AppConstants.FAV_PARTY) {
-            removeFavParty(partyDataDTO);
+        if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
+            if (value == AppConstants.NOT_FAV_PARTY) {
+                addToFavParty(partyDataDTO);
+            } else if (value == AppConstants.FAV_PARTY) {
+                removeFavParty(partyDataDTO);
+            }
+        } else {
+            Toast.makeText(getContext(), getContext().getResources().
+                    getString(R.string.str_connect_internet), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -242,15 +263,16 @@ public class FindPartyFragment extends BaseFragment implements
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             showProgress(false, mListParties, progressBar);
-            setAdapter();
+            setAdapter(true);
         }
     }
 
-    private void setAdapter() {
+    private void setAdapter(boolean netFlag) {
         mPartyAdapter = new PartyAdapter(partyDataDTOs, getContext());
         mListParties.setAdapter(mPartyAdapter);
         mPartyAdapter.setLikeOrFavClick(this);
-        drawMarker(0);
+        if (netFlag)
+            drawMarker(0);
     }
 
     private void attendancePartyMark(PartyDataDTO partyDataDTO) {

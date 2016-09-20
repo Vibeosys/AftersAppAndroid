@@ -34,4 +34,5 @@
     <string name="str_already_fav">Already mark as favouirte</string>
     <string name="party_removed_fav_success">Remove from favourite</string>
     <string name="party_add_fav_success">Party added in favourite</string>
+    <string name="str_connect_internet">Please connect internet</string>
 </resources>
