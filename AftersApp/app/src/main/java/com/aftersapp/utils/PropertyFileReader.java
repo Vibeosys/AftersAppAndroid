@@ -69,5 +69,17 @@ public class PropertyFileReader {
     public String getPartyUrl() {
         return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.PARTY_URL);
     }
+
+    public String getLikePartyUrl() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.LIKE_PARTY_URL);
+    }
+
+    public String getRemoveFav() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.REMOVE_FAV_PARTY_URL);
+    }
+
+    public String getAddFav() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.ADD_FAV_PARTY_URL);
+    }
 }
 

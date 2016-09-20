@@ -5,4 +5,7 @@ package com.aftersapp.utils;
  */
 public class ServerRequestConstants {
     public static final int REQUEST_GET_PARTY = 111;
+    public static final int REQUEST_LIKE_PARTY = 112;
+    public static final int REQUEST_REMOVE_FAV_PARTY = 113;
+    public static final int REQUEST_ADD_FAV_PARTY = 114;
 }

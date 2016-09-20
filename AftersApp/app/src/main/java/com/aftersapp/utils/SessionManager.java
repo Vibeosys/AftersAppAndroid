@@ -57,6 +57,9 @@ public class SessionManager {
         SharedPreferences.Editor editor = mProjectSharedPref.edit();
         editor.putInt(PropertyTypeConstants.DATABASE_VERSION_NUMBER, mPropertyFileReader.getDbVersion());
         editor.putString(PropertyTypeConstants.PARTY_URL, mPropertyFileReader.getPartyUrl());
+        editor.putString(PropertyTypeConstants.LIKE_PARTY_URL, mPropertyFileReader.getLikePartyUrl());
+        editor.putString(PropertyTypeConstants.REMOVE_FAV_PARTY_URL, mPropertyFileReader.getRemoveFav());
+        editor.putString(PropertyTypeConstants.ADD_FAV_PARTY_URL, mPropertyFileReader.getAddFav());
         editor.apply();
         return true;
     }
@@ -83,5 +86,17 @@ public class SessionManager {
 
     public String getPartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.PARTY_URL, null);
+    }
+
+    public String getLikePartyUrl() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.LIKE_PARTY_URL, null);
+    }
+
+    public String removeFavPartyUrl() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.REMOVE_FAV_PARTY_URL, null);
+    }
+
+    public String addFavPartyUrl() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.ADD_FAV_PARTY_URL, null);
     }
 }

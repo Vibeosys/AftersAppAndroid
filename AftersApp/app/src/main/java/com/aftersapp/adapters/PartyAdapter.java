@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aftersapp.R;
@@ -23,6 +24,7 @@ public class PartyAdapter extends BaseAdapter {
     private ArrayList<PartyDataDTO> mData;
     private Context mContext;
     private ImageLoader mImageLoader;
+    private OnLikeOrFavClick likeOrFavClick;
 
     public PartyAdapter(ArrayList<PartyDataDTO> mData, Context mContext) {
         this.mData = mData;
@@ -45,7 +47,7 @@ public class PartyAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder viewHolder = null;
         if (row == null) {
@@ -59,11 +61,13 @@ public class PartyAdapter extends BaseAdapter {
             viewHolder.txtAgeLimit = (TextView) row.findViewById(R.id.txtAgeLimit);
             viewHolder.txtAttending = (TextView) row.findViewById(R.id.txtAttending);
             viewHolder.networkImageView = (NetworkImageView) row.findViewById(R.id.imgPartyImage);
+            viewHolder.imgLike = (ImageView) row.findViewById(R.id.imgLike);
+            viewHolder.imgFav = (ImageView) row.findViewById(R.id.imgFav);
             row.setTag(viewHolder);
 
         } else
             viewHolder = (ViewHolder) convertView.getTag();
-        PartyDataDTO partyData = mData.get(position);
+        final PartyDataDTO partyData = mData.get(position);
         String partyName = partyData.getTitle();
         String partyDesc = partyData.getDesc();
         String age = partyData.getAge();
@@ -87,11 +91,64 @@ public class PartyAdapter extends BaseAdapter {
         } else {
             viewHolder.networkImageView.setImageResource(R.drawable.party1);
         }
+        viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (likeOrFavClick != null) {
+                    likeOrFavClick.onLikeClickListener(partyData, position, partyData.getIsLike());
+                }
+            }
+        });
+        viewHolder.imgFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (likeOrFavClick != null) {
+                    likeOrFavClick.onFavClickListener(partyData, position, partyData.getIsFavourite());
+                }
+            }
+        });
+        viewHolder.txtPartyName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (likeOrFavClick != null) {
+                    likeOrFavClick.onItemClickListener(partyData, position);
+                }
+            }
+        });
+        viewHolder.txtPartyDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (likeOrFavClick != null) {
+                    likeOrFavClick.onItemClickListener(partyData, position);
+                }
+            }
+        });
+        viewHolder.networkImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (likeOrFavClick != null) {
+                    likeOrFavClick.onItemClickListener(partyData, position);
+                }
+            }
+        });
         return row;
     }
 
     private class ViewHolder {
         TextView txtPartyName, txtPartyDesc, txtAgeLimit, txtAttending;
         NetworkImageView networkImageView;
+        ImageView imgLike, imgFav;
+    }
+
+    public void setLikeOrFavClick(OnLikeOrFavClick listener) {
+        this.likeOrFavClick = listener;
+    }
+
+    public interface OnLikeOrFavClick {
+        public void onLikeClickListener(PartyDataDTO partyDataDTO, int position, int value);
+
+        public void onFavClickListener(PartyDataDTO partyDataDTO, int position, int value);
+
+        public void onItemClickListener(PartyDataDTO partyDataDTO, int position);
     }
 }
