@@ -80,7 +80,7 @@ public class FindPartyFragment extends BaseFragment implements
 
         if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
             showProgress(true, mListParties, progressBar);
-            GetPartyDTO getPartyDTO = new GetPartyDTO(2, 18.520430, 73.856744);
+            GetPartyDTO getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), 18.520430, 73.856744);
             Gson gson = new Gson();
             String serializedJsonString = gson.toJson(getPartyDTO);
             BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
@@ -278,7 +278,7 @@ public class FindPartyFragment extends BaseFragment implements
     private void attendancePartyMark(PartyDataDTO partyDataDTO) {
         partyDataDTO.setAttending(AppConstants.ATTENDING_PARTY);
         mPartyAdapter.notifyDataSetChanged();
-        LikePartyRequest likePartyRequest = new LikePartyRequest(2, partyDataDTO.getPartyId());
+        LikePartyRequest likePartyRequest = new LikePartyRequest(mSessionManager.getUserId(), partyDataDTO.getPartyId());
         Gson gson = new Gson();
         String serializedJsonString = gson.toJson(likePartyRequest);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
@@ -290,7 +290,7 @@ public class FindPartyFragment extends BaseFragment implements
     private void removeFavParty(PartyDataDTO partyDataDTO) {
         partyDataDTO.setIsFavourite(AppConstants.NOT_FAV_PARTY);
         mPartyAdapter.notifyDataSetChanged();
-        LikePartyRequest likePartyRequest = new LikePartyRequest(2, partyDataDTO.getPartyId());
+        LikePartyRequest likePartyRequest = new LikePartyRequest(mSessionManager.getUserId(), partyDataDTO.getPartyId());
         Gson gson = new Gson();
         String serializedJsonString = gson.toJson(likePartyRequest);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
@@ -302,7 +302,7 @@ public class FindPartyFragment extends BaseFragment implements
     private void addToFavParty(PartyDataDTO partyDataDTO) {
         partyDataDTO.setIsFavourite(AppConstants.FAV_PARTY);
         mPartyAdapter.notifyDataSetChanged();
-        LikePartyRequest likePartyRequest = new LikePartyRequest(2, partyDataDTO.getPartyId());
+        LikePartyRequest likePartyRequest = new LikePartyRequest(mSessionManager.getUserId(), partyDataDTO.getPartyId());
         Gson gson = new Gson();
         String serializedJsonString = gson.toJson(likePartyRequest);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "60438663098",
+    "project_id": "aftersapp-143612"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60438663098:android:b8883280001eadee",
+        "android_client_info": {
+          "package_name": "com.aftersapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60438663098-91000jt357r2khejftn82iphdn53kic5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aftersapp",
+            "certificate_hash": "97B3E472544EB7562FCB87A0215AD9FE018C7A5E"
+          }
+        },
+        {
+          "client_id": "60438663098-d35i7hr5ikj6kpuci671amtd7p0h3d9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmFbvAOx6xGxBJBMrqnU57rIxa2dfwNMA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -64,8 +64,8 @@ public class ServerSyncManager {
 
     private String prepareUploadJsonFromData(BaseRequestDTO params) {
 
-        UserRequestDTO userRequestDTO = new UserRequestDTO(2,
-                "test1@gmail.com");
+        UserRequestDTO userRequestDTO = new UserRequestDTO(mSessionManager.getUserId(),
+                mSessionManager.getEmail());
        /* UserRequestDTO userRequestDTO = new UserRequestDTO(mSessionManager.getUserId(),
                 mSessionManager.getEmail());*/
         //get the values from session manager

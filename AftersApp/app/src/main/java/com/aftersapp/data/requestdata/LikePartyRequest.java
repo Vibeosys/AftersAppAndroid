@@ -7,19 +7,19 @@ import com.aftersapp.data.BaseDTO;
  */
 public class LikePartyRequest extends BaseDTO {
 
-    private int userId;
+    private long userId;
     private long partyId;
 
-    public LikePartyRequest(int userId, long partyId) {
+    public LikePartyRequest(long userId, long partyId) {
         this.userId = userId;
         this.partyId = partyId;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

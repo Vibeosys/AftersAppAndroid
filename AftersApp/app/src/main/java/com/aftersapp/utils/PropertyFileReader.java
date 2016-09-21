@@ -81,10 +81,14 @@ public class PropertyFileReader {
     public String getAddFav() {
         return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.ADD_FAV_PARTY_URL);
     }
-    public String getHostPartyUrl(){
 
-        return getEndPointUri()+mProperties.getProperty(PropertyTypeConstants.POST_PART_URL);
+    public String getHostPartyUrl() {
+
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.POST_PART_URL);
     }
 
+    public String getRegisterUserUrl() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.REGISTER_USER);
+    }
 }
 

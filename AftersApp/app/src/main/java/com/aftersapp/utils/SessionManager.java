@@ -61,6 +61,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.REMOVE_FAV_PARTY_URL, mPropertyFileReader.getRemoveFav());
         editor.putString(PropertyTypeConstants.ADD_FAV_PARTY_URL, mPropertyFileReader.getAddFav());
         editor.putString(PropertyTypeConstants.POST_PART_URL, mPropertyFileReader.getHostPartyUrl());
+        editor.putString(PropertyTypeConstants.REGISTER_USER, mPropertyFileReader.getRegisterUserUrl());
         editor.apply();
         return true;
     }
@@ -187,5 +188,9 @@ public class SessionManager {
 
     public void setEmailNotify(int emailNotify) {
         setValuesInSharedPrefs(PropertyTypeConstants.USER_EMAIL_NOTIFY, emailNotify);
+    }
+
+    public String registerUser() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.REGISTER_USER, null);
     }
 }

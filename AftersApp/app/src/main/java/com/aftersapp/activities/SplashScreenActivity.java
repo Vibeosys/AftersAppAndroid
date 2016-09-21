@@ -11,14 +11,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.aftersapp.MainActivity;
 import com.aftersapp.R;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends BaseActivity {
     private static int SPLASH_TIME_OUT = 3000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -40,7 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent mainRun = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                Intent mainRun = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(mainRun);
 
                 // close this activity

@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.aftersapp.activities.BaseActivity;
+import com.aftersapp.activities.LoginActivity;
 import com.aftersapp.activities.LogoutActivity;
 import com.aftersapp.fragments.EditMyProfileFragment;
 import com.aftersapp.fragments.FilterFragment;
@@ -23,8 +25,9 @@ import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
+import com.aftersapp.utils.UserAuth;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private LinearLayout mHomeLay, mSearchLay, mHostLay, mMoreLay;
     private static final String HOME_FRAGMENT = "home";
@@ -47,7 +50,11 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });*/
-
+        if (!UserAuth.isUserLoggedIn()) {
+            // finish();
+            callLogin();
+            return;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -67,6 +74,13 @@ public class MainActivity extends AppCompatActivity
         mHostLay.setOnClickListener(this);
         mMoreLay.setOnClickListener(this);
         setUpFragment(R.id.homeLay);
+    }
+
+    public void callLogin() {
+        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
     }
 
     @Override
@@ -133,6 +147,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_logout) {
+            LoginActivity.LogoutFacebook();
+            UserAuth.CleanAuthenticationInfo();
             Intent logout = new Intent(MainActivity.this, LogoutActivity.class);
             startActivity(logout);
             finish();

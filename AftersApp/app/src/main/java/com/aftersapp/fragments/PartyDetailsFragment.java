@@ -130,7 +130,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
 
     private void addToFavParty() {
         partyData.setIsFavourite(AppConstants.FAV_PARTY);
-        LikePartyRequest likePartyRequest = new LikePartyRequest(2, partyData.getPartyId());
+        LikePartyRequest likePartyRequest = new LikePartyRequest(mSessionManager.getUserId(), partyData.getPartyId());
         Gson gson = new Gson();
         String serializedJsonString = gson.toJson(likePartyRequest);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
@@ -141,7 +141,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
 
     private void attendancePartyMark() {
         partyData.setAttending(AppConstants.ATTENDING_PARTY);
-        LikePartyRequest likePartyRequest = new LikePartyRequest(2, partyData.getPartyId());
+        LikePartyRequest likePartyRequest = new LikePartyRequest(mSessionManager.getUserId(), partyData.getPartyId());
         Gson gson = new Gson();
         String serializedJsonString = gson.toJson(likePartyRequest);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
