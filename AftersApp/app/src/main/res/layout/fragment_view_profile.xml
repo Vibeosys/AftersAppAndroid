@@ -78,7 +78,7 @@
                     android:textSize="14sp" />
 
                 <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/userFullName"
+                    android:id="@+id/userFullNameView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -112,7 +112,7 @@
                     android:textSize="14sp" />
 
                 <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/userEmailId"
+                    android:id="@+id/userEmailIdView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -145,7 +145,7 @@
                     android:text="Gender"
                     android:textSize="14sp" />
                 <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/userGendar"
+                    android:id="@+id/userGendarView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -183,7 +183,7 @@
                     android:textSize="14sp" />
 
                 <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/userDOB"
+                    android:id="@+id/userDOBView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -217,13 +217,15 @@
                     android:textColor="@color/secondaryText"
                     android:textSize="14sp" />
                 <com.aftersapp.views.RobotoBoldTextView
-                    android:id="@+id/notificationStatus"
+                    android:id="@+id/notificationStatusView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:padding="4dp"
                     android:text="Enabled"
                     android:textColor="@color/secondaryText"
-                    androidtextSize="14sp" />
+                    android:textSize="18sp" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

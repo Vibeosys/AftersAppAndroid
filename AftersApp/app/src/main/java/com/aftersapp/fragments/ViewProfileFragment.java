@@ -1,24 +1,30 @@
 package com.aftersapp.fragments;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.aftersapp.MainActivity;
 import com.aftersapp.R;
 
-public class ViewProfileFragment extends Fragment {
+
+public class ViewProfileFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private TextView mUserName,mUserEmailId,mUserDateOfBirth,mUserGender,mUserNotificationStatus;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Context mContext;
 
 
 
@@ -58,15 +64,13 @@ public class ViewProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
+        mUserName = (TextView) view.findViewById(R.id.userFullNameView);
+        mUserEmailId = (TextView) view.findViewById(R.id.userEmailIdView);
+        mUserDateOfBirth = (TextView) view.findViewById(R.id.userGendarView);
+        mUserGender =(TextView) view.findViewById(R.id.userDOBView);
+        mUserNotificationStatus = (TextView) view.findViewById(R.id.notificationStatusView);
+
         return view;
     }
-
-
-
-
-
-
-
-
 
 }
