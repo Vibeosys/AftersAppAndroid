@@ -2,6 +2,7 @@ package com.aftersapp.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,12 +29,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aftersapp.MainActivity;
 import com.aftersapp.R;
+import com.aftersapp.data.UserDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.UpdateProfileDTO;
+import com.aftersapp.data.responsedata.RegisterResponseData;
 import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
+import com.aftersapp.utils.UserAuth;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 
@@ -68,7 +73,8 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     private TextView mUserNameFirst;
     private CircleImageView mEditUserImage;
     private static final String HOME_FRAGMENT_EDIT_PROFILE="home";
-
+    String userEmail,userFullName,userDate;
+    int NotifyVal;
 
 
     @Override
@@ -226,10 +232,10 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
 
     private void CallToWebServices() {
 
-        String userEmail = mUserEmailId.getText().toString();
-        String userFullName = mUserName.getText().toString();
-        String userDate = mDateOfBirth.getText().toString();
-        int NotifyVal =(int) mSwitchValNotification;
+         userEmail = mUserEmailId.getText().toString();
+         userFullName = mUserName.getText().toString();
+         userDate = mDateOfBirth.getText().toString();
+         NotifyVal =(int) mSwitchValNotification;
         UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO(mSessionManager.getUserId(),userFullName,mSessionManager.getEmail(),
                 userEmail,"123456789",mSpinnerSelectionVal,mSessionManager.getProfImg(),userDate,mSessionManager.getToken(),NotifyVal);
 
@@ -286,6 +292,22 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 Toast toast = Toast.makeText(getContext(),"Profile Updated Successfully",Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();
+                RegisterResponseData registerResponseData = RegisterResponseData.deserializeJson(data);
+                UserDTO userDTO = new UserDTO();
+                userDTO.setUserId(registerResponseData.getUserId());
+                userDTO.setName(userFullName);
+                userDTO.setEmail(mSessionManager.getEmail());
+                userDTO.setEmail2(userEmail);
+                userDTO.setPhone("1234567890");
+                userDTO.setGender(mSpinnerSelectionVal);
+                userDTO.setProfImage(mSessionManager.getProfImg());
+                userDTO.setDob(userDate);
+                userDTO.setToken(mSessionManager.getToken());
+                userDTO.setEmailNotify(NotifyVal);
+
+                UserAuth userAuth = new UserAuth();
+                userAuth.saveAuthenticationInfo(userDTO, getActivity());
+
                 HomeFragment homeFragment = new HomeFragment();
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_EDIT_PROFILE).commit();
