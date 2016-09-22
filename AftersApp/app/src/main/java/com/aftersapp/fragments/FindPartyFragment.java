@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aftersapp.R;
@@ -19,6 +20,7 @@ import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.GetPartyDTO;
 import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.LikePartyRequest;
+import com.aftersapp.services.GPSTracker;
 import com.aftersapp.utils.AppConstants;
 import com.aftersapp.utils.NetworkUtils;
 import com.aftersapp.utils.ServerRequestConstants;
@@ -53,10 +55,31 @@ public class FindPartyFragment extends BaseFragment implements
     private ListView mListParties;
     private ArrayList<PartyDataDTO> partyDataDTOs = new ArrayList<>();
     private ProgressBar progressBar;
+    private GPSTracker gps;
+    private double latitude;
+    double longitude;
+    private TextView txtErrorMsg;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //GPS Code
+        gps = new GPSTracker(getContext());
+
+        // check if GPS enabled
+        if (gps.canGetLocation()) {
+
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+
+            // \n is for new line
+            //Toast.makeText(getContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
     }
 
     @Nullable
@@ -66,6 +89,7 @@ public class FindPartyFragment extends BaseFragment implements
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mListParties = (ListView) rootView.findViewById(R.id.listParties);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        txtErrorMsg = (TextView) rootView.findViewById(R.id.txtErrorMsg);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         try {
@@ -125,7 +149,7 @@ public class FindPartyFragment extends BaseFragment implements
             }
 
         }
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(18.520430, 73.856744)).zoom(13).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(latitude, longitude)).zoom(13).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
@@ -133,37 +157,50 @@ public class FindPartyFragment extends BaseFragment implements
     public void onVolleyErrorReceived(@NonNull VolleyError error, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_GET_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.e(TAG, "##Volley Server error " + error.toString());
                 break;
             case ServerRequestConstants.REQUEST_LIKE_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.e(TAG, "##Volley Server error " + error.toString());
                 break;
             case ServerRequestConstants.REQUEST_REMOVE_FAV_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.e(TAG, "##Volley Server error " + error.toString());
                 break;
             case ServerRequestConstants.REQUEST_ADD_FAV_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.e(TAG, "##Volley Server error " + error.toString());
                 break;
         }
+        txtErrorMsg.setVisibility(View.VISIBLE);
+        mListParties.setVisibility(View.GONE);
+        txtErrorMsg.setText(getString(R.string.str_err_msg));
     }
 
     @Override
     public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_GET_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.d(TAG, "##Volley Data error " + errorMessage);
+                txtErrorMsg.setVisibility(View.VISIBLE);
+                mListParties.setVisibility(View.GONE);
                 break;
             case ServerRequestConstants.REQUEST_LIKE_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.d(TAG, "##Volley Data error " + errorMessage);
                 Toast.makeText(getContext(), getContext().getResources().
                         getString(R.string.str_already_like), Toast.LENGTH_SHORT).show();
                 break;
             case ServerRequestConstants.REQUEST_REMOVE_FAV_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.d(TAG, "##Volley Data error " + errorMessage);
                 Toast.makeText(getContext(), getContext().getResources().
                         getString(R.string.str_already_removed_fav), Toast.LENGTH_SHORT).show();
                 break;
             case ServerRequestConstants.REQUEST_ADD_FAV_PARTY:
+                showProgress(false, mListParties, progressBar);
                 Log.d(TAG, "##Volley Data error " + errorMessage);
                 Toast.makeText(getContext(), getContext().getResources().
                         getString(R.string.str_already_fav), Toast.LENGTH_SHORT).show();

@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.aftersapp.database.DbRepository;
+import com.aftersapp.services.GPSTracker;
 import com.aftersapp.utils.ServerSyncManager;
 import com.aftersapp.utils.SessionManager;
 
@@ -26,6 +28,7 @@ public class BaseFragment extends Fragment {
     protected ServerSyncManager mServerSyncManager = null;
     protected DbRepository mDbRepository = null;
     protected static SessionManager mSessionManager = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class BaseFragment extends Fragment {
         }
 
     }
+
     protected void createAlertDialog(String title, String message) {
         new AlertDialog.Builder(getContext())
                 .setTitle(title)

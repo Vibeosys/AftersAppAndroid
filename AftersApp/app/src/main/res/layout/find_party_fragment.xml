@@ -26,11 +26,24 @@
         android:layout_weight="1"
         android:visibility="gone" />
 
+    <com.aftersapp.views.RobotoTextView
+        android:id="@+id/txtErrorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/str_err_no_party_in_location"
+        android:textColor="@color/secondaryText"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/listParties"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:divider="@null"
-        android:dividerHeight="0dp"></ListView>
+        android:dividerHeight="0dp"
+        android:visibility="visible"></ListView>
 </LinearLayout>
