@@ -66,7 +66,7 @@ import java.util.Locale;
 
 
 public class HostPartyFragment extends BaseFragment implements
-        OnMapReadyCallback,ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived  {
+        ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -91,7 +91,6 @@ public class HostPartyFragment extends BaseFragment implements
     private String mImageUri,imgDecodableString;
     double mFinalLatititude,mFinalLongitude;
     private String mFinalAddress,mSpinnerAge;
-    private String mFinalGoogleMapAddress,mGoogleLatitude,mGoogleLongitude;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     Bitmap convertedImg = null;
 
@@ -173,7 +172,6 @@ public class HostPartyFragment extends BaseFragment implements
                 {
                     callTToWebService();
                 }
-
             }
         });
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,21 +179,12 @@ public class HostPartyFragment extends BaseFragment implements
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mSpinnerAge=parent.getItemAtPosition(position).toString();
                 String item = parent.getItemAtPosition(position).toString();
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-        /*mSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSpinnerAge=parent.getItemAtPosition(position).toString();
-                String item = parent.getItemAtPosition(position).toString();
-            }
-        });*/
+
         return rootView;
     }
 
@@ -266,9 +255,6 @@ public class HostPartyFragment extends BaseFragment implements
         }
 
         Gson gson = new Gson();
-        /*HostPartyDTO hostPartyDTO = new HostPartyDTO("New Test ThinkPad",
-                "This is Testing Part",Double.parseDouble("18.5081477"),Double.parseDouble("73.8361482"),
-                "This is testing Address","Music Generation","10+","0","0","0","2","1474354108");*/
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
                 PartyDescription,sendLat,sendLong,
                 PartyAddress,MusciGeneration,PartyAge,"0","0",imageInBase64Format,"2","1474354108");
@@ -436,7 +422,6 @@ public class HostPartyFragment extends BaseFragment implements
                                 double sendLatitude =0.0;
                                 double sendLongitude=0.0;
                                 for(Address add : adresses){
-
                                    // if (statement) {//Controls to ensure it is right address such as country etc.
                                         double longitude = add.getLongitude();
                                         double latitude = add.getLatitude();
@@ -446,8 +431,6 @@ public class HostPartyFragment extends BaseFragment implements
                                     CameraPosition cameraPosition = new CameraPosition.Builder().target(DemoLatLong).zoom(12).build();
                                     mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                                     mGoogleMap.clear();
-
-
                                     Geocoder geocoder;
                                     List<Address> addresses;
                                     geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -470,7 +453,6 @@ public class HostPartyFragment extends BaseFragment implements
                                     {
                                         mSendAddress = mSendAddress+state;
                                     }
-
                                    // }
                                 }
                                 if(sendLongitude!=0.0 ||sendLongitude!=0.0)
@@ -480,54 +462,44 @@ public class HostPartyFragment extends BaseFragment implements
                                         setResult(mSendAddress,sendLatitude,sendLongitude);
                                     }
                                 }
-
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                 });
-                mapCancelBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        addressFlag=false;
-                        dlg.dismiss();
-                    }
-                });
-                mapOkBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if(!TextUtils.isEmpty(mFinalAddress))
-                        {
-                            if(mFinalLatititude!=0.0||mFinalLongitude!=0.0)
-                            {
-                                addressFlag=true;
-                            }
-                        }
-                        dlg.dismiss();
-                    }
-                });
             }
 
         });
+        mapCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                addressFlag=false;
+                dlg.dismiss();
+            }
+        });
+        mapOkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!TextUtils.isEmpty(mFinalAddress))
+                {
+                    if(mFinalLatititude!=0.0||mFinalLongitude!=0.0)
+                    {
+                        addressFlag=true;
+                    }
+                }
+                dlg.dismiss();
+            }
+        });
 
         dlg.show();
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        LatLng DemoLatLong =  new LatLng(35.1264, 33.4299);
-        mGoogleMap.setMyLocationEnabled(true);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(35.1264, 33.4299)).zoom(13).build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-       // Marker marker =mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("cyprus"));
-        //mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
     public  void setResult(String address,double latitude,double longitude)
     {
 
@@ -627,10 +599,6 @@ public class HostPartyFragment extends BaseFragment implements
 
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
-        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;*/
+
     }
 }

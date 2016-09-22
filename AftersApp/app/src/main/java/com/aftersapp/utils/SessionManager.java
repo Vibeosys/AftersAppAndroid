@@ -114,8 +114,8 @@ public class SessionManager {
         return mProjectSharedPref.getString(PropertyTypeConstants.USER_TOKEN, null);
     }
 
-    public int getEmailNotify() {
-        return mProjectSharedPref.getInt(PropertyTypeConstants.USER_EMAIL_NOTIFY, 0);
+    public long getEmailNotify() {
+        return mProjectSharedPref.getLong(PropertyTypeConstants.USER_EMAIL_NOTIFY, 0);
     }
 
     public String getPartyUrl() {

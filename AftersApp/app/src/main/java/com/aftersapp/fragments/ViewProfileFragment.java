@@ -27,7 +27,8 @@ public class ViewProfileFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private TextView mUserName, mUserEmailId, mUserDateOfBirth, mUserGender, mUserNotificationStatus;
+    private TextView mUserName, mUserEmailId, mUserDateOfBirth, mUserGender,mUserNotificationStatus
+            ,mUserNameFirst;
     private CircleImageView circleView;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,9 +78,27 @@ public class ViewProfileFragment extends BaseFragment {
         mUserGender = (TextView) view.findViewById(R.id.userDOBView);
         circleView = (CircleImageView) view.findViewById(R.id.circleView);
         mUserNotificationStatus = (TextView) view.findViewById(R.id.notificationStatusView);
+        mUserNameFirst =(TextView) view.findViewById(R.id.userName);
         DownloadImage downloadImage = new DownloadImage();
         downloadImage.execute(mSessionManager.getProfImg());
+        CallToViewProfile();
         return view;
+    }
+
+    private void CallToViewProfile() {
+        mUserName.setText(""+mSessionManager.getName());
+        mUserEmailId.setText(""+mSessionManager.getEmail2());
+        mUserDateOfBirth.setText(""+mSessionManager.getDob());
+        mUserGender.setText(""+mSessionManager.getGender());
+        long NotificationFlg = mSessionManager.getEmailNotify();
+        mUserNameFirst.setText(""+mSessionManager.getName());
+        if(NotificationFlg==1)
+        {
+            mUserNotificationStatus.setText("Enable");
+        }
+        else {
+            mUserNotificationStatus.setText("Disable");
+        }
     }
 
 

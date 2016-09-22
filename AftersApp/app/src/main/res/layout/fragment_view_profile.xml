@@ -48,7 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text=" y.a.24,Hollywood"
+                        android:text=""
                         android:textColor="@color/secondaryText"
                         android:textSize="18sp" />
                 </LinearLayout>
