@@ -131,6 +131,7 @@ public class FindPartyFragment extends BaseFragment implements
     private void drawMarker(long selectedId) {
         // Creating an instance of MarkerOptions
         mGoogleMap.clear();
+        LatLng selectedLocation = new LatLng(latitude, longitude);
         for (int i = 0; i < partyDataDTOs.size(); i++) {
             PartyDataDTO partyData = partyDataDTOs.get(i);
             LatLng location = new LatLng(partyData.getLatitude(), partyData.getLongitude());
@@ -139,7 +140,7 @@ public class FindPartyFragment extends BaseFragment implements
                 MarkerOptions markerOptions = new MarkerOptions().
                         position(location).title(partyName)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker));
-
+                selectedLocation = new LatLng(partyData.getLatitude(), partyData.getLongitude());
 
                 mGoogleMap.addMarker(markerOptions);
             } else {
@@ -149,7 +150,7 @@ public class FindPartyFragment extends BaseFragment implements
             }
 
         }
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(latitude, longitude)).zoom(13).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
@@ -280,6 +281,11 @@ public class FindPartyFragment extends BaseFragment implements
         partyDetailsFragment.setArguments(bundle);
         getFragmentManager().beginTransaction().
                 replace(R.id.fragment_frame_lay, partyDetailsFragment, "PartDetails").commit();
+    }
+
+    @Override
+    public void onImageClickListener(PartyDataDTO partyDataDTO, int position) {
+        drawMarker(partyDataDTO.getPartyId());
     }
 
     private class AsyncInsertDB extends AsyncTask<Void, Void, Boolean> {

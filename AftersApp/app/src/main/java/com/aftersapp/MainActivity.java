@@ -1,9 +1,13 @@
 package com.aftersapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,7 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.aftersapp.activities.BaseActivity;
 import com.aftersapp.activities.LoginActivity;
@@ -27,6 +33,10 @@ import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.utils.UserAuth;
 
+import java.io.InputStream;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private LinearLayout mHomeLay, mSearchLay, mHostLay, mMoreLay;
@@ -35,6 +45,8 @@ public class MainActivity extends BaseActivity
     private static final String HOST_FRAGMENT = "host";
     private static final String MORE_FRAGMENT = "more";
     private static final String USER_FRAGMENT = "user";
+    private CircleImageView profileImg;
+    private TextView mNavigationUserEmailId, mNavigationUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,18 @@ public class MainActivity extends BaseActivity
         mHostLay = (LinearLayout) findViewById(R.id.hostLay);
         mMoreLay = (LinearLayout) findViewById(R.id.moreLay);
 
+        View headerView = navigationView.getHeaderView(0);
+        mNavigationUserEmailId = (TextView) headerView.findViewById(R.id.userEmailId);
+        mNavigationUserName = (TextView) headerView.findViewById(R.id.userName);
+        String mImageUri = mSessionManager.getProfImg();
+        profileImg = (CircleImageView) headerView.findViewById(R.id.imageView);
+        mNavigationUserEmailId.setText("" + mSessionManager.getEmail());
+        mNavigationUserName.setText("" + mSessionManager.getName());
+
+        if (!TextUtils.isEmpty(mImageUri)) {
+            DownloadImage downloadImage = new DownloadImage();
+            downloadImage.execute(mImageUri);
+        }
         mHomeLay.setOnClickListener(this);
         mSearchLay.setOnClickListener(this);
         mHostLay.setOnClickListener(this);
@@ -190,5 +214,34 @@ public class MainActivity extends BaseActivity
     public void onClick(View v) {
         int id = v.getId();
         setUpFragment(id);
+    }
+
+    // DownloadImage AsyncTask
+    private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... URL) {
+
+            String imageURL = URL[0];
+
+            Bitmap bitmap = null;
+            try {
+                InputStream input = new java.net.URL(imageURL).openStream();
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            profileImg.setImageBitmap(result);
+        }
     }
 }

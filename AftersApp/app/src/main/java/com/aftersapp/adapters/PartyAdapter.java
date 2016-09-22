@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aftersapp.R;
@@ -63,6 +64,7 @@ public class PartyAdapter extends BaseAdapter {
             viewHolder.networkImageView = (NetworkImageView) row.findViewById(R.id.imgPartyImage);
             viewHolder.imgLike = (ImageView) row.findViewById(R.id.imgLike);
             viewHolder.imgFav = (ImageView) row.findViewById(R.id.imgFav);
+            viewHolder.layoutDetails = (LinearLayout) row.findViewById(R.id.linearDetails);
             row.setTag(viewHolder);
 
         } else
@@ -107,7 +109,7 @@ public class PartyAdapter extends BaseAdapter {
                 }
             }
         });
-        viewHolder.txtPartyName.setOnClickListener(new View.OnClickListener() {
+        viewHolder.layoutDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (likeOrFavClick != null) {
@@ -115,19 +117,12 @@ public class PartyAdapter extends BaseAdapter {
                 }
             }
         });
-        viewHolder.txtPartyDesc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (likeOrFavClick != null) {
-                    likeOrFavClick.onItemClickListener(partyData, position);
-                }
-            }
-        });
+
         viewHolder.networkImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (likeOrFavClick != null) {
-                    likeOrFavClick.onItemClickListener(partyData, position);
+                    likeOrFavClick.onImageClickListener(partyData, position);
                 }
             }
         });
@@ -138,6 +133,7 @@ public class PartyAdapter extends BaseAdapter {
         TextView txtPartyName, txtPartyDesc, txtAgeLimit, txtAttending;
         NetworkImageView networkImageView;
         ImageView imgLike, imgFav;
+        LinearLayout layoutDetails;
     }
 
     public void setLikeOrFavClick(OnLikeOrFavClick listener) {
@@ -150,5 +146,7 @@ public class PartyAdapter extends BaseAdapter {
         public void onFavClickListener(PartyDataDTO partyDataDTO, int position, int value);
 
         public void onItemClickListener(PartyDataDTO partyDataDTO, int position);
+
+        public void onImageClickListener(PartyDataDTO partyDataDTO, int position);
     }
 }

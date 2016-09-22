@@ -185,7 +185,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,birthday,picture{url,height,width,is_silhouette},gender,email");
+        parameters.putString("fields", "id,name,birthday,picture.type(large){url,height,width,is_silhouette},gender,email");
         request.setParameters(parameters);
         request.executeAsync();
     }
