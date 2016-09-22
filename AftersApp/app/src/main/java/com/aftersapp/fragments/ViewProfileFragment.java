@@ -74,8 +74,8 @@ public class ViewProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
         mUserName = (TextView) view.findViewById(R.id.userFullNameView);
         mUserEmailId = (TextView) view.findViewById(R.id.userEmailIdView);
-        mUserDateOfBirth = (TextView) view.findViewById(R.id.userGendarView);
-        mUserGender = (TextView) view.findViewById(R.id.userDOBView);
+        mUserDateOfBirth = (TextView) view.findViewById(R.id.userDOBView);
+        mUserGender = (TextView) view.findViewById(R.id.userGendarView);
         circleView = (CircleImageView) view.findViewById(R.id.circleView);
         mUserNotificationStatus = (TextView) view.findViewById(R.id.notificationStatusView);
         mUserNameFirst =(TextView) view.findViewById(R.id.userName);

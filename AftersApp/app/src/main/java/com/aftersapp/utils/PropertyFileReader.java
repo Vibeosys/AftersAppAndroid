@@ -90,5 +90,9 @@ public class PropertyFileReader {
     public String getRegisterUserUrl() {
         return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.REGISTER_USER);
     }
+
+    public String getEditProfileUrl() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.EDIT_PROFILE_URL);
+    }
 }
 

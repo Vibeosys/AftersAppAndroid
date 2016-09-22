@@ -11,7 +11,7 @@ import java.util.TimeZone;
  * Created by akshay on 19-09-2016.
  */
 public class DateUtils {
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     final SimpleDateFormat dateReadFormat = new SimpleDateFormat("dd MMM yyyy");
     final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
     final SimpleDateFormat timeReadFormat = new SimpleDateFormat("hh:mm aa");
