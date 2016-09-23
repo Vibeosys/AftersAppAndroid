@@ -417,6 +417,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onError(QBResponseException e) {
-        registerDataOnQb();
+        progressDialog.dismiss();
+        signIn();
+    }
+
+    public void signIn() {
+
+        progressDialog.show();
+
+        QBUser qbUser = new QBUser(email, email + mSessionManager.getUserId());
+        QBUsers.signIn(qbUser, new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                progressDialog.dismiss();
+                DataHolder.getInstance().setSignInQbUser(qbUser);
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+                progressDialog.dismiss();
+                signIn();
+            }
+        });
     }
 }
