@@ -38,4 +38,7 @@
     <string name="str_connect_internet">Please connect internet</string>
     <string name="str_err_no_party_in_location">There is no any event or party in your location</string>
     <string name="str_err_msg">Somthing went wrong on server</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="dlg_ok">Ok</string>
+    <string name="dlg_cancel">Cancel</string>
 </resources>

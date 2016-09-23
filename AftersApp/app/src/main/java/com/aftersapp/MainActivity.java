@@ -32,6 +32,7 @@ import com.aftersapp.fragments.HostPartyFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.utils.UserAuth;
+import com.quickblox.users.model.QBUser;
 
 import java.io.InputStream;
 

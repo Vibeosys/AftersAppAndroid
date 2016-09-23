@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -32,4 +33,9 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     compile 'com.google.android.gms:play-services-plus:8.1.0'
+    compile 'com.android.support:multidex:1.0.0'
+    compile "com.quickblox:quickblox-android-sdk-core:2.5.1@aar"
+    compile("com.quickblox:quickblox-android-sdk-chat:2.5.1@aar") {
+        transitive = true
+    }
 }

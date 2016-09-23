@@ -2,6 +2,7 @@ package com.aftersapp.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.aftersapp.data.UserDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.RegisterUserDataDTO;
 import com.aftersapp.data.responsedata.RegisterResponseData;
+import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.aftersapp.utils.UserAuth;
@@ -45,6 +47,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.gson.Gson;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +65,7 @@ import java.util.Arrays;
 public class LoginActivity extends BaseActivity implements View.OnClickListener,
         ServerSyncManager.OnSuccessResultReceived,
         ServerSyncManager.OnErrorResultReceived, GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks {
+        GoogleApiClient.ConnectionCallbacks, QBEntityCallback<QBUser> {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ImageView imgFb, imgGPlus;
@@ -194,6 +200,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                 String profileImg, String dob, String token) {
         Log.d(TAG, "## email" + email + " first Name" + name +
                 " Gender " + gender + " picture url" + profileImg);
+        progressDialog.show();
         RegisterUserDataDTO registerUserDataDTO = new RegisterUserDataDTO(name, email,
                 "1234567890", gender, profileImg, dob, token, 1);
         Gson gson = new Gson();
@@ -209,6 +216,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_REGISTER:
                 Log.e(TAG, "##Volley Server error " + error.toString());
+                progressDialog.dismiss();
                 break;
 
         }
@@ -219,6 +227,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_REGISTER:
                 Log.d(TAG, "##Volley Data error " + errorMessage);
+                progressDialog.dismiss();
                 break;
         }
     }
@@ -227,6 +236,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_REGISTER:
+                progressDialog.dismiss();
                 RegisterResponseData registerResponseData = RegisterResponseData.deserializeJson(data);
                 UserDTO userDTO = new UserDTO();
                 userDTO.setUserId(registerResponseData.getUserId());
@@ -242,10 +252,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
                 UserAuth userAuth = new UserAuth();
                 userAuth.saveAuthenticationInfo(userDTO, getApplicationContext());
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
+                registerDataOnQb();
+
                 break;
         }
+    }
+
+    private void registerDataOnQb() {
+        progressDialog.show();
+        QBUser qbUser = new QBUser();
+        qbUser.setFullName(name);
+        qbUser.setEmail(email);
+        qbUser.setLogin(email);
+        qbUser.setPassword(name + mSessionManager.getUserId());
+        qbUser.setId(Integer.parseInt(String.valueOf(mSessionManager.getUserId())));
+        qbUser.setExternalId(String.valueOf(mSessionManager.getUserId()));
+        QBUsers.signUpSignInTask(qbUser, this);
     }
 
     public void getAccountPermission() {
@@ -382,5 +404,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onStart();
         if (mGoogleApiClient != null)
             mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onSuccess(QBUser qbUser, Bundle bundle) {
+        progressDialog.dismiss();
+        DataHolder.getInstance().addQbUser(qbUser);
+        DataHolder.getInstance().setSignInQbUser(qbUser);
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onError(QBResponseException e) {
+        registerDataOnQb();
     }
 }
