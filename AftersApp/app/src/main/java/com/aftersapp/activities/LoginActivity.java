@@ -264,7 +264,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         qbUser.setFullName(name);
         qbUser.setEmail(email);
         qbUser.setLogin(email);
-        qbUser.setPassword(name + mSessionManager.getUserId());
+        qbUser.setPassword(email + mSessionManager.getUserId());
         qbUser.setId(Integer.parseInt(String.valueOf(mSessionManager.getUserId())));
         qbUser.setExternalId(String.valueOf(mSessionManager.getUserId()));
         QBUsers.signUpSignInTask(qbUser, this);

@@ -44,9 +44,16 @@ import com.aftersapp.adapters.PartyAdapter;
 import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.responsedata.HostPartyDTO;
+import com.aftersapp.services.GPSTracker;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -66,7 +73,9 @@ import java.util.Locale;
 
 
 public class HostPartyFragment extends BaseFragment implements
-        ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived  {
+        ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived,
+        LocationListener,GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,13 +96,18 @@ public class HostPartyFragment extends BaseFragment implements
     MapView mMapView;
     GoogleMap mGoogleMap;
     private int EDIT_PROFILE_MEDIA_PERMISSION_CODE = 19;
+    private int EDIT_LOCATION_PERMISSION_CODE = 20;
     private int EDIT_SELECT_IMAGE=20;
     private String mImageUri,imgDecodableString;
     double mFinalLatititude,mFinalLongitude;
     private String mFinalAddress,mSpinnerAge;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     Bitmap convertedImg = null;
-
+    private GPSTracker gps;
+    private double GpsLatitude,GpsLongitude;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    Location mLastLocation;
 
 
 
@@ -115,6 +129,14 @@ public class HostPartyFragment extends BaseFragment implements
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        onRequestGpsPermission();
+        //mGoogleApiClient.connect();
+    }
+
+    private void onRequestGpsPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                EDIT_LOCATION_PERMISSION_CODE);
     }
 
     @Override
@@ -324,6 +346,8 @@ public class HostPartyFragment extends BaseFragment implements
     }
 
     private void showTakeawayDialog(Bundle savedInstanceState) {
+        double temp1 = GpsLatitude;
+        double temp2 = GpsLongitude;
         final Dialog dlg = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
         View view = getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_google_map, null);
@@ -351,6 +375,11 @@ public class HostPartyFragment extends BaseFragment implements
                 mGoogleMap = googleMap;
                 // For showing a move to my location button
                 mGoogleMap.setMyLocationEnabled(true);
+                LatLng selectedLocation = new LatLng(GpsLatitude, GpsLongitude);
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
+                mGoogleMap.clear();
+                Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(selectedLocation).draggable(false));
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
@@ -527,6 +556,35 @@ public class HostPartyFragment extends BaseFragment implements
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
+        if(requestCode==EDIT_LOCATION_PERMISSION_CODE&& grantResults[0]==0)
+        {
+            Toast toast = Toast.makeText(getActivity(),
+                    "User Permisssion granted", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            buildGoogleApiClient();
+        }else {
+            Toast toast = Toast.makeText(getActivity(),
+                    "User denied permission", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+    }
+
+    synchronized private void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        callToConnect();
+    }
+
+    private void callToConnect() {
+        if(mGoogleApiClient!=null) {
+            mGoogleApiClient.connect();
+        }else
+            Log.d("TAG","TAG");
     }
 
     private void openGallery() {
@@ -600,5 +658,57 @@ public class HostPartyFragment extends BaseFragment implements
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
 
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Log.d("TAG", "## ");
+        Log.d("TAG", "## ");
+
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(100); // Update location every second
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+          String   lat = String.valueOf(mLastLocation.getLatitude());
+          String lon = String.valueOf(mLastLocation.getLongitude());
+            GpsLatitude= Double.parseDouble(lat );
+            GpsLongitude=Double.parseDouble(lon);
+
+        }
+        //updateUI();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
     }
 }

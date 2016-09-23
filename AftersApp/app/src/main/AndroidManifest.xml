@@ -15,7 +15,7 @@
     <!-- To use account credentials -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-feature android:name="android.hardware.location.gps" />
-
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
     <application
         android:name="com.aftersapp.AftersAppApplication"
 
