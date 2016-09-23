@@ -54,7 +54,10 @@ public class UserListFragment extends BaseFragment implements AdapterView.OnItem
         ListView usersListView = (ListView) rootView.findViewById(R.id.users_listview);
         setOnRefreshListener = (SwipyRefreshLayout) rootView.findViewById(R.id.swipy_refresh_layout);
 
+      /*  TextView listHeader = (TextView) LayoutInflater.from(getContext())
                 .inflate(R.layout.include_list_header, usersListView, false);
+*/
+        //usersListView.addHeaderView(listHeader, null, false);
         qbUsersList = DataHolder.getInstance().getQBUsers();
         usersListAdapter = new UserListAdapter(getContext(), qbUsersList);
         usersListView.setAdapter(usersListAdapter);
