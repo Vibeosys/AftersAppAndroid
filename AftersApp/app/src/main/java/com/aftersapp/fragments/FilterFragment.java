@@ -19,11 +19,11 @@ import org.w3c.dom.Text;
  */
 public class FilterFragment extends BaseFragment implements View.OnClickListener {
 
-    private LinearLayout layRadius, seekBarLay, layAge, seekBarAgeLay;
-    private ImageView imgArrow, imgAgeArrow;
-    private SeekBar mSeekBar;
-    private int mSeekBarStep,mSeekBarMax,mSeekBarMin;
-    private TextView mFilterVal;
+    private LinearLayout layRadius, seekBarLay, layAge, seekBarAgeLay,musicGeneration,musicLayout;
+    private ImageView imgArrow, imgAgeArrow,imgMusciGener;
+    private SeekBar mSeekBar,mSeekBarAge;
+    private int mSeekBarStep,mSeekBarMax,mSeekBarMin,mSeekBarAgeStep,mSeekBarAgeMax,mSeekBarAgeMin;
+    private TextView mFilterVal,mFilterAge;
     private  int mSeekBarFlag;
 
     //private
@@ -40,6 +40,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mSeekBarStep =1;
         mSeekBarMax=20;
         mSeekBarMin=1;
+        mSeekBarAgeStep =1;
+        mSeekBarAgeMax = 60;
+        mSeekBarAgeMin =10;
         layRadius = (LinearLayout) rootView.findViewById(R.id.layRadius);
         seekBarLay = (LinearLayout) rootView.findViewById(R.id.seekBarLay);
         imgArrow = (ImageView) rootView.findViewById(R.id.imgArrow);
@@ -49,15 +52,39 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         seekBarAgeLay = (LinearLayout) rootView.findViewById(R.id.seekBarAgeLay);
         imgAgeArrow = (ImageView) rootView.findViewById(R.id.imgAgeArrow);
         mSeekBar = (SeekBar) rootView.findViewById(R.id.seekBar) ;
+        musicGeneration = (LinearLayout) rootView.findViewById(R.id.musciGenerAge);
+        musicLayout = (LinearLayout)rootView.findViewById(R.id.seekBarAgeLayMusic);
+        imgMusciGener = (ImageView) rootView.findViewById(R.id.musciAgeArrow);
+        mSeekBarAge =(SeekBar) rootView.findViewById(R.id.seekBarAge);
+        mFilterAge =(TextView) rootView.findViewById(R.id.defaultAge);
 
         layRadius.setOnClickListener(this);
         layAge.setOnClickListener(this);
+        musicGeneration.setOnClickListener(this);
         mSeekBar.setMax((mSeekBarMax - mSeekBarMin) / mSeekBarStep );
+        mSeekBarAge.setMax((mSeekBarAgeMax - mSeekBarAgeMin) / mSeekBarAgeStep );
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int value = mSeekBarMin + (progress * mSeekBarStep);
                 mFilterVal.setText("Default radius selected "+value);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        mSeekBarAge.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int value = mSeekBarAgeMin + (progress * mSeekBarAgeStep);
+                mFilterAge.setText("Default age selected "+value);
             }
 
             @Override
@@ -97,6 +124,17 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                     seekBarAgeLay.setVisibility(View.GONE);
                     imgAgeArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                     mSeekBarFlag=0;
+                }
+                break;
+                case R.id.musciGenerAge:
+                if(musicLayout.getVisibility() == View.GONE)
+                {
+                    musicLayout.setVisibility(View.VISIBLE);
+                    imgMusciGener.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                }else if(musicLayout.getVisibility() == View.VISIBLE)
+                {
+                    musicLayout.setVisibility(View.GONE);
+                    imgMusciGener.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                 }
                 break;
         }
