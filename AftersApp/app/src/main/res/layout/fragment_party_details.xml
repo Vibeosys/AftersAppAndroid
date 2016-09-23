@@ -189,9 +189,9 @@
                     android:layout_marginEnd="60dp"
                     android:layout_marginStart="60dp"
                     android:layout_weight="1"
-                    android:background="#FF78BC"
+                    android:background="#9E6BD4"
                     android:padding="4dp"
-                    android:text="Chat with host"
+                    android:text="Chat With Host"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
@@ -213,7 +213,7 @@
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
                     android:padding="4dp"
-                    android:text="I am Attending"
+                    android:text="Attend Party "
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
@@ -226,7 +226,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/cancel_btn_border"
                     android:padding="4dp"
-                    android:text="Add to favourite"
+                    android:text="Add To Favourites"
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />

@@ -31,6 +31,7 @@ import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
+import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.UserAuth;
 import com.quickblox.users.model.QBUser;
 
@@ -162,16 +163,13 @@ public class MainActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, viewProfileFragment, MORE_FRAGMENT).commit();
 
-        } else if (id == R.id.nav_feed) {
-
-        } else if (id == R.id.nav_messages) {
+        }  else if (id == R.id.nav_messages) {
             UserListFragment userListFragment = new UserListFragment();
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, userListFragment, USER_FRAGMENT).commit();
 
-        } else if (id == R.id.nav_setting) {
-
-        } else if (id == R.id.nav_logout) {
+        }  else if (id == R.id.nav_logout) {
+            DataHolder.getInstance().setSignInQbUser(null);
             LoginActivity.LogoutFacebook();
             UserAuth.CleanAuthenticationInfo();
             Intent logout = new Intent(MainActivity.this, LogoutActivity.class);

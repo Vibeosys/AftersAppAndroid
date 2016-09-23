@@ -19,17 +19,20 @@
             android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
-            <com.aftersapp.views.RobotoTextView
+            <com.aftersapp.views.OpenSansRegularTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/str_find_party"
                 android:textColor="@android:color/white"
+                android:layout_marginLeft="14dp"
                 android:textSize="30sp" />
+
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_keyboard_arrow_right_white_48dp" />
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -41,17 +44,19 @@
             android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
-            <com.aftersapp.views.RobotoTextView
+            <com.aftersapp.views.OpenSansRegularTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/str_host_party"
+                android:layout_marginLeft="14dp"
                 android:textColor="@android:color/white"
                 android:textSize="32sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_keyboard_arrow_right_white_48dp" />
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,17 +68,19 @@
             android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
-            <com.aftersapp.views.RobotoTextView
+            <com.aftersapp.views.OpenSansRegularTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/str_edit_profile"
+                android:layout_marginLeft="14dp"
                 android:textColor="@android:color/white"
                 android:textSize="30sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_keyboard_arrow_right_white_48dp" />
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -60,6 +60,7 @@
                         </LinearLayout>
 
                         <com.aftersapp.views.RobotoTextView
+                            android:id="@+id/filterVal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingBottom="6dp"
