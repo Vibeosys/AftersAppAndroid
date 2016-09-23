@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.aftersapp.database.DbRepository;
 import com.aftersapp.services.GPSTracker;
+import com.aftersapp.utils.DialogUtils;
 import com.aftersapp.utils.ServerSyncManager;
 import com.aftersapp.utils.SessionManager;
 
@@ -28,7 +30,7 @@ public class BaseFragment extends Fragment {
     protected ServerSyncManager mServerSyncManager = null;
     protected DbRepository mDbRepository = null;
     protected static SessionManager mSessionManager = null;
-
+    protected ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +39,8 @@ public class BaseFragment extends Fragment {
         Log.d("##", "##" + mSessionManager.getDatabaseDeviceFullPath());
         mServerSyncManager = new ServerSyncManager(getActivity().getApplicationContext(), mSessionManager);
         mDbRepository = new DbRepository(getActivity().getApplicationContext(), mSessionManager);
+        progressDialog = DialogUtils.getProgressDialog(getContext());
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

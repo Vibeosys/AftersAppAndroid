@@ -41,4 +41,7 @@
     <string name="please_wait">Please Wait</string>
     <string name="dlg_ok">Ok</string>
     <string name="dlg_cancel">Cancel</string>
+    <string name="select">Selected</string>
+    <string name="str_name">Name</string>
+    <string name="full_name">Full Name</string>
 </resources>

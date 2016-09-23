@@ -29,4 +29,10 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="ListHeaderStyle" parent="AppTheme">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textColor">@color/warm_gray</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 </resources>

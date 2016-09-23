@@ -19,5 +19,6 @@
     <color name="navBarHeader">#7F83D3</color>
     <color name="transparentWhite">#66FFFFFF</color>
     <color name="layout_background">#f0f2f2f5</color>
+    <color name="warm_gray">#757575</color>
 
 </resources>
