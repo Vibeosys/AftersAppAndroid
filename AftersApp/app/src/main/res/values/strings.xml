@@ -44,4 +44,12 @@
     <string name="select">Selected</string>
     <string name="str_name">Name</string>
     <string name="full_name">Full Name</string>
+    <string name="chat_empty_you_are_alone_here">You are alone here</string>
+    <string name="chat_empty_start_new_chat">Start new chat</string>
+    <string name="connection_error">Connection failed</string>
+    <string name="reconnect_alert">Reconnecting in %s seconds</string>
+    <string name="chat_attachment">Attachment</string>
+    <string name="menu_dialogs_delete">Delete</string>
+    <string name="chat_edit_text_hint">Message</string>
+    <string name="chat_send">Send</string>
 </resources>

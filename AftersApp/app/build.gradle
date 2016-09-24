@@ -18,8 +18,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -37,7 +41,13 @@ dependencies {
     compile 'com.github.orangegangsters:swipy:1.2.2@aar'
     compile "com.quickblox:quickblox-android-sdk-core:2.5.1@aar"
     compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
     compile("com.quickblox:quickblox-android-sdk-chat:2.5.1@aar") {
         transitive = true
     }
+    compile("com.quickblox:quickblox-android-sdk-content:2.5.1@aar")
+    compile("com.quickblox:quickblox-android-sdk-messages:2.5.1@aar")
+    compile "se.emilsjolander:stickylistheaders:2.7.0"
+    compile "com.github.bumptech.glide:glide:3.6.1"
 }
+apply plugin: 'com.google.gms.google-services'

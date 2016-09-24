@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:ignore="RtlHardcoded">
+
+    <ImageView
+        android:id="@+id/image_dialog_icon"
+        style="@style/ListItemIconStyle"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_action_timer_auto" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_dialog_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp"
+            tools:text="Room name" />
+
+        <TextView
+            android:id="@+id/text_dialog_last_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/secondaryText"
+            android:textSize="14sp"
+            tools:text="Long last message to see how margin on the right side works" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_dialog_unread_count"
+        style="@style/DialogUnreadCounterStyle"
+        android:visibility="visible"
+        tools:text="4" />
+</LinearLayout>

@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_chat_message_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:gravity="right"
+    tools:ignore="RtlHardcoded">
+
+    <RelativeLayout
+        android:id="@+id/layout_message_content_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:background="@drawable/outgoing_message_bg">
+
+        <com.aftersapp.views.RobotoTextView
+            android:id="@+id/text_image_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_message_author"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:maxWidth="250dp"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            tools:text="Test message" />
+
+        <com.aftersapp.views.chatviews.MaskedImageView
+            android:id="@+id/image_message_attachment"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            app:mask="@drawable/outgoing_message_bg" />
+
+        <ProgressBar
+            android:id="@+id/progress_message_attachment"
+            style="@style/CenterProgressBarStyle" />
+
+        <com.aftersapp.views.RobotoTextView
+            android:id="@+id/text_message_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:gravity="left"
+            android:textColor="@color/warm_gray"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="User 2" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text_message_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="@color/warm_gray"
+        android:textSize="13sp"
+        android:visibility="gone"
+        tools:text="10:50" />
+</LinearLayout>

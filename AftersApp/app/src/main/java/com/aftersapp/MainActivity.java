@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.aftersapp.activities.BaseActivity;
 import com.aftersapp.activities.LoginActivity;
 import com.aftersapp.activities.LogoutActivity;
+import com.aftersapp.fragments.ChatsUsersList;
 import com.aftersapp.fragments.EditMyProfileFragment;
 import com.aftersapp.fragments.FilterFragment;
 import com.aftersapp.fragments.FindPartyFragment;
@@ -41,12 +42,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
     private LinearLayout mHomeLay, mSearchLay, mHostLay, mMoreLay;
     private static final String HOME_FRAGMENT = "home";
     private static final String SEARCH_FRAGMENT = "search";
     private static final String HOST_FRAGMENT = "host";
     private static final String MORE_FRAGMENT = "more";
     private static final String USER_FRAGMENT = "user";
+    private static final String USER_LIST_FRAGEMNT = "user_list";
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
 
@@ -163,12 +166,12 @@ public class MainActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, viewProfileFragment, MORE_FRAGMENT).commit();
 
-        }  else if (id == R.id.nav_messages) {
-            UserListFragment userListFragment = new UserListFragment();
+        } else if (id == R.id.nav_messages) {
+            ChatsUsersList userListFragment = new ChatsUsersList();
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, userListFragment, USER_FRAGMENT).commit();
 
-        }  else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             DataHolder.getInstance().setSignInQbUser(null);
             LoginActivity.LogoutFacebook();
             UserAuth.CleanAuthenticationInfo();
@@ -242,5 +245,11 @@ public class MainActivity extends BaseActivity
         protected void onPostExecute(Bitmap result) {
             profileImg.setImageBitmap(result);
         }
+    }
+
+    public void onStartNewChatClick(View view) {
+        UserListFragment partyFragment = new UserListFragment();
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_frame_lay, partyFragment, USER_LIST_FRAGEMNT).commit();
     }
 }

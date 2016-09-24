@@ -14,16 +14,22 @@ import com.quickblox.core.QBSettings;
  */
 public class AftersAppApplication extends MultiDexApplication {
 
+    private static AftersAppApplication instance;
+
     @Override
     public void onCreate() {
         MultiDex.install(this);
         super.onCreate();
-
+        instance = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
         QBSettings.getInstance().init(getApplicationContext(), QuickBlocsConst.APP_ID,
                 QuickBlocsConst.AUTH_KEY, QuickBlocsConst.AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(QuickBlocsConst.ACCOUNT_KEY);
+    }
+
+    public static synchronized AftersAppApplication getInstance() {
+        return instance;
     }
 }

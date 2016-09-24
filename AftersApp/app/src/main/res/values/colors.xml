@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#643596</color>
     <color name="colorPrimaryDark">#542685</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#7F83D3</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="gridBorder">#c6e4e3e3</color>
@@ -10,7 +10,7 @@
     <color name="accentText">#FF4081</color>
     <color name="secondaryText">#d863666b</color>
     <color name="bottom_strip_color">#643596</color>
-
+    <color name="divider_color">#e0e0e0</color>
     <color name="findPartyTabBack">#773eb8</color>
     <color name="hostTabBack">#513669</color>
     <color name="editProfTabBack">#9a6bd1</color>
@@ -20,5 +20,5 @@
     <color name="transparentWhite">#66FFFFFF</color>
     <color name="layout_background">#f0f2f2f5</color>
     <color name="warm_gray">#757575</color>
-
+    <color name="color_username_rectangle">#99000000</color>
 </resources>
