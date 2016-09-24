@@ -52,8 +52,12 @@
     <string name="menu_dialogs_delete">Delete</string>
     <string name="chat_edit_text_hint">Message</string>
     <string name="chat_send">Send</string>
-    <string name="removeAds">remove ads</string>
+    <string name="removeAds">Remove Ads</string>
     <string name="str_purchase_msg">IF YOU ARE TIRED OF SEEING ADS YOU CAN UPGRADE
         WITH JUST \u20AC0.99 AND YOU WILL NEVER HAVE TO SEE ANOTHER AD AGAIN</string>
     <string name="str_remove_ads">REMOVE ADS</string>
+
+    <string name="banner_home_footer">ca-app-pub-1303442515313304/7146112072</string>
+
+
 </resources>

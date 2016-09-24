@@ -8,14 +8,20 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.aftersapp.MainActivity;
 import com.aftersapp.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.InputStream;
 
@@ -34,6 +40,9 @@ public class ViewProfileFragment extends BaseFragment {
     private String mParam1;
     private String mParam2;
     private Context mContext;
+    private AdView mAdView;
+    private Button mRemoveAds;
+    AdRequest adRequest;
 
 
     public ViewProfileFragment() {
@@ -72,6 +81,14 @@ public class ViewProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
+        mAdView = (AdView) view.findViewById(R.id.adView);
+        adRequest = new AdRequest.Builder().addTestDevice("DC7854A3ADFE5403F956AFB5B83C7391")
+                .build();
+        mAdView.loadAd(adRequest);
+
+        mRemoveAds = (Button) view.findViewById(R.id.removeAD);
+
+
         mUserName = (TextView) view.findViewById(R.id.userFullNameView);
         mUserEmailId = (TextView) view.findViewById(R.id.userEmailIdView);
         mUserDateOfBirth = (TextView) view.findViewById(R.id.userDOBView);
@@ -82,6 +99,14 @@ public class ViewProfileFragment extends BaseFragment {
         DownloadImage downloadImage = new DownloadImage();
         downloadImage.execute(mSessionManager.getProfImg());
         CallToViewProfile();
+        mRemoveAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PurchaseFragment purchaseFragment= new PurchaseFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay,purchaseFragment,"Remove Ads").commit();
+            }
+        });
         return view;
     }
 
@@ -130,4 +155,5 @@ public class ViewProfileFragment extends BaseFragment {
             circleView.setImageBitmap(result);
         }
     }
+
 }
