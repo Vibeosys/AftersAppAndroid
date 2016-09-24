@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -23,8 +24,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private ImageView imgArrow, imgAgeArrow,imgMusciGener;
     private SeekBar mSeekBar,mSeekBarAge;
     private int mSeekBarStep,mSeekBarMax,mSeekBarMin,mSeekBarAgeStep,mSeekBarAgeMax,mSeekBarAgeMin;
-    private TextView mFilterVal,mFilterAge;
+    private TextView mFilterVal,mFilterAge,mSelectMusicSelect;
     private  int mSeekBarFlag;
+    private EditText mUserMusicGenre;
 
     //private
     @Override
@@ -57,6 +59,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         imgMusciGener = (ImageView) rootView.findViewById(R.id.musciAgeArrow);
         mSeekBarAge =(SeekBar) rootView.findViewById(R.id.seekBarAge);
         mFilterAge =(TextView) rootView.findViewById(R.id.defaultAge);
+        mSelectMusicSelect =(TextView) rootView.findViewById(R.id.editMusicSetText);
+        mUserMusicGenre = (EditText)rootView.findViewById(R.id.MusicGenreEdit);
 
         layRadius.setOnClickListener(this);
         layAge.setOnClickListener(this);
@@ -67,7 +71,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int value = mSeekBarMin + (progress * mSeekBarStep);
-                mFilterVal.setText("Default radius selected "+value);
+                mFilterVal.setText(""+value+"-"+getResources().getString(R.string.raduis_selected));
             }
 
             @Override

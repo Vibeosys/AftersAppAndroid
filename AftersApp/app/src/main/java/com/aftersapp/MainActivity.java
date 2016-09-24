@@ -30,6 +30,7 @@ import com.aftersapp.fragments.FilterFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
+import com.aftersapp.fragments.PurchaseFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.helper.DataHolder;
@@ -49,6 +50,8 @@ public class MainActivity extends BaseActivity
     private static final String HOST_FRAGMENT = "host";
     private static final String MORE_FRAGMENT = "more";
     private static final String USER_FRAGMENT = "user";
+    private static final String USER_PROFILE = "viewProfile";
+    private static final String PURCHASE_FRAGMENT = "purchase";
     private static final String USER_LIST_FRAGEMNT = "user_list";
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
@@ -171,7 +174,14 @@ public class MainActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, userListFragment, USER_FRAGMENT).commit();
 
-        } else if (id == R.id.nav_logout) {
+        }else if(id == R.id.nav_removeAd)
+        {
+
+            PurchaseFragment purchaseFragment = new PurchaseFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay,purchaseFragment,PURCHASE_FRAGMENT).commit();
+        }
+        else if (id == R.id.nav_logout) {
             DataHolder.getInstance().setSignInQbUser(null);
             LoginActivity.LogoutFacebook();
             UserAuth.CleanAuthenticationInfo();
@@ -203,6 +213,9 @@ public class MainActivity extends BaseActivity
                         replace(R.id.fragment_frame_lay, hostPartyFragment, HOST_FRAGMENT).commit();
                 break;
             case R.id.moreLay:
+                ViewProfileFragment viewProfileFragment = new ViewProfileFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_frame_lay,viewProfileFragment,USER_PROFILE).commit();
 
 
                 break;

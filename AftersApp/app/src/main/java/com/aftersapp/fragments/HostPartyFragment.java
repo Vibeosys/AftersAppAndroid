@@ -709,6 +709,7 @@ public class HostPartyFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(mGoogleApiClient!=null)
         mGoogleApiClient.disconnect();
     }
 }

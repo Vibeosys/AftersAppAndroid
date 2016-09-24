@@ -84,9 +84,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/layout_background"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:padding="12dp"
                         android:visibility="gone">
+
 
                         <SeekBar
                             android:id="@+id/seekBar"
@@ -94,6 +95,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
                             android:padding="8dp" />
+
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -223,13 +225,14 @@
                         </LinearLayout>
 
                         <com.aftersapp.views.RobotoTextView
+                            android:id="@+id/editMusicSetText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingBottom="6dp"
                             android:paddingLeft="6dp"
                             android:paddingRight="6dp"
                             android:paddingTop="2dp"
-                            android:text=""
+                            android:text="Not selected"
                             android:textColor="@color/secondaryText" />
                     </LinearLayout>
 
@@ -243,7 +246,7 @@
                         android:visibility="gone">
 
                         <EditText
-                            android:id="@+id/MusciGenerEdit"
+                            android:id="@+id/MusicGenreEdit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"

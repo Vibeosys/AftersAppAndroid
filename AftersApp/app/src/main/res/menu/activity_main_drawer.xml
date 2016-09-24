@@ -16,10 +16,16 @@
             android:icon="@drawable/ic_message_white_24dp"
             android:title="Messages" />
 
+        <item android:id="@+id/nav_removeAd"
+
+            android:icon="@drawable/ic_touch_app_white_24dp"
+            android:title="@string/removeAds"/>
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_power_settings_new_white_24dp"
             android:title="Logout" />
+
     </group>
 
 

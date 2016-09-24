@@ -12,7 +12,7 @@
     <string name="str_home">Home</string>
     <string name="str_find">Find</string>
     <string name="str_host">Host</string>
-    <string name="str_more">More</string>
+    <string name="str_more">Profile</string>
     <string name="str_find_party">Find Party</string>
     <string name="str_host_party">Host Party</string>
     <string name="str_edit_profile">Edit Profile</string>
@@ -24,7 +24,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="action_filter">Filter</string>
     <string name="str_radius">Radius</string>
-    <string name="raduis_selected">Default radius selected</string>
+    <string name="raduis_selected">Distance in km.</string>
     <string name="str_age_filter">Age</string>
     <string name="str_age_selected">Default age selected</string>
     <string name="show_result">Show result</string>
@@ -52,4 +52,8 @@
     <string name="menu_dialogs_delete">Delete</string>
     <string name="chat_edit_text_hint">Message</string>
     <string name="chat_send">Send</string>
+    <string name="removeAds">remove ads</string>
+    <string name="str_purchase_msg">IF YOU ARE TIRED OF SEEING ADS YOU CAN UPGRADE
+        WITH JUST \u20AC0.99 AND YOU WILL NEVER HAVE TO SEE ANOTHER AD AGAIN</string>
+    <string name="str_remove_ads">REMOVE ADS</string>
 </resources>
