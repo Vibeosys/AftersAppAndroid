@@ -1,13 +1,18 @@
 package com.aftersapp;
 
+import android.*;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aftersapp.activities.BaseActivity;
 import com.aftersapp.activities.LoginActivity;
@@ -35,8 +41,13 @@ import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.UserAuth;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.users.model.QBUser;
 
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+
+import java.io.IOException;
 import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -53,6 +64,7 @@ public class MainActivity extends BaseActivity
     private static final String USER_PROFILE = "viewProfile";
     private static final String PURCHASE_FRAGMENT = "purchase";
     private static final String USER_LIST_FRAGEMNT = "user_list";
+
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
 
@@ -174,14 +186,12 @@ public class MainActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, userListFragment, USER_FRAGMENT).commit();
 
-        }else if(id == R.id.nav_removeAd)
-        {
+        } else if (id == R.id.nav_removeAd) {
 
             PurchaseFragment purchaseFragment = new PurchaseFragment();
             getSupportFragmentManager().beginTransaction().
-                    replace(R.id.fragment_frame_lay,purchaseFragment,PURCHASE_FRAGMENT).commit();
-        }
-        else if (id == R.id.nav_logout) {
+                    replace(R.id.fragment_frame_lay, purchaseFragment, PURCHASE_FRAGMENT).commit();
+        } else if (id == R.id.nav_logout) {
             DataHolder.getInstance().setSignInQbUser(null);
             LoginActivity.LogoutFacebook();
             UserAuth.CleanAuthenticationInfo();
@@ -215,7 +225,7 @@ public class MainActivity extends BaseActivity
             case R.id.moreLay:
                 ViewProfileFragment viewProfileFragment = new ViewProfileFragment();
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_frame_lay,viewProfileFragment,USER_PROFILE).commit();
+                        .replace(R.id.fragment_frame_lay, viewProfileFragment, USER_PROFILE).commit();
 
 
                 break;
@@ -260,9 +270,11 @@ public class MainActivity extends BaseActivity
         }
     }
 
+
     public void onStartNewChatClick(View view) {
         UserListFragment partyFragment = new UserListFragment();
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_frame_lay, partyFragment, USER_LIST_FRAGEMNT).commit();
     }
+
 }

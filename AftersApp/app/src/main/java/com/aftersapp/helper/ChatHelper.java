@@ -130,6 +130,19 @@ public class ChatHelper {
         );
     }
 
+    public void createDialogWithSelectedUser(final QBUser user,
+                                             final QBEntityCallback<QBDialog> callback) {
+        QBChatService.getInstance().getPrivateChatManager().createDialog(user.getId(),
+                new QbEntityCallbackWrapper<QBDialog>(callback) {
+                    @Override
+                    public void onSuccess(QBDialog dialog, Bundle args) {
+                        QbUsersHolder.getInstance().putUser(user);
+                        super.onSuccess(dialog, args);
+                    }
+                }
+        );
+    }
+
     public void deleteDialogs(Collection<QBDialog> dialogs, QBEntityCallback<Void> callback) {
         for (QBDialog dialog : dialogs) {
             deleteDialog(dialog, new QBEntityCallback<Void>() {

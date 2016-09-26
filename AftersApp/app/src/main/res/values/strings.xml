@@ -16,7 +16,7 @@
     <string name="str_find_party">Find Party</string>
     <string name="str_host_party">Host Party</string>
     <string name="str_edit_profile">Edit Profile</string>
-    <string name="google_maps_key">AIzaSyA9g3URalt8bKMpR3aac_7vuzbMi-BG4gM</string>
+    <string name="google_maps_key">AIzaSyCmFbvAOx6xGxBJBMrqnU57rIxa2dfwNMA</string>
     <string name="facebook_app_id">336232213386758</string>
     <string name="str_age">Age:</string>
     <string name="str_attending">Attending:</string>
@@ -58,6 +58,13 @@
     <string name="str_remove_ads">REMOVE ADS</string>
 
     <string name="banner_home_footer">ca-app-pub-1303442515313304/7146112072</string>
+    <string name="msg_err">Server connection fails</string>
+    <string name="chat_wait_for_attachments_to_upload">Wait for all attachments to upload</string>
+    <string name="chat_send_message_error">Failed to send message</string>
+    <string name="dlg_choose_image_from">Select photo from…</string>
+    <string name="dlg_loading">Loading...</string>
+    <string name="notification_title">Aftersapp Chat notification</string>
+    <string name="str_per_accept">Please allow the permission for chat</string>
 
 
 </resources>

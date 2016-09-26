@@ -53,6 +53,9 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.gson.Gson;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -154,7 +157,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-           // mSignInClicked = false;
+            // mSignInClicked = false;
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             getProfileInformation(result);
 
@@ -292,7 +295,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onConnected(Bundle bundle) {
-       // getProfileInformation();
+        // getProfileInformation();
         Log.d("TAG", "LOGIN");
 
 
@@ -365,7 +368,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(LoginActivity.this,LoginActivity.this)
+                .enableAutoManage(LoginActivity.this, LoginActivity.this)
                 .addScope(new Scope(Scopes.PLUS_LOGIN))
                 .addScope(new Scope(Scopes.PLUS_ME))
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -374,17 +377,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void signInGooglePluse() {
-        if(mGoogleApiClient!=null)
-        {
+        if (mGoogleApiClient != null) {
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
 
-        }
-        else
-        {
-            Log.d("TAG","TAG");
-            Log.d("TAG","TAG");
-            Log.d("TAG","TAG");
+        } else {
+            Log.d("TAG", "TAG");
+            Log.d("TAG", "TAG");
+            Log.d("TAG", "TAG");
         }
 
     }
@@ -404,20 +404,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void getProfileInformation(GoogleSignInResult result) {
         try {
-            if(result.isSuccess())
-            {
+            if (result.isSuccess()) {
 
                 GoogleSignInAccount acct = result.getSignInAccount();
                 email = acct.getEmail();
                 Uri Img = acct.getPhotoUrl();
-                String profileImg=Img.toString();
-                String id =  acct.getId();
+                String profileImg = Img.toString();
+                String id = acct.getId();
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, "", id);
 
-                Log.d("TAG","TAG");
-                Log.d("TAG","TAG");
-                Log.d("TAG","TAG");
+                Log.d("TAG", "TAG");
+                Log.d("TAG", "TAG");
+                Log.d("TAG", "TAG");
             }
            /* if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
                 Person currentPerson = Plus.PeopleApi
@@ -492,8 +491,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 progressDialog.dismiss();
                 DataHolder.getInstance().setSignInQbUser(qbUser);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
+                signInChat();
             }
 
             @Override
@@ -504,4 +502,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         });
     }
 
+    public void signInChat() {
+        progressDialog.show();
+        final QBChatService chatService = QBChatService.getInstance();
+
+        final QBUser user = new QBUser(email, email + mSessionManager.getUserId());
+        QBAuth.createSession(user, new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession session, Bundle params) {
+                // success, login to chat
+
+                user.setId(session.getUserId());
+
+                chatService.login(user, new QBEntityCallback() {
+
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+                        progressDialog.dismiss();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+
+            }
+        });
+    }
 }

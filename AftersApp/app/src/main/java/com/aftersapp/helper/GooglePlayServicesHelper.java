@@ -1,16 +1,21 @@
 package com.aftersapp.helper;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import com.aftersapp.AftersAppApplication;
+import com.aftersapp.R;
 import com.aftersapp.utils.SessionManager;
 import com.aftersapp.utils.SharedPrefsHelper;
 import com.aftersapp.utils.VersionUtils;
@@ -98,7 +103,8 @@ public class GooglePlayServicesHelper {
             protected String doInBackground(String... params) {
                 try {
                     InstanceID instanceID = InstanceID.getInstance(AftersAppApplication.getInstance());
-                    return instanceID.getToken(params[0], GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    return instanceID.getToken(AftersAppApplication.getInstance().getString(R.string.gcm_defaultSenderId),
+                            GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 } catch (IOException e) {
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform

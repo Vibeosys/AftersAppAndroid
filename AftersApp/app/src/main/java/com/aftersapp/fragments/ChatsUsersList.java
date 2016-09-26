@@ -1,10 +1,13 @@
 package com.aftersapp.fragments;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
@@ -68,17 +71,39 @@ public class ChatsUsersList extends BaseFragment {
     private int skipRecords = 0;
     private static final int REQUEST_SELECT_PEOPLE = 174;
     private static final int REQUEST_MARK_READ = 165;
-
+    private int READ_PH_STATE_PERMISSION = 19;
     private ProgressBar progressBar;
     private FloatingActionButton fab;
     private ActionMode currentActionMode;
     private SwipyRefreshLayout setOnRefreshListener;
     private DialogsAdapter dialogsAdapter;
     private boolean isActivityForeground;
+    private static final String HOME_FRAGMENT = "home";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onRequestMessagePermission();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void onRequestMessagePermission() {
+        requestPermissions(new String[]{android.Manifest.permission.READ_PHONE_STATE},
+                READ_PH_STATE_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == READ_PH_STATE_PERMISSION && grantResults[0] == 0) {
+        } else {
+            Toast toast = Toast.makeText(getContext(),
+                    getResources().getString(R.string.str_per_accept), Toast.LENGTH_SHORT);
+            toast.show();
+            HomeFragment homeFragment = new HomeFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
+        }
     }
 
     @Nullable
@@ -159,7 +184,12 @@ public class ChatsUsersList extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 QBDialog selectedDialog = (QBDialog) parent.getItemAtPosition(position);
                 if (currentActionMode == null) {
-                    //ChatActivity.startForResult(getContext(), REQUEST_MARK_READ, selectedDialog);
+                    ChatFragment chatFragment = new ChatFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
+                    chatFragment.setArguments(bundle);
+                    getFragmentManager().beginTransaction().
+                            replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
                 } else {
                     dialogsAdapter.toggleSelection(selectedDialog);
                 }
