@@ -17,7 +17,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.aftersapp",
-            "certificate_hash": "97B3E472544EB7562FCB87A0215AD9FE018C7A5E"
+            "certificate_hash": "78057967BDFD3044185352BCE11F9C0FD8087CEE"
           }
         },
         {
@@ -30,6 +30,33 @@
           "current_key": "AIzaSyCmFbvAOx6xGxBJBMrqnU57rIxa2dfwNMA"
         }
       ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60438663098:android:44c471d79b75bc79",
+        "android_client_info": {
+          "package_name": "com.aftersapp.activities"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60438663098-d35i7hr5ikj6kpuci671amtd7p0h3d9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
       "services": {
         "analytics_service": {
           "status": 1

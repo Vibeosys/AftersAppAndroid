@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -42,8 +43,13 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.gson.Gson;
@@ -52,9 +58,14 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.Arrays;
 
 /**
@@ -71,6 +82,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private ImageView imgFb, imgGPlus;
     CallbackManager callbackManager;
     protected GoogleApiClient mGoogleApiClient;
+    GoogleSignInOptions gso;
     private int ACCOUNT_PERMISSION_CODE = 14;
     private static int RC_SIGN_IN = 400;
     private boolean mSignInClicked;
@@ -92,7 +104,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_login);
-
+        googlePlusAPIInit();
         imgFb = (ImageView) findViewById(R.id.fbImg);
         imgGPlus = (ImageView) findViewById(R.id.gpImg);
         imgFb.setOnClickListener(this);
@@ -141,8 +153,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RC_SIGN_IN) {
-            mSignInClicked = false;
+        if (requestCode == RC_SIGN_IN) {
+           // mSignInClicked = false;
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            getProfileInformation(result);
+
         } else {
             if (mGoogleApiClient != null)
                 mGoogleApiClient.connect();
@@ -277,8 +292,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onConnected(Bundle bundle) {
-        getProfileInformation();
+       // getProfileInformation();
         Log.d("TAG", "LOGIN");
+
+
     }
 
     @Override
@@ -288,7 +305,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        if (connectionResult.hasResolution()) {
+        /*if (connectionResult.hasResolution()) {
             try {
                 connectionResult.startResolutionForResult(this, RC_SIGN_IN);
                 // GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
@@ -304,7 +321,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             if (mSignInClicked) {
                 resolveSignInError();
             }
-        }
+        }*/
     }
 
     @Override
@@ -312,8 +329,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                            @NonNull int[] grantResults) {
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == ACCOUNT_PERMISSION_CODE && grantResults[0] == 0) {
-            googlePlusAPIInit();
-            if (!mGoogleApiClient.isConnecting()) {
+            signInGooglePluse();
+           /* if (!mGoogleApiClient.isConnecting()) {
                 if (mGoogleApiClient.isConnected()) {
                     mSignInClicked = true;
                     resolveSignInError();
@@ -324,7 +341,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         resolveSignInError();
                     }
                 }
-            }
+            }*/
+
         } else {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "User denied permission", Toast.LENGTH_SHORT);
@@ -334,13 +352,41 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void googlePlusAPIInit() {
-        mGoogleApiClient = new GoogleApiClient.Builder(LoginActivity.this)
+        /*mGoogleApiClient = new GoogleApiClient.Builder(LoginActivity.this)
                 .addConnectionCallbacks(LoginActivity.this)
                 .addOnConnectionFailedListener(LoginActivity.this)
                 .addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
+                .build();*/
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(new Scope(Scopes.PLUS_ME))
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(LoginActivity.this,LoginActivity.this)
+                .addScope(new Scope(Scopes.PLUS_LOGIN))
+                .addScope(new Scope(Scopes.PLUS_ME))
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+    }
+
+    private void signInGooglePluse() {
+        if(mGoogleApiClient!=null)
+        {
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+
+        }
+        else
+        {
+            Log.d("TAG","TAG");
+            Log.d("TAG","TAG");
+            Log.d("TAG","TAG");
+        }
+
     }
 
     private void resolveSignInError() {
@@ -356,9 +402,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void getProfileInformation() {
+    private void getProfileInformation(GoogleSignInResult result) {
         try {
-            if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+            if(result.isSuccess())
+            {
+
+                GoogleSignInAccount acct = result.getSignInAccount();
+                email = acct.getEmail();
+                Uri Img = acct.getPhotoUrl();
+                String profileImg=Img.toString();
+                String id =  acct.getId();
+                name = acct.getDisplayName();
+                callToRegister(name, email, "Male", profileImg, "", id);
+
+                Log.d("TAG","TAG");
+                Log.d("TAG","TAG");
+                Log.d("TAG","TAG");
+            }
+           /* if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
                 Person currentPerson = Plus.PeopleApi
                         .getCurrentPerson(mGoogleApiClient);
                 email = Plus.AccountApi.getAccountName(mGoogleApiClient);
@@ -373,7 +434,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 callToRegister(name, email, gender, profileImg, dob, token);
             } else {
                 Log.e("user profile is null", "profile is null");
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -442,4 +503,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
         });
     }
+
 }
