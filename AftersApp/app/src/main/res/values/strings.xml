@@ -65,6 +65,7 @@
     <string name="dlg_loading">Loading...</string>
     <string name="notification_title">Aftersapp Chat notification</string>
     <string name="str_per_accept">Please allow the permission for chat</string>
+    <string name="str_grant_permission">Allow the permission to send and receive images</string>
 
 
 </resources>

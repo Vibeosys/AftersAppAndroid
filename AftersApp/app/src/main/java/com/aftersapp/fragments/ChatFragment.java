@@ -1,9 +1,10 @@
 package com.aftersapp.fragments;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.aftersapp.R;
 import com.aftersapp.adapters.qbadapters.AttachmentPreviewAdapter;
@@ -21,6 +22,7 @@ import com.aftersapp.adapters.qbadapters.ChatAdapter;
 import com.aftersapp.helper.ChatHelper;
 import com.aftersapp.helper.ImagePickHelper;
 import com.aftersapp.interfaces.chatinterfaces.Chat;
+import com.aftersapp.interfaces.chatinterfaces.OnImagePickedListener;
 import com.aftersapp.interfaces.chatinterfaces.PaginationHistoryListener;
 import com.aftersapp.interfaces.chatinterfaces.QBChatMessageListener;
 import com.aftersapp.utils.Toaster;
@@ -41,6 +43,7 @@ import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,11 +54,11 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Created by akshay on 24-09-2016.
  */
-public class ChatFragment extends ChatBaseFragment implements View.OnClickListener {
+public class ChatFragment extends ChatBaseFragment implements View.OnClickListener, OnImagePickedListener {
 
     private static final int REQUEST_CODE_ATTACHMENT = 721;
     private static final int REQUEST_CODE_SELECT_PEOPLE = 752;
-
+    private int MEDIA_PERMISSION_CODE = 801;
     public static final String EXTRA_DIALOG = "dialog";
     private static final String PROPERTY_SAVE_TO_HISTORY = "save_to_history";
 
@@ -391,6 +394,31 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
 
     public void onAttachmentsClick() {
         new ImagePickHelper().pickAnImage(this, REQUEST_CODE_ATTACHMENT);
+
+    }
+
+    private void requestGrantPermission() {
+
+        requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL,
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                MEDIA_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MEDIA_PERMISSION_CODE && grantResults[1] == 0) {
+            pickImage();
+        } else {
+            Toast toast = Toast.makeText(getActivity(),
+                    getResources().getString(R.string.str_grant_permission), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private void pickImage() {
+
     }
 
     @Override
@@ -432,5 +460,24 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
             Log.e(TAG, "Failed to send a message", e);
             Toaster.shortToast(R.string.chat_send_message_error);
         }
+    }
+
+    @Override
+    public void onImagePicked(int requestCode, File file) {
+        switch (requestCode) {
+            case REQUEST_CODE_ATTACHMENT:
+                attachmentPreviewAdapter.add(file);
+                break;
+        }
+    }
+
+    @Override
+    public void onImagePickError(int requestCode, Exception e) {
+        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onImagePickClosed(int requestCode) {
+
     }
 }

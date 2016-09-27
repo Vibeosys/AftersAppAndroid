@@ -39,6 +39,8 @@ import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
 import com.aftersapp.utils.qbutils.VerboseQbChatConnectionListener;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBGroupChatManager;
 import com.quickblox.chat.QBPrivateChat;
@@ -48,7 +50,9 @@ import com.quickblox.chat.listeners.QBMessageListener;
 import com.quickblox.chat.listeners.QBPrivateChatManagerListener;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
+import com.quickblox.core.LogLevel;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.QBSettings;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.QBUsers;
@@ -241,15 +245,19 @@ public class ChatsUsersList extends ChatBaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 QBDialog selectedDialog = (QBDialog) parent.getItemAtPosition(position);
-                if (currentActionMode == null) {
-                    ChatFragment chatFragment = new ChatFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
-                    chatFragment.setArguments(bundle);
-                    getFragmentManager().beginTransaction().
-                            replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
+                if (QBChatService.getInstance().getPrivateChatManager() == null) {
+                    signInChat(selectedDialog);
                 } else {
-                    dialogsAdapter.toggleSelection(selectedDialog);
+                    if (currentActionMode == null) {
+                        ChatFragment chatFragment = new ChatFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
+                        chatFragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction().
+                                replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
+                    } else {
+                        dialogsAdapter.toggleSelection(selectedDialog);
+                    }
                 }
             }
         });
@@ -272,6 +280,58 @@ public class ChatsUsersList extends ChatBaseFragment {
             }
         });
     }
+
+    public void signInChat(final QBDialog selectedDialog) {
+        progressDialog.show();
+        final QBChatService chatService = QBChatService.getInstance();
+        QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+        chatService.setDebugEnabled(true);
+        chatService.setDefaultPacketReplyTimeout(150000); //add this
+        chatService.setDefaultConnectionTimeout(150000); //add this
+        chatService.setUseStreamManagement(true);
+        //chatService.addConnectionListener(chatConnectionListener);
+        final QBUser user = new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId());
+        QBAuth.createSession(user, new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession session, Bundle params) {
+                // success, login to chat
+
+                user.setId(session.getUserId());
+
+                chatService.login(user, new QBEntityCallback() {
+
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+                        progressDialog.dismiss();
+                        ChatFragment chatFragment = new ChatFragment();
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
+                        chatFragment.setArguments(bundle1);
+                        getFragmentManager().beginTransaction().
+                                replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors) {
+                        Log.e("UserList", errors.getMessage());
+                        progressDialog.dismiss();
+                        ChatFragment chatFragment = new ChatFragment();
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
+                        chatFragment.setArguments(bundle1);
+                        getFragmentManager().beginTransaction().
+                                replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+
+            }
+        });
+    }
+
 
     QBMessageListener<QBPrivateChat> privateChatMessageListener = new QBMessageListener<QBPrivateChat>() {
         @Override

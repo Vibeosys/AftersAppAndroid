@@ -64,7 +64,7 @@ public class ImagePickHelperFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Fragment fragment = getActivity().getSupportFragmentManager()
+        Fragment fragment = ((AppCompatActivity) context).getSupportFragmentManager()
                 .findFragmentByTag(getArguments().getString(ARG_PARENT_FRAGMENT));
         if (fragment != null) {
             if (fragment instanceof OnImagePickedListener) {
