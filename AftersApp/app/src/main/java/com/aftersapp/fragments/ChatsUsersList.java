@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aftersapp.MainActivity;
 import com.aftersapp.R;
 import com.aftersapp.adapters.qbadapters.DialogsAdapter;
 import com.aftersapp.helper.ChatHelper;
@@ -86,6 +87,7 @@ public class ChatsUsersList extends ChatBaseFragment {
     private DialogsAdapter dialogsAdapter;
     private boolean isActivityForeground;
     private static final String HOME_FRAGMENT = "home";
+    private boolean isAllow = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,47 +120,55 @@ public class ChatsUsersList extends ChatBaseFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == READ_PH_STATE_PERMISSION && grantResults[0] == 0) {
+            isAllow = true;
         } else {
+            isAllow = false;
             Toast toast = Toast.makeText(getContext(),
                     getResources().getString(R.string.str_per_accept), Toast.LENGTH_SHORT);
             toast.show();
-            HomeFragment homeFragment = new HomeFragment();
-            getActivity().getSupportFragmentManager().beginTransaction().
-                    replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
+            startFragment();
         }
+    }
+
+    private void startFragment() {
+        startActivity(new Intent(getContext(), MainActivity.class));
+        getActivity().finish();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat_user_list, container, false);
-        googlePlayServicesHelper = new GooglePlayServicesHelper(mSessionManager);
-        if (googlePlayServicesHelper.checkPlayServicesAvailable(getActivity())) {
-            googlePlayServicesHelper.registerForGcm(QuickBlocsConst.GCM_SENDER_ID);
-        }
-        pushBroadcastReceiver = new PushBroadcastReceiver();
-        corCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.layout_root);
-        privateChatManagerListener = new QBPrivateChatManagerListener() {
-            @Override
-            public void chatCreated(QBPrivateChat qbPrivateChat, boolean createdLocally) {
-                if (!createdLocally) {
-                    qbPrivateChat.addMessageListener(privateChatMessageListener);
+        if (isAllow) {
+            googlePlayServicesHelper = new GooglePlayServicesHelper(mSessionManager);
+            if (googlePlayServicesHelper.checkPlayServicesAvailable(getActivity())) {
+                googlePlayServicesHelper.registerForGcm(QuickBlocsConst.GCM_SENDER_ID);
+            }
+            pushBroadcastReceiver = new PushBroadcastReceiver();
+            corCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.layout_root);
+            privateChatManagerListener = new QBPrivateChatManagerListener() {
+                @Override
+                public void chatCreated(QBPrivateChat qbPrivateChat, boolean createdLocally) {
+                    if (!createdLocally) {
+                        qbPrivateChat.addMessageListener(privateChatMessageListener);
+                    }
                 }
-            }
-        };
+            };
 
-        chatConnectionListener = new VerboseQbChatConnectionListener(corCoordinatorLayout) {
+            chatConnectionListener = new VerboseQbChatConnectionListener(corCoordinatorLayout) {
 
-            @Override
-            public void reconnectionSuccessful() {
-                super.reconnectionSuccessful();
+                @Override
+                public void reconnectionSuccessful() {
+                    super.reconnectionSuccessful();
 
-                requestBuilder.setSkip(skipRecords = 0);
-                loadDialogsFromQbInUiThread(true);
-            }
-        };
+                    requestBuilder.setSkip(skipRecords = 0);
+                    loadDialogsFromQbInUiThread(true);
+                }
+            };
 
-        initUi(rootView);
+            initUi(rootView);
+        }
+
         return rootView;
     }
 
@@ -247,17 +257,15 @@ public class ChatsUsersList extends ChatBaseFragment {
                 QBDialog selectedDialog = (QBDialog) parent.getItemAtPosition(position);
                 if (QBChatService.getInstance().getPrivateChatManager() == null) {
                     signInChat(selectedDialog);
+                } else if (currentActionMode == null) {
+                    ChatFragment chatFragment = new ChatFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
+                    chatFragment.setArguments(bundle);
+                    getFragmentManager().beginTransaction().
+                            replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
                 } else {
-                    if (currentActionMode == null) {
-                        ChatFragment chatFragment = new ChatFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(ChatFragment.EXTRA_DIALOG, selectedDialog);
-                        chatFragment.setArguments(bundle);
-                        getFragmentManager().beginTransaction().
-                                replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
-                    } else {
-                        dialogsAdapter.toggleSelection(selectedDialog);
-                    }
+                    dialogsAdapter.toggleSelection(selectedDialog);
                 }
             }
         });
@@ -355,12 +363,15 @@ public class ChatsUsersList extends ChatBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ChatHelper.getInstance().addConnectionListener(chatConnectionListener);
-        isActivityForeground = true;
-        googlePlayServicesHelper.checkPlayServicesAvailable(getActivity());
+        if (isAllow) {
+            ChatHelper.getInstance().addConnectionListener(chatConnectionListener);
+            isActivityForeground = true;
+            googlePlayServicesHelper.checkPlayServicesAvailable(getActivity());
 
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(pushBroadcastReceiver,
-                new IntentFilter(GcmConsts.ACTION_NEW_GCM_EVENT));
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(pushBroadcastReceiver,
+                    new IntentFilter(GcmConsts.ACTION_NEW_GCM_EVENT));
+        }
+
     }
 
     @Override
@@ -397,7 +408,7 @@ public class ChatsUsersList extends ChatBaseFragment {
             public void onError(QBResponseException e) {
                 progressBar.setVisibility(View.GONE);
                 setOnRefreshListener.setRefreshing(false);
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

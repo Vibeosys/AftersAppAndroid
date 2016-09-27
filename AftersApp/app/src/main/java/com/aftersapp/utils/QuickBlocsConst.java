@@ -7,7 +7,7 @@ import android.content.res.Resources;
  */
 public class QuickBlocsConst {
 
-    public static final String GCM_SENDER_ID = "aftersapp-143612";
+    public static final String GCM_SENDER_ID = "60438663098";
     public static String APP_ID = "47079";
     public static String AUTH_KEY = "BsYQBMamqQZBw6V";
     public static String AUTH_SECRET = "6MLpETCFkgkcTFL";

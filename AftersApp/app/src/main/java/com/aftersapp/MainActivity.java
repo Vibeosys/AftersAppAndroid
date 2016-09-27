@@ -41,6 +41,7 @@ import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.UserAuth;
+import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.users.model.QBUser;
 
@@ -192,6 +193,7 @@ public class MainActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, purchaseFragment, PURCHASE_FRAGMENT).commit();
         } else if (id == R.id.nav_logout) {
+            SharedPreferencesUtil.removeQbUser();
             DataHolder.getInstance().setSignInQbUser(null);
             LoginActivity.LogoutFacebook();
             UserAuth.CleanAuthenticationInfo();

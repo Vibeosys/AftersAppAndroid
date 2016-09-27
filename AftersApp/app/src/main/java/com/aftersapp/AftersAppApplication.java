@@ -5,6 +5,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.aftersapp.utils.QuickBlocsConst;
+import com.aftersapp.utils.qbutils.gcm.ActivityLifecycle;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.quickblox.core.QBSettings;
@@ -23,7 +24,7 @@ public class AftersAppApplication extends MultiDexApplication {
         instance = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-
+        ActivityLifecycle.init(this);
         QBSettings.getInstance().init(getApplicationContext(), QuickBlocsConst.APP_ID,
                 QuickBlocsConst.AUTH_KEY, QuickBlocsConst.AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(QuickBlocsConst.ACCOUNT_KEY);

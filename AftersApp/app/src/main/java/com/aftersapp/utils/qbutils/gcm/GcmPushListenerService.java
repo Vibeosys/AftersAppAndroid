@@ -24,7 +24,7 @@ public class GcmPushListenerService extends CoreGcmPushListenerService {
     protected void showNotification(String message) {
         showNotification(this, MainActivity.class,
                 AftersAppApplication.getInstance().getResources().getString(R.string.notification_title), message,
-                R.mipmap.ic_launcher, NOTIFICATION_ID);
+                R.drawable.app_icon, NOTIFICATION_ID);
     }
 
     @Override

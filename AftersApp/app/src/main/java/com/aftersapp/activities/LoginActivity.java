@@ -31,6 +31,7 @@ import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.aftersapp.utils.UserAuth;
+import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
 import com.android.volley.VolleyError;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -308,7 +309,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-       
+
     }
 
     @Override
@@ -415,6 +416,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onSuccess(QBUser qbUser, Bundle bundle) {
         progressDialog.dismiss();
+        SharedPreferencesUtil.saveQbUser(qbUser);
         DataHolder.getInstance().addQbUser(qbUser);
         DataHolder.getInstance().setSignInQbUser(qbUser);
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
