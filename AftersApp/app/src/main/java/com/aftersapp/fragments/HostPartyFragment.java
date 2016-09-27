@@ -2,8 +2,10 @@ package com.aftersapp.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -13,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -177,7 +180,26 @@ public class HostPartyFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
 
-                showTakeawayDialog(savedInstanceState);
+                /*if(mLastLocation!=null)
+                {
+                    showTakeawayDialog(savedInstanceState);
+                }*/
+                {
+                    final LocationManager manager = (LocationManager)getContext().getSystemService( Context.LOCATION_SERVICE );
+
+                    if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                        buildAlertMessageNoGps();
+                    }
+                    else
+                    {
+
+                            showTakeawayDialog(savedInstanceState);
+
+
+                    }
+
+                }
+
             }
         });
         mUserPartyPhoto.setOnClickListener(new View.OnClickListener() {
@@ -374,7 +396,14 @@ public class HostPartyFragment extends BaseFragment implements
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
                 // For showing a move to my location button
-                mGoogleMap.setMyLocationEnabled(true);
+                try
+                {
+                    mGoogleMap.setMyLocationEnabled(true);
+                }catch (SecurityException e)
+                {
+
+                }
+
                 LatLng selectedLocation = new LatLng(GpsLatitude, GpsLongitude);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
                 mGoogleMap.clear();
@@ -550,18 +579,9 @@ public class HostPartyFragment extends BaseFragment implements
        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] == 0) {
             openGallery();
-        } else {
-            Toast toast = Toast.makeText(getActivity(),
-                    "User denied permission", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
         }
         if(requestCode==EDIT_LOCATION_PERMISSION_CODE&& grantResults[0]==0)
         {
-            Toast toast = Toast.makeText(getActivity(),
-                    "User Permisssion granted", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
             buildGoogleApiClient();
         }else {
             Toast toast = Toast.makeText(getActivity(),
@@ -675,17 +695,36 @@ public class HostPartyFragment extends BaseFragment implements
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(100); // Update location every second
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        try
+        {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+        }catch (SecurityException e)
+        {
+            e.printStackTrace();
+        }
+
         if (mLastLocation != null) {
           String   lat = String.valueOf(mLastLocation.getLatitude());
           String lon = String.valueOf(mLastLocation.getLongitude());
             GpsLatitude= Double.parseDouble(lat );
             GpsLongitude=Double.parseDouble(lon);
 
+        }
+        else
+        {
+            Toast toast = Toast.makeText(getContext(),"Please turn on GPS",Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();
+            final LocationManager manager = (LocationManager)getContext().getSystemService( Context.LOCATION_SERVICE );
+
+            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                buildAlertMessageNoGps();
+            }
+            //buildAlertMessageNoGps();
         }
         //updateUI();
     }
@@ -711,5 +750,23 @@ public class HostPartyFragment extends BaseFragment implements
         super.onDestroy();
         if(mGoogleApiClient!=null)
         mGoogleApiClient.disconnect();
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }

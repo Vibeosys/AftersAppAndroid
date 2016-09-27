@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,8 +114,21 @@ public class ViewProfileFragment extends BaseFragment {
     private void CallToViewProfile() {
         mUserName.setText(""+mSessionManager.getName());
         mUserEmailId.setText(""+mSessionManager.getEmail2());
-        mUserDateOfBirth.setText(""+mSessionManager.getDob());
-        mUserGender.setText(""+mSessionManager.getGender());
+
+        if(TextUtils.isEmpty(mSessionManager.getGender()))
+        {
+            mUserGender.setText("");
+        }else
+        {
+            mUserGender.setText(""+mSessionManager.getGender());
+        }
+        if(TextUtils.isEmpty(mSessionManager.getDob()))
+        {
+            mUserDateOfBirth.setText("");
+        }else
+        {
+            mUserDateOfBirth.setText(""+mSessionManager.getDob());
+        }
         long NotificationFlg = mSessionManager.getEmailNotify();
         mUserNameFirst.setText(""+mSessionManager.getName());
         if(NotificationFlg==1)

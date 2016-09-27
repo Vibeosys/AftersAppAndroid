@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -108,9 +109,15 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         mUserName.setText(""+mSessionManager.getName());
         mUserNameFirst.setText(""+mSessionManager.getName());
         mUserEmailId.setText(""+mSessionManager.getEmail2());
-        mDateOfBirth.setText(""+mSessionManager.getDob());
+
         DownloadImage downloadImage = new DownloadImage();
         downloadImage.execute(mSessionManager.getProfImg());
+
+        if(!TextUtils.isEmpty(mSessionManager.getDob()))
+            mDateOfBirth.setText(""+mSessionManager.getDob());
+        else
+            mDateOfBirth.setText("Click here to enter birth date");
+
         //mSpinnerSelectionVal get from shared preferences
         //mSwitchValNotification get from shared preferences
        // mSwitchValNotification =0;
@@ -128,10 +135,15 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
 
         mSpinner.setAdapter(dataAdapter);
 
-        if(!mSpinnerSelectionVal.equals(null))
+        if(!TextUtils.isEmpty(mSpinnerSelectionVal))
         {
            int spineerPosition = dataAdapter.getPosition(mSpinnerSelectionVal);
             mSpinner.setSelection(spineerPosition);
+        }
+        else if(TextUtils.isEmpty(mSpinnerSelectionVal))
+        {
+            Log.d("TAG","TAG");
+            Log.d("TAG","TAG");
         }
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -252,17 +264,36 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     }
 
     private boolean callToValidation() {
+            userDate = mDateOfBirth.getText().toString();
             if(TextUtils.isEmpty(mUserName.getText().toString().trim()))
             {
                 mUserName.requestFocus();
                 mUserName.setError("Please enter userName");
                 return false;
-            }else if(TextUtils.isEmpty(mUserEmailId.getText().toString().trim()))
+            }
+
+           if(TextUtils.isEmpty(mUserEmailId.getText().toString().trim()))
             {
                 mUserEmailId.requestFocus();
-                mUserEmailId.setError("Please enter email id");
+                mUserEmailId.setError("Please enter email Id");
                 return false;
-            }
+            }else if(mUserEmailId.getText().toString().trim().length()!=0)
+           {
+               if(!Patterns.EMAIL_ADDRESS.matcher(mUserEmailId.getText().toString()).matches())
+               {
+                   mUserEmailId.requestFocus();
+                   mUserEmailId.setError("Invalid email Id");
+                   return false;
+               }
+           }if(userDate.equals("Click here to enter birth date"))
+             {
+                 mUserEmailId.requestFocus();
+                 mDateOfBirth.setError("Please select Birth date");
+                 Toast toast = Toast.makeText(getContext(),"Please select Birth date",Toast.LENGTH_LONG);
+                 toast.setGravity(Gravity.CENTER,0,0);
+                 toast.show();
+                 return false;
+             }
         return true;
     }
 

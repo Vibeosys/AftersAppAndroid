@@ -155,10 +155,7 @@
                     android:textColor="@color/secondaryText"
                     android:textSize="18sp" />
 
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+
 
                 <View
                     android:layout_width="fill_parent"

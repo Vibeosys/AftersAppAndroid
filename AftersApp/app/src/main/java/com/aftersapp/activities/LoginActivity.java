@@ -308,23 +308,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*if (connectionResult.hasResolution()) {
-            try {
-                connectionResult.startResolutionForResult(this, RC_SIGN_IN);
-                // GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
-                return;
-            } catch (Exception e) {
-                mGoogleApiClient.connect();
-            }
-
-        }
-        if (!mIntentInProgress) {
-            mConnectionResult = connectionResult;
-
-            if (mSignInClicked) {
-                resolveSignInError();
-            }
-        }*/
+       
     }
 
     @Override
@@ -333,18 +317,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == ACCOUNT_PERMISSION_CODE && grantResults[0] == 0) {
             signInGooglePluse();
-           /* if (!mGoogleApiClient.isConnecting()) {
-                if (mGoogleApiClient.isConnected()) {
-                    mSignInClicked = true;
-                    resolveSignInError();
-                } else {
-                    mGoogleApiClient.connect();
-                    if (mGoogleApiClient.isConnected()) {
-                        mSignInClicked = true;
-                        resolveSignInError();
-                    }
-                }
-            }*/
+
 
         } else {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -355,13 +328,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void googlePlusAPIInit() {
-        /*mGoogleApiClient = new GoogleApiClient.Builder(LoginActivity.this)
-                .addConnectionCallbacks(LoginActivity.this)
-                .addOnConnectionFailedListener(LoginActivity.this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addScope(Plus.SCOPE_PLUS_PROFILE)
-                .build();*/
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestScopes(new Scope(Scopes.PLUS_ME))
@@ -381,10 +348,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
 
-        } else {
-            Log.d("TAG", "TAG");
-            Log.d("TAG", "TAG");
-            Log.d("TAG", "TAG");
         }
 
     }
@@ -414,26 +377,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, "", id);
 
-                Log.d("TAG", "TAG");
-                Log.d("TAG", "TAG");
-                Log.d("TAG", "TAG");
+
             }
-           /* if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-                Person currentPerson = Plus.PeopleApi
-                        .getCurrentPerson(mGoogleApiClient);
-                email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-                name = currentPerson.getDisplayName();
-                profileImg = currentPerson.getImage().getUrl();
-                //personGooglePlusProfile = currentPerson.getUrl();
-                token = currentPerson.getId();
-                int iGender = currentPerson.getGender();
-                gender = iGender == Person.Gender.MALE ? "Male" :
-                        iGender == Person.Gender.FEMALE ? "Female" : "Other";
-                dob = currentPerson.getBirthday();
-                callToRegister(name, email, gender, profileImg, dob, token);
-            } else {
-                Log.e("user profile is null", "profile is null");
-            }*/
+
         } catch (Exception e) {
             e.printStackTrace();
         }
