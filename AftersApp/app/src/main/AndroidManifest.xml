@@ -15,6 +15,7 @@
     <!-- To use account credentials -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.vending.BILLING"/>
 
     <uses-feature android:name="android.hardware.location.gps" />
 
@@ -39,7 +40,8 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activities.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

@@ -198,4 +198,11 @@ public class SessionManager {
     public String registerUser() {
         return mProjectSharedPref.getString(PropertyTypeConstants.REGISTER_USER, null);
     }
+
+    public void setIsPurchased(int isPurchased) {
+        setValuesInSharedPrefs(PropertyTypeConstants.IS_PURCHASED, isPurchased);
+    }
+    public int getIsPurchased() {
+        return mProjectSharedPref.getInt(PropertyTypeConstants.IS_PURCHASED, -1);
+    }
 }

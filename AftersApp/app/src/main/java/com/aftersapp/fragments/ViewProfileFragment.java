@@ -82,10 +82,14 @@ public class ViewProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
-        mAdView = (AdView) view.findViewById(R.id.adView);
-        adRequest = new AdRequest.Builder().addTestDevice("DC7854A3ADFE5403F956AFB5B83C7391")
-                .build();
-        mAdView.loadAd(adRequest);
+        if(mSessionManager.getIsPurchased()==-1)
+        {
+            mAdView = (AdView) view.findViewById(R.id.adView);
+            adRequest = new AdRequest.Builder().addTestDevice("DC7854A3ADFE5403F956AFB5B83C7391")
+                    .build();
+            mAdView.loadAd(adRequest);
+        }
+
 
         mRemoveAds = (Button) view.findViewById(R.id.removeAD);
 

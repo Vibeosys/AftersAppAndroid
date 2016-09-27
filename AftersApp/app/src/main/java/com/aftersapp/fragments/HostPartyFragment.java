@@ -547,9 +547,17 @@ public class HostPartyFragment extends BaseFragment implements
                     if(mFinalLatititude!=0.0||mFinalLongitude!=0.0)
                     {
                         addressFlag=true;
+                        dlg.dismiss();
                     }
                 }
-                dlg.dismiss();
+                else
+                {
+                    dlg.dismiss();
+                    Toast toast = Toast.makeText(getContext(),"Cannot able to find GPS location ",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                }
+
             }
         });
 

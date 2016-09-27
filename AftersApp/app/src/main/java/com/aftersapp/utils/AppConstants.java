@@ -9,4 +9,5 @@ public class AppConstants {
     public static final int NOT_ATTENDING_PARTY = 0;
     public static final int FAV_PARTY = 1;
     public static final int NOT_FAV_PARTY = 0;
+    public final static int ITEM_PURCHASED = 1;
 }
