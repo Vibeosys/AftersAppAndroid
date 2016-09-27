@@ -42,6 +42,9 @@ import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.UserAuth;
 import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.users.model.QBUser;
 
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity
 
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +123,9 @@ public class MainActivity extends BaseActivity
         mHostLay.setOnClickListener(this);
         mMoreLay.setOnClickListener(this);
         setUpFragment(R.id.homeLay);
+
     }
+
 
     public void callLogin() {
         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -151,7 +157,7 @@ public class MainActivity extends BaseActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        AftersAppApplication.getInstance().setAddClickCount();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_filter) {
             FilterFragment filterFragment = new FilterFragment();
@@ -168,7 +174,7 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        AftersAppApplication.getInstance().setAddClickCount();
         if (id == R.id.nav_home) {
             // Handle the camera action
             HomeFragment homeFragment = new HomeFragment();
@@ -207,7 +213,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void setUpFragment(int i) {
-
+        AftersAppApplication.getInstance().setAddClickCount();
         switch (i) {
             case R.id.homeLay:
                 HomeFragment homeFragment = new HomeFragment();
