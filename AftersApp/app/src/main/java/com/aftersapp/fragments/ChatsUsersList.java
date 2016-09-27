@@ -40,7 +40,9 @@ import com.aftersapp.utils.qbutils.VerboseQbChatConnectionListener;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBGroupChatManager;
 import com.quickblox.chat.QBPrivateChat;
+import com.quickblox.chat.QBPrivateChatManager;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBMessageListener;
 import com.quickblox.chat.listeners.QBPrivateChatManagerListener;
@@ -49,6 +51,7 @@ import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import org.jivesoftware.smack.ConnectionListener;
@@ -60,7 +63,7 @@ import java.util.Collection;
 /**
  * Created by akshay on 23-09-2016.
  */
-public class ChatsUsersList extends BaseFragment {
+public class ChatsUsersList extends ChatBaseFragment {
     private static final String TAG = ChatsUsersList.class.getSimpleName();
     private GooglePlayServicesHelper googlePlayServicesHelper;
     private BroadcastReceiver pushBroadcastReceiver;
@@ -83,6 +86,21 @@ public class ChatsUsersList extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String email = mSessionManager.getEmail();
+        String password = mSessionManager.getEmail() + mSessionManager.getUserId();
+        final QBUser user = new QBUser(email, password);
+        QBUsers.signIn(user, new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
         onRequestMessagePermission();
     }
 
@@ -110,7 +128,7 @@ public class ChatsUsersList extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat_user_list, container, false);
-        googlePlayServicesHelper = new GooglePlayServicesHelper();
+        googlePlayServicesHelper = new GooglePlayServicesHelper(mSessionManager);
         if (googlePlayServicesHelper.checkPlayServicesAvailable(getActivity())) {
             googlePlayServicesHelper.registerForGcm(QuickBlocsConst.GCM_SENDER_ID);
         }
@@ -140,6 +158,46 @@ public class ChatsUsersList extends BaseFragment {
         return rootView;
     }
 
+    @Override
+    public void onSessionCreated(boolean success) {
+        if (success) {
+            QBUser currentUser = ChatHelper.getCurrentUser();
+            if (currentUser != null) {
+                //setActionBarTitle(getString(R.string.dialogs_logged_in_as, currentUser.getFullName()));
+            }
+
+            registerQbChatListeners();
+            if (QbDialogHolder.getInstance().getDialogList().size() > 0) {
+                loadDialogsFromQb(true, true);
+            } else {
+                loadDialogsFromQb();
+            }
+        }
+    }
+
+    private void registerQbChatListeners() {
+        QBPrivateChatManager privateChatManager = QBChatService.getInstance().getPrivateChatManager();
+        QBGroupChatManager groupChatManager = QBChatService.getInstance().getGroupChatManager();
+        if (privateChatManager != null) {
+            privateChatManager.addPrivateChatManagerListener(privateChatManagerListener);
+        }
+
+       /* if (groupChatManager != null) {
+            groupChatManager.addGroupChatManagerListener(groupChatManagerListener);
+        }*/
+    }
+
+    private void unregisterQbChatListeners() {
+        QBPrivateChatManager privateChatManager = QBChatService.getInstance().getPrivateChatManager();
+        QBGroupChatManager groupChatManager = QBChatService.getInstance().getGroupChatManager();
+        if (privateChatManager != null) {
+            privateChatManager.removePrivateChatManagerListener(privateChatManagerListener);
+        }
+
+       /* if (groupChatManager != null) {
+            groupChatManager.removeGroupChatManagerListener(groupChatManagerListener);
+        }*/
+    }
 
     private class PushBroadcastReceiver extends BroadcastReceiver {
 
@@ -282,6 +340,14 @@ public class ChatsUsersList extends BaseFragment {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (isAppSessionActive) {
+            unregisterQbChatListeners();
+        }
     }
 
     private class DeleteActionModeCallback implements ActionMode.Callback {

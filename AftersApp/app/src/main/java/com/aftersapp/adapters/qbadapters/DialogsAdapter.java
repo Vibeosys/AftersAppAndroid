@@ -42,7 +42,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBDialog> {
 
         QBDialog dialog = getItem(position);
 
-        holder.dialogImageView.setBackgroundDrawable(UiUtils.getColorCircleDrawable(position));
+        holder.dialogImageView.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
         holder.dialogImageView.setImageDrawable(null);
 
         holder.nameTextView.setText(QbDialogUtils.getDialogName(dialog));

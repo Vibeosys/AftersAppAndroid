@@ -29,6 +29,8 @@ import com.quickblox.messages.QBPushNotifications;
 import com.quickblox.messages.model.QBEnvironment;
 import com.quickblox.messages.model.QBNotificationChannel;
 import com.quickblox.messages.model.QBSubscription;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +46,13 @@ public class GooglePlayServicesHelper {
 
     private static final int PLAY_SERVICES_REQUEST_CODE = 9000;
     protected static SessionManager mSessionManager = null;
+
+    public GooglePlayServicesHelper() {
+    }
+
+    public GooglePlayServicesHelper(SessionManager mSessionManager) {
+        this.mSessionManager = mSessionManager;
+    }
 
     public void registerForGcm(String senderId) {
         String gcmRegId = getGcmRegIdFromPreferences();
@@ -120,26 +129,39 @@ public class GooglePlayServicesHelper {
                     Log.w(TAG, "Device wasn't registered in GCM");
                 } else {
                     Log.i(TAG, "Device registered in GCM, regId=" + gcmRegId);
+                    String email = mSessionManager.getEmail();
+                    String password = mSessionManager.getEmail() + mSessionManager.getUserId();
+                    final QBUser user = new QBUser(email, password);
+                    QBUsers.signIn(user, new QBEntityCallback<QBUser>() {
+                        @Override
+                        public void onSuccess(QBUser qbUser, Bundle bundle) {
+                            QBSubscription qbSubscription = new QBSubscription();
+                            qbSubscription.setNotificationChannel(QBNotificationChannel.GCM);
+                            qbSubscription.setDeviceUdid(getDeviceUid());
+                            qbSubscription.setRegistrationID(gcmRegId);
+                            qbSubscription.setEnvironment(QBEnvironment.DEVELOPMENT); // Don't forget to change QBEnvironment to PRODUCTION when releasing application
 
-                    QBSubscription qbSubscription = new QBSubscription();
-                    qbSubscription.setNotificationChannel(QBNotificationChannel.GCM);
-                    qbSubscription.setDeviceUdid(getDeviceUid());
-                    qbSubscription.setRegistrationID(gcmRegId);
-                    qbSubscription.setEnvironment(QBEnvironment.DEVELOPMENT); // Don't forget to change QBEnvironment to PRODUCTION when releasing application
+                            QBPushNotifications.createSubscription(qbSubscription,
+                                    new QBEntityCallback<ArrayList<QBSubscription>>() {
+                                        @Override
+                                        public void onSuccess(ArrayList<QBSubscription> qbSubscriptions, Bundle bundle) {
+                                            Log.i(TAG, "Successfully subscribed for QB push messages");
+                                            saveGcmRegIdToPreferences(gcmRegId);
+                                        }
 
-                    QBPushNotifications.createSubscription(qbSubscription,
-                            new QBEntityCallback<ArrayList<QBSubscription>>() {
-                                @Override
-                                public void onSuccess(ArrayList<QBSubscription> qbSubscriptions, Bundle bundle) {
-                                    Log.i(TAG, "Successfully subscribed for QB push messages");
-                                    saveGcmRegIdToPreferences(gcmRegId);
-                                }
+                                        @Override
+                                        public void onError(QBResponseException error) {
+                                            Log.w(TAG, "Unable to subscribe for QB push messages; " + error.toString());
+                                        }
+                                    });
+                        }
 
-                                @Override
-                                public void onError(QBResponseException error) {
-                                    Log.w(TAG, "Unable to subscribe for QB push messages; " + error.toString());
-                                }
-                            });
+                        @Override
+                        public void onError(QBResponseException e) {
+
+                        }
+                    });
+
                 }
             }
         }.execute(senderId);

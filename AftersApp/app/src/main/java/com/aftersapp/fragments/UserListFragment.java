@@ -207,6 +207,12 @@ public class UserListFragment extends BaseFragment implements AdapterView.OnItem
                     @Override
                     public void onError(QBResponseException errors) {
                         Log.e("UserList", errors.getMessage());
+                        progressDialog.dismiss();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                createDialog(selectedUsers);
+                            }
+                        });
                     }
                 });
             }
