@@ -87,13 +87,13 @@ public class PartyAdapter extends BaseAdapter {
         if (isFav == AppConstants.FAV_PARTY) {
             viewHolder.imgFav.setImageResource(R.drawable.heart_colour);
         } else if (isFav == AppConstants.NOT_FAV_PARTY) {
-            viewHolder.imgFav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            viewHolder.imgFav.setImageResource(R.drawable.not_favouirte);
         }
 
         if (isLike == AppConstants.ATTENDING_PARTY) {
             viewHolder.imgLike.setImageResource(R.drawable.thumb_color);
         } else if (isLike == AppConstants.NOT_ATTENDING_PARTY) {
-            viewHolder.imgLike.setImageResource(R.drawable.ic_thumb_up_black_24dp);
+            viewHolder.imgLike.setImageResource(R.drawable.party_not_attending);
         }
 
         final String url = partyData.getImage();

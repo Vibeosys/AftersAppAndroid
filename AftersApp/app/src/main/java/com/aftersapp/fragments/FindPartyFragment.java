@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,9 @@ public class FindPartyFragment extends BaseFragment implements
         ServerSyncManager.OnErrorResultReceived, PartyAdapter.OnLikeOrFavClick {
 
     private static final String TAG = FindPartyFragment.class.getSimpleName();
+    public static final String PARTY_RADIUS = "party_radius";
+    public static final String PARTY_AGE = "party_age";
+    public static final String PARTY_MUSIC = "party_music";
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private PartyAdapter mPartyAdapter;
@@ -62,6 +66,10 @@ public class FindPartyFragment extends BaseFragment implements
     private double latitude;
     double longitude;
     private TextView txtErrorMsg;
+    private int filterAge = AppConstants.DEFAULT_AGE_VALUE;
+    private int filterRadius = AppConstants.DEFAULT_RADIUS_VALUE;
+    private String musicGenre = "";
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +91,9 @@ public class FindPartyFragment extends BaseFragment implements
             // Ask user to enable GPS/network in settings
             gps.showSettingsAlert();
         }
+        filterAge = mSessionManager.getAge();
+        filterRadius = mSessionManager.getRadius();
+        musicGenre = mSessionManager.getMusicGenre();
     }
 
     @Nullable
@@ -107,7 +118,12 @@ public class FindPartyFragment extends BaseFragment implements
 
         if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
             showProgress(true, mListParties, progressBar);
-            GetPartyDTO getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), latitude, longitude);
+            GetPartyDTO getPartyDTO = null;
+            if (!TextUtils.isEmpty(musicGenre))
+                getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), latitude,
+                        longitude, filterAge, filterRadius, musicGenre.toLowerCase());
+            else getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), latitude,
+                    longitude, filterAge, filterRadius);
             Gson gson = new Gson();
             String serializedJsonString = gson.toJson(getPartyDTO);
             BaseRequestDTO baseRequestDTO = new BaseRequestDTO();

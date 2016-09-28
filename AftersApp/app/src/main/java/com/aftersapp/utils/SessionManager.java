@@ -142,14 +142,20 @@ public class SessionManager {
     public void setUserId(long userId) {
         setValuesInSharedPrefs(PropertyTypeConstants.USER_ID, userId);
     }
-    public String getEditProfileUrl()
-    {
-        return mProjectSharedPref.getString(PropertyTypeConstants.EDIT_PROFILE_URL,null);
+
+    public String getEditProfileUrl() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.EDIT_PROFILE_URL, null);
     }
 
     private static void setValuesInSharedPrefs(String sharedPrefKey, long sharedPrefValue) {
         SharedPreferences.Editor editor = mProjectSharedPref.edit();
         editor.putLong(sharedPrefKey, sharedPrefValue);
+        editor.apply();
+    }
+
+    private static void setIntValuesInSharedPrefs(String sharedPrefKey, int sharedPrefValue) {
+        SharedPreferences.Editor editor = mProjectSharedPref.edit();
+        editor.putInt(sharedPrefKey, sharedPrefValue);
         editor.apply();
     }
 
@@ -202,7 +208,32 @@ public class SessionManager {
     public void setIsPurchased(int isPurchased) {
         setValuesInSharedPrefs(PropertyTypeConstants.IS_PURCHASED, isPurchased);
     }
+
     public int getIsPurchased() {
         return mProjectSharedPref.getInt(PropertyTypeConstants.IS_PURCHASED, -1);
+    }
+
+    public void setRadius(int radius) {
+        setIntValuesInSharedPrefs(PropertyTypeConstants.FILTER_RADIUS, radius);
+    }
+
+    public int getRadius() {
+        return mProjectSharedPref.getInt(PropertyTypeConstants.FILTER_RADIUS, AppConstants.DEFAULT_RADIUS_VALUE);
+    }
+
+    public void setAge(int age) {
+        setIntValuesInSharedPrefs(PropertyTypeConstants.FILTER_AGE, age);
+    }
+
+    public int getAge() {
+        return mProjectSharedPref.getInt(PropertyTypeConstants.FILTER_AGE, AppConstants.DEFAULT_AGE_VALUE);
+    }
+
+    public void setMusicGenre(String musicGenre) {
+        setValuesInSharedPrefs(PropertyTypeConstants.FILTER_MUSIC, musicGenre);
+    }
+
+    public String getMusicGenre() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.FILTER_MUSIC, null);
     }
 }

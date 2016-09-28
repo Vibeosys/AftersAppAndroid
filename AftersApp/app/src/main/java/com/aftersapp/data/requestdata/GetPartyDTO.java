@@ -10,11 +10,25 @@ public class GetPartyDTO extends BaseDTO {
     private long userId;
     private double latitude;
     private double longitude;
+    private int age;
+    private int radiusInKm;
+    private String genre;
 
-    public GetPartyDTO(long userId, double latitude, double longitude) {
+    public GetPartyDTO(long userId, double latitude, double longitude, int age, int radiusInKm, String genre) {
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.age = age;
+        this.radiusInKm = radiusInKm;
+        this.genre = genre;
+    }
+
+    public GetPartyDTO(long userId, double latitude, double longitude, int age, int radiusInKm) {
+        this.userId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.age = age;
+        this.radiusInKm = radiusInKm;
     }
 
     public long getUserId() {
@@ -39,5 +53,29 @@ public class GetPartyDTO extends BaseDTO {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getRadius() {
+        return radiusInKm;
+    }
+
+    public void setRadius(int radiusInKm) {
+        this.radiusInKm = radiusInKm;
+    }
+
+    public String getGenre() {
+        return genre.toLowerCase();
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }

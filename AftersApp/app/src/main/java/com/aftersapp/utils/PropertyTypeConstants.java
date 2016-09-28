@@ -33,4 +33,7 @@ public class PropertyTypeConstants {
     public static final String USER_TOKEN = "user.token";
     public static final String USER_EMAIL_NOTIFY = "user.emailnotify";
     public static final String IS_PURCHASED = "user.Purchase";
+    public static final String FILTER_RADIUS = "user.filter.radius";
+    public static final String FILTER_AGE = "user.filter.age";
+    public static final String FILTER_MUSIC = "user.filter.music";
 }
