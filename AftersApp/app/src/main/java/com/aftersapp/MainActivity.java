@@ -118,6 +118,10 @@ public class MainActivity extends BaseActivity
             DownloadImage downloadImage = new DownloadImage();
             downloadImage.execute(mImageUri);
         }
+        else if(TextUtils.isEmpty(mSessionManager.getProfImg()))
+        {
+            profileImg.setImageResource(R.drawable.avatar_profile);
+        }
         mHomeLay.setOnClickListener(this);
         mSearchLay.setOnClickListener(this);
         mHostLay.setOnClickListener(this);

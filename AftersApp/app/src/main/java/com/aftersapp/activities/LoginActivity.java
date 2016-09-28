@@ -374,7 +374,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 GoogleSignInAccount acct = result.getSignInAccount();
                 email = acct.getEmail();
                 Uri Img = acct.getPhotoUrl();
-                String profileImg = String.valueOf(Img);
+                profileImg = String.valueOf(Img);
                 String id = acct.getId();
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, "", id);

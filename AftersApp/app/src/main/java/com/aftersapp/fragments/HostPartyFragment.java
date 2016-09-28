@@ -48,6 +48,7 @@ import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.responsedata.HostPartyDTO;
 import com.aftersapp.services.GPSTracker;
+import com.aftersapp.utils.NetworkUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
@@ -183,8 +184,13 @@ public class HostPartyFragment extends BaseFragment implements
                     if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         buildAlertMessageNoGps();
                     } else {
-
-                        showTakeawayDialog(savedInstanceState);
+                        if(NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                            showTakeawayDialog(savedInstanceState);
+                        }
+                        else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
+                        {
+                            createAlertDialog("AftersApp","Internet connection is not available");
+                        }
 
 
                     }
@@ -204,7 +210,14 @@ public class HostPartyFragment extends BaseFragment implements
             public void onClick(View v) {
                 boolean result = callToValidation();
                 if (result == true) {
-                    callTToWebService();
+                    if(NetworkUtils.isActiveNetworkAvailable(getContext()))
+                    {
+                        callTToWebService();
+                    }
+                    else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
+                    {
+                        createAlertDialog("AftersApp","Internet connection is not available");
+                    }
                 }
             }
         });

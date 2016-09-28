@@ -102,8 +102,7 @@ public class ViewProfileFragment extends BaseFragment {
         circleView = (CircleImageView) view.findViewById(R.id.circleView);
         mUserNotificationStatus = (TextView) view.findViewById(R.id.notificationStatusView);
         mUserNameFirst =(TextView) view.findViewById(R.id.userName);
-        DownloadImage downloadImage = new DownloadImage();
-        downloadImage.execute(mSessionManager.getProfImg());
+
         CallToViewProfile();
         mRemoveAds.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,6 +141,15 @@ public class ViewProfileFragment extends BaseFragment {
         }
         else {
             mUserNotificationStatus.setText("Disable");
+        }
+        if(!TextUtils.isEmpty(mSessionManager.getProfImg()))
+        {
+            DownloadImage downloadImage = new DownloadImage();
+            downloadImage.execute(mSessionManager.getProfImg());
+        }
+        else if(TextUtils.isEmpty(mSessionManager.getProfImg()))
+        {
+            circleView.setImageResource(R.drawable.avatar_profile);
         }
     }
 
