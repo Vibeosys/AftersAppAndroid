@@ -218,6 +218,10 @@ public class HostPartyFragment extends BaseFragment implements
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mSpinnerAge = parent.getItemAtPosition(position).toString();
                 String item = parent.getItemAtPosition(position).toString();
+                String replace = item.replace("+","");
+                Log.d("TAG","TAG");
+                Log.d("TAG","TAG");
+                Log.d("TAG","TAG");
             }
 
             @Override
@@ -248,11 +252,11 @@ public class HostPartyFragment extends BaseFragment implements
             createAlertDialog("AftersApp", "Please select Age Limit");
             setFlag = false;
             return false;
-        } else if (mUserPartyPhoto.getTag().equals("thumnel")) {
+        }/* else if (mUserPartyPhoto.getTag().equals("thumnel")) {
             createAlertDialog("AftersApp", "Please select party image");
             setFlag = false;
             return false;
-        } else if (addressFlag != true) {
+        }*/ else if (addressFlag != true) {
             mPartyAddress.setError("Please click here to get address");
             setFlag = false;
             return false;
@@ -273,17 +277,20 @@ public class HostPartyFragment extends BaseFragment implements
         int scaledWidth = 320;
         Bitmap scaledBitmap = null;
         String imageInBase64Format = null;
-
-        try {
-            scaledBitmap = Bitmap.createScaledBitmap(convertedImg, scaledHeight, scaledWidth, true);
-            System.gc();
-            imageInBase64Format = getStringImage(scaledBitmap);
-        } catch (Exception e) {
-            createAlertDialog("Post My Ad", "Image cannot be uploaded");
-            Log.d("TAG", "##" + e.toString());
-            System.gc();
-            return;
+        if (!mUserPartyPhoto.getTag().equals("thumnel"))
+        {
+            try {
+                scaledBitmap = Bitmap.createScaledBitmap(convertedImg, scaledHeight, scaledWidth, true);
+                System.gc();
+                imageInBase64Format = getStringImage(scaledBitmap);
+            } catch (Exception e) {
+                createAlertDialog("Post My Ad", "Image cannot be uploaded");
+                Log.d("TAG", "##" + e.toString());
+                System.gc();
+                return;
+            }
         }
+
 
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,

@@ -110,7 +110,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
             int responseCode = purchaseItems.getInt("RESPONSE_CODE");
             if (responseCode == 0) {
                 ArrayList<String> items = purchaseItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-                if (items.contains("com.package.name")) {
+                if (items.contains("com.aftersapp.noads")) {
                     Toast.makeText(getContext(), "Product is already purchased", Toast.LENGTH_SHORT).show();
                 } else {
                     purchaseAvailableProduct();
@@ -124,7 +124,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
     private void purchaseAvailableProduct() {
 
         ArrayList<String> purchaseList = new ArrayList<String>();
-        purchaseList.add("com.inter.package.name");
+        purchaseList.add("com.aftersapp.noads");
         Bundle querySkus = new Bundle();
         querySkus.putStringArrayList("ITEM_ID_LIST", purchaseList);
         AsynchGetPurchaseData purchaseBundle = new AsynchGetPurchaseData();
@@ -157,7 +157,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                         JSONObject object = new JSONObject(thisResponse);
                         String productId = object.getString("productId");
                         String price = object.getString("price");
-                        if (productId.equals("com.package.name.add"))
+                        if (productId.equals("com.aftersapp.noads"))
 
                 mPrice = price;
                         mTransactionId = UUID.randomUUID();
@@ -196,7 +196,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                     JSONObject jsonObj = new JSONObject(purchaseData);
                     String productId = jsonObj.getString("productId");
                     String payload = jsonObj.getString("developerPayload");
-                    if (productId.equals("com.your.package.name")) {
+                    if (productId.equals("com.aftersapp.noads")) {
                         Toast.makeText(getContext(), "You have purchase the ads free " +
                                 "application. Thank you!", Toast.LENGTH_LONG).show();
                         mSessionManager.setIsPurchased(AppConstants.ITEM_PURCHASED);

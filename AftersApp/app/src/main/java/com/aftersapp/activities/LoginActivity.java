@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -373,7 +374,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 GoogleSignInAccount acct = result.getSignInAccount();
                 email = acct.getEmail();
                 Uri Img = acct.getPhotoUrl();
-                String profileImg = Img.toString();
+                String profileImg = String.valueOf(Img);
                 String id = acct.getId();
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, "", id);

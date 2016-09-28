@@ -82,6 +82,7 @@ public class ViewProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
+        int val = mSessionManager.getIsPurchased();
         if(mSessionManager.getIsPurchased()==-1)
         {
             mAdView = (AdView) view.findViewById(R.id.adView);
