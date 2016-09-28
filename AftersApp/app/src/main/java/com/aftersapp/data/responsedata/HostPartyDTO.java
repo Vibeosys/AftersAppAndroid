@@ -14,7 +14,7 @@ public class HostPartyDTO extends BaseDTO {
     double longitude;
     String location;
     String music;
-    String age;
+    int age;
     String interest;
     String attending;
     String image;
@@ -22,7 +22,7 @@ public class HostPartyDTO extends BaseDTO {
     String pdate;
 
     public HostPartyDTO(String title, String desc, double latitude, double longitude, String location,
-                        String music, String age, String interest, String attending, String image,
+                        String music, int age, String interest, String attending, String image,
                         long host, String pdate) {
         this.title = title;
         this.desc = desc;
@@ -86,11 +86,11 @@ public class HostPartyDTO extends BaseDTO {
         this.music = music;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 

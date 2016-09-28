@@ -103,7 +103,7 @@ public class HostPartyFragment extends BaseFragment implements
     private int EDIT_SELECT_IMAGE = 20;
     private String mImageUri, imgDecodableString;
     double mFinalLatititude, mFinalLongitude;
-    private String mFinalAddress, mSpinnerAge;
+    private String mFinalAddress, mSpinnerAge,replaceSpinner;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     Bitmap convertedImg = null;
     private GPSTracker gps;
@@ -111,6 +111,7 @@ public class HostPartyFragment extends BaseFragment implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
+
 
 
     // TODO: Rename and change types and number of parameters
@@ -218,7 +219,7 @@ public class HostPartyFragment extends BaseFragment implements
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mSpinnerAge = parent.getItemAtPosition(position).toString();
                 String item = parent.getItemAtPosition(position).toString();
-                String replace = item.replace("+","");
+                replaceSpinner = item.replace("+","");
                 Log.d("TAG","TAG");
                 Log.d("TAG","TAG");
                 Log.d("TAG","TAG");
@@ -252,11 +253,7 @@ public class HostPartyFragment extends BaseFragment implements
             createAlertDialog("AftersApp", "Please select Age Limit");
             setFlag = false;
             return false;
-        }/* else if (mUserPartyPhoto.getTag().equals("thumnel")) {
-            createAlertDialog("AftersApp", "Please select party image");
-            setFlag = false;
-            return false;
-        }*/ else if (addressFlag != true) {
+        } else if (addressFlag != true) {
             mPartyAddress.setError("Please click here to get address");
             setFlag = false;
             return false;
@@ -271,7 +268,9 @@ public class HostPartyFragment extends BaseFragment implements
         double sendLat = mFinalLatititude;
         double sendLong = mFinalLongitude;
         String PartyAddress = mFinalAddress;
-        String PartyAge = mSpinnerAge;
+        //String PartyAge = mSpinnerAge;
+        String PartyAge=replaceSpinner;
+        int spinnerConv= Integer.parseInt(PartyAge);
         String MusciGeneration = mMusicGeneration.getText().toString().trim();
         int scaledHeight = 480;
         int scaledWidth = 320;
@@ -295,7 +294,7 @@ public class HostPartyFragment extends BaseFragment implements
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
                 PartyDescription, sendLat, sendLong,
-                PartyAddress, MusciGeneration, PartyAge, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
+                PartyAddress, MusciGeneration, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
         String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);
@@ -425,10 +424,14 @@ public class HostPartyFragment extends BaseFragment implements
                                 mSendAddress = mSendAddress + address + "\t";
                             }
                             if (!TextUtils.isEmpty(city)) {
-                                mSendAddress = mSendAddress + city + "\t";
+                                mSendAddress = mSendAddress+"," + city + "\t";
                             }
                             if (!TextUtils.isEmpty(state)) {
-                                mSendAddress = mSendAddress + state + "\t";
+                                mSendAddress = mSendAddress+"," + state + "\t";
+                            }
+                            if(!TextUtils.isEmpty(postalCode))
+                            {
+                                mSendAddress = mSendAddress+","+postalCode+"\t";
                             }
                             if (lat != 0.0 || log != 0.0) {
                                 if (!mSendAddress.equals("")) {
@@ -485,10 +488,14 @@ public class HostPartyFragment extends BaseFragment implements
                                         mSendAddress = mSendAddress + address + "\t";
                                     }
                                     if (!TextUtils.isEmpty(city)) {
-                                        mSendAddress = mSendAddress + city + "\t";
+                                        mSendAddress = mSendAddress+"," + city + "\t";
                                     }
                                     if (!TextUtils.isEmpty(state)) {
-                                        mSendAddress = mSendAddress + state;
+                                        mSendAddress = mSendAddress+"," + state+"\t";
+                                    }
+                                    if(!TextUtils.isEmpty(postalCode))
+                                    {
+                                        mSendAddress = mSendAddress+","+postalCode;
                                     }
                                     // }
                                 }
