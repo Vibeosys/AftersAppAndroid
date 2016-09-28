@@ -90,7 +90,7 @@ public class HostPartyFragment extends BaseFragment implements
 
     private Spinner mSpinner;
     private TextView mGoogleMapTextView, mPartyAddress;
-    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty,mRemoveImg;
+    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg;
     private EditText mSearchEditText, mPartyTitle, mPartyDescription, mMusicGeneration;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
@@ -103,7 +103,7 @@ public class HostPartyFragment extends BaseFragment implements
     private int EDIT_SELECT_IMAGE = 20;
     private String mImageUri, imgDecodableString;
     double mFinalLatititude, mFinalLongitude;
-    private String mFinalAddress, mSpinnerAge,replaceSpinner;
+    private String mFinalAddress, mSpinnerAge, replaceSpinner;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     Bitmap convertedImg = null;
     private GPSTracker gps;
@@ -111,7 +111,6 @@ public class HostPartyFragment extends BaseFragment implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
-
 
 
     // TODO: Rename and change types and number of parameters
@@ -178,7 +177,6 @@ public class HostPartyFragment extends BaseFragment implements
         mGoogleMapTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
                 {
                     final LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
@@ -215,10 +213,8 @@ public class HostPartyFragment extends BaseFragment implements
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mSpinnerAge = parent.getItemAtPosition(position).toString();
                 String item = parent.getItemAtPosition(position).toString();
-                replaceSpinner = item.replace("+","");
-                Log.d("TAG","TAG");
-                Log.d("TAG","TAG");
-                Log.d("TAG","TAG");
+                replaceSpinner = item.replace("+", "");
+
             }
 
             @Override
@@ -229,10 +225,8 @@ public class HostPartyFragment extends BaseFragment implements
         mRemoveImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!mUserPartyPhoto.getTag().equals("thumnel"))
-                {
-                    if(mUserPartyPhoto.getTag().equals("ImageSet"))
-                    {
+                if (!mUserPartyPhoto.getTag().equals("thumnel")) {
+                    if (mUserPartyPhoto.getTag().equals("ImageSet")) {
                         mUserPartyPhoto.setImageResource(R.drawable.default_party_image);
                     }
                 }
@@ -277,15 +271,14 @@ public class HostPartyFragment extends BaseFragment implements
         double sendLong = mFinalLongitude;
         String PartyAddress = mFinalAddress;
         //String PartyAge = mSpinnerAge;
-        String PartyAge=replaceSpinner;
-        int spinnerConv= Integer.parseInt(PartyAge);
+        String PartyAge = replaceSpinner;
+        int spinnerConv = Integer.parseInt(PartyAge);
         String MusciGeneration = mMusicGeneration.getText().toString().trim();
         int scaledHeight = 480;
         int scaledWidth = 320;
         Bitmap scaledBitmap = null;
         String imageInBase64Format = null;
-        if (!mUserPartyPhoto.getTag().equals("thumnel"))
-        {
+        if (!mUserPartyPhoto.getTag().equals("thumnel")) {
             try {
                 scaledBitmap = Bitmap.createScaledBitmap(convertedImg, scaledHeight, scaledWidth, true);
                 System.gc();
@@ -368,190 +361,229 @@ public class HostPartyFragment extends BaseFragment implements
     private void showTakeawayDialog(Bundle savedInstanceState) {
         double temp1 = GpsLatitude;
         double temp2 = GpsLongitude;
-        final Dialog dlg = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        mFinalLongitude = GpsLongitude;
+        mFinalLatititude = GpsLatitude;
 
-        View view = getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_google_map, null);
-        dlg.setContentView(view);
-        addressFlag = false;
-        dlg.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        if (GpsLatitude == 0.0 || GpsLongitude == 0.0) {
+            createAlertDialog("AfterApp","Cannot able to find location");
+            buildGoogleApiClient();
+        } else {
+            final Dialog dlg = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
-        mSearchBtn = (Button) dlg.findViewById(R.id.searchBtn);
-        mMapView = (MapView) dlg.findViewById(R.id.mapViewParty);
-        mapOkBtn = (Button) dlg.findViewById(R.id.savePartyMap);
-        mapCancelBtn = (Button) dlg.findViewById(R.id.cancelPartyMap);
-        mSearchEditText = (EditText) dlg.findViewById(R.id.searchAddress);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
+            View view = getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_google_map, null);
+            dlg.setContentView(view);
+            addressFlag = false;
+            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mGoogleMap = googleMap;
-                // For showing a move to my location button
-                try {
-                    mGoogleMap.setMyLocationEnabled(true);
-                } catch (SecurityException e) {
+            mSearchBtn = (Button) dlg.findViewById(R.id.searchBtn);
+            mMapView = (MapView) dlg.findViewById(R.id.mapViewParty);
+            mapOkBtn = (Button) dlg.findViewById(R.id.savePartyMap);
+            mapCancelBtn = (Button) dlg.findViewById(R.id.cancelPartyMap);
+            mSearchEditText = (EditText) dlg.findViewById(R.id.searchAddress);
+            mMapView.onCreate(savedInstanceState);
+            mMapView.onResume();
+            try {
+                MapsInitializer.initialize(getActivity().getApplicationContext());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mGoogleMap = googleMap;
+                    // For showing a move to my location button
+                    try {
+                        mGoogleMap.setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+
+                    }
+
+                    LatLng selectedLocation = new LatLng(GpsLatitude, GpsLongitude);
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
+                    mGoogleMap.clear();
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(getContext(), Locale.getDefault());
+                    String completeAddress = "";
+                    try {
+
+                        addresses = geocoder.getFromLocation(GpsLatitude, GpsLongitude, 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        int addressLine = addresses.get(0).getMaxAddressLineIndex();
+
+                        for (int i = 0; i <= addressLine; i++) {
+
+                            String address = addresses.get(0).getAddressLine(i);
+                            completeAddress = completeAddress + "\t" + address+"\t";
+                            Log.d("TAG", "TAG");
+                        }
+                    }catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
+                    Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(selectedLocation).title(completeAddress).draggable(false));
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+
+                    mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng latLng) {
+
+                            double lat = latLng.latitude;
+                            double log = latLng.longitude;
+                            String mSendAddress = "";
+                            mGoogleMap.clear();
+
+                            Geocoder geocoder;
+                            List<Address> addresses;
+                            geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+                            try {
+
+                                addresses = geocoder.getFromLocation(lat, log, 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                                int addressLine = addresses.get(0).getMaxAddressLineIndex();
+                                String completeAddress = "";
+                                for (int i = 0; i <= addressLine; i++) {
+
+                                    String address = addresses.get(0).getAddressLine(i);
+                                    completeAddress =  completeAddress+"\t" + address;
+                                    Log.d("TAG", "TAG");
+                                }
+                                Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(completeAddress).draggable(false));
+
+                                if (lat != 0.0 || log != 0.0) {
+                                    if (!mSendAddress.equals("")) {
+                                        setResult(mSendAddress, lat, log);
+                                    }
+                                }
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    });
+                    mSearchBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!TextUtils.isEmpty(mSearchEditText.getText().toString())) {
+                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(),
+                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                                String userAddress = mSearchEditText.getText().toString();
+                                Geocoder coder = new Geocoder(getContext());
+                                try {
+                                    ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userAddress, 50);
+                                    String mSendAddress = "";
+                                    double sendLatitude = 0.0;
+                                    double sendLongitude = 0.0;
+                                    for (Address add : adresses) {
+                                        // if (statement) {//Controls to ensure it is right address such as country etc.
+                                        double longitude = add.getLongitude();
+                                        double latitude = add.getLatitude();
+                                        sendLatitude = latitude;
+                                        sendLongitude = longitude;
+                                        LatLng DemoLatLong = new LatLng(latitude, longitude);
+                                        CameraPosition cameraPosition = new CameraPosition.Builder().target(DemoLatLong).zoom(12).build();
+                                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                        mGoogleMap.clear();
+                                        Geocoder geocoder;
+                                        List<Address> addresses;
+                                        geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                        addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                                        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                                        String city = addresses.get(0).getLocality();
+                                        String state = addresses.get(0).getAdminArea();
+                                        String country = addresses.get(0).getCountryName();
+                                        String postalCode = addresses.get(0).getPostalCode();
+                                        String knownName = addresses.get(0).getFeatureName();
+                                        Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + addresses));
+                                        if (!TextUtils.isEmpty(address)) {
+                                            mSendAddress = mSendAddress + address + "\t";
+                                        }
+                                        if (!TextUtils.isEmpty(city)) {
+                                            mSendAddress = mSendAddress + "," + city + "\t";
+                                        }
+                                        if (!TextUtils.isEmpty(state)) {
+                                            mSendAddress = mSendAddress + "," + state + "\t";
+                                        }
+                                        if (!TextUtils.isEmpty(postalCode)) {
+                                            mSendAddress = mSendAddress + "," + postalCode;
+                                        }
+                                        // }
+                                    }
+                                    if (sendLongitude != 0.0 || sendLongitude != 0.0) {
+                                        if (!mSendAddress.equals("")) {
+                                            setResult(mSendAddress, sendLatitude, sendLongitude);
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
 
                 }
 
-                LatLng selectedLocation = new LatLng(GpsLatitude, GpsLongitude);
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
-                mGoogleMap.clear();
-                Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(selectedLocation).draggable(false));
-                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
+            });
+            mapCancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                        double lat = latLng.latitude;
-                        double log = latLng.longitude;
-                        String mSendAddress = "";
-                        mGoogleMap.clear();
+                    addressFlag = false;
+                    dlg.dismiss();
+                }
+            });
+            mapOkBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    // if (!TextUtils.isEmpty(mFinalAddress)) {
+                    if (mFinalLatititude != 0.0 || mFinalLongitude != 0.0) {
+                        addressFlag = true;
                         Geocoder geocoder;
                         List<Address> addresses;
                         geocoder = new Geocoder(getContext(), Locale.getDefault());
-
                         try {
 
-                            addresses = geocoder.getFromLocation(lat, log, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                            String city = addresses.get(0).getLocality();
-                            String state = addresses.get(0).getAdminArea();
-                            String country = addresses.get(0).getCountryName();
-                            String postalCode = addresses.get(0).getPostalCode();
-                            String knownName = addresses.get(0).getFeatureName();
-                            Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(address).draggable(false));
-                            //String mSendAddress = address+" "+city+" "+state+" "+postalCode;
-                            if (!TextUtils.isEmpty(address)) {
-                                mSendAddress = mSendAddress + address + "\t";
+                            addresses = geocoder.getFromLocation(mFinalLatititude, mFinalLongitude, 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            int addressLine = addresses.get(0).getMaxAddressLineIndex();
+                            String completeAddress = "";
+                            for (int i = 0; i <= addressLine; i++) {
+
+                                String address = addresses.get(0).getAddressLine(i);
+                                completeAddress = completeAddress + "\t" + address;
+                                Log.d("TAG", "TAG");
                             }
-                            if (!TextUtils.isEmpty(city)) {
-                                mSendAddress = mSendAddress+"," + city + "\t";
-                            }
-                            if (!TextUtils.isEmpty(state)) {
-                                mSendAddress = mSendAddress+"," + state + "\t";
-                            }
-                            if(!TextUtils.isEmpty(postalCode))
-                            {
-                                mSendAddress = mSendAddress+","+postalCode+"\t";
-                            }
-                            if (lat != 0.0 || log != 0.0) {
-                                if (!mSendAddress.equals("")) {
-                                    setResult(mSendAddress, lat, log);
+                            if (mFinalLatititude != 0.0 || mFinalLongitude != 0.0) {
+                                if (!completeAddress.equals("")) {
+                                    setResult(completeAddress, mFinalLatititude, mFinalLongitude);
                                 }
                             }
-
-                            //  setResult(mSendAddress,lat,log);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (IndexOutOfBoundsException e) {
                             e.printStackTrace();
                         }
-
-
-                    }
-                });
-                mSearchBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!TextUtils.isEmpty(mSearchEditText.getText().toString())) {
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(),
-                                    InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                            String userAddress = mSearchEditText.getText().toString();
-                            Geocoder coder = new Geocoder(getContext());
-                            try {
-                                ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userAddress, 50);
-                                String mSendAddress = "";
-                                double sendLatitude = 0.0;
-                                double sendLongitude = 0.0;
-                                for (Address add : adresses) {
-                                    // if (statement) {//Controls to ensure it is right address such as country etc.
-                                    double longitude = add.getLongitude();
-                                    double latitude = add.getLatitude();
-                                    sendLatitude = latitude;
-                                    sendLongitude = longitude;
-                                    LatLng DemoLatLong = new LatLng(latitude, longitude);
-                                    CameraPosition cameraPosition = new CameraPosition.Builder().target(DemoLatLong).zoom(12).build();
-                                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                                    mGoogleMap.clear();
-                                    Geocoder geocoder;
-                                    List<Address> addresses;
-                                    geocoder = new Geocoder(getContext(), Locale.getDefault());
-                                    addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                                    String city = addresses.get(0).getLocality();
-                                    String state = addresses.get(0).getAdminArea();
-                                    String country = addresses.get(0).getCountryName();
-                                    String postalCode = addresses.get(0).getPostalCode();
-                                    String knownName = addresses.get(0).getFeatureName();
-                                    Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + addresses));
-                                    if (!TextUtils.isEmpty(address)) {
-                                        mSendAddress = mSendAddress + address + "\t";
-                                    }
-                                    if (!TextUtils.isEmpty(city)) {
-                                        mSendAddress = mSendAddress+"," + city + "\t";
-                                    }
-                                    if (!TextUtils.isEmpty(state)) {
-                                        mSendAddress = mSendAddress+"," + state+"\t";
-                                    }
-                                    if(!TextUtils.isEmpty(postalCode))
-                                    {
-                                        mSendAddress = mSendAddress+","+postalCode;
-                                    }
-                                    // }
-                                }
-                                if (sendLongitude != 0.0 || sendLongitude != 0.0) {
-                                    if (!mSendAddress.equals("")) {
-                                        setResult(mSendAddress, sendLatitude, sendLongitude);
-                                    }
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-
-            }
-
-        });
-        mapCancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                addressFlag = false;
-                dlg.dismiss();
-            }
-        });
-        mapOkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!TextUtils.isEmpty(mFinalAddress)) {
-                    if (mFinalLatititude != 0.0 || mFinalLongitude != 0.0) {
-                        addressFlag = true;
                         dlg.dismiss();
                     }
-                } else {
-                    dlg.dismiss();
-                    Toast toast = Toast.makeText(getContext(), "Cannot able to find GPS location ", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    // }
+
+
                 }
+            });
 
-            }
-        });
+            dlg.show();
 
-        dlg.show();
 
+        }
     }
 
 
@@ -710,11 +742,7 @@ public class HostPartyFragment extends BaseFragment implements
             GpsLongitude = Double.parseDouble(lon);
 
         } else {
-            Toast toast = Toast.makeText(getContext(), "Please turn on GPS", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
             final LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-
             if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 buildAlertMessageNoGps();
             }
