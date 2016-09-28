@@ -77,7 +77,7 @@ import java.util.Locale;
 
 public class HostPartyFragment extends BaseFragment implements
         ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived,
-        LocationListener,GoogleApiClient.ConnectionCallbacks,
+        LocationListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,30 +89,28 @@ public class HostPartyFragment extends BaseFragment implements
     private String mParam2;
 
     private Spinner mSpinner;
-    private TextView mGoogleMapTextView,mPartyAddress;
-    private Button mSearchBtn,mapOkBtn,mapCancelBtn,mHostParty;
-    private EditText mSearchEditText,mPartyTitle,mPartyDescription,mMusicGeneration;
+    private TextView mGoogleMapTextView, mPartyAddress;
+    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty;
+    private EditText mSearchEditText, mPartyTitle, mPartyDescription, mMusicGeneration;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
-    private boolean setFlag =  true;
+    private boolean setFlag = true;
     private boolean addressFlag = false;
     MapView mMapView;
     GoogleMap mGoogleMap;
     private int EDIT_PROFILE_MEDIA_PERMISSION_CODE = 19;
     private int EDIT_LOCATION_PERMISSION_CODE = 20;
-    private int EDIT_SELECT_IMAGE=20;
-    private String mImageUri,imgDecodableString;
-    double mFinalLatititude,mFinalLongitude;
-    private String mFinalAddress,mSpinnerAge;
+    private int EDIT_SELECT_IMAGE = 20;
+    private String mImageUri, imgDecodableString;
+    double mFinalLatititude, mFinalLongitude;
+    private String mFinalAddress, mSpinnerAge;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     Bitmap convertedImg = null;
     private GPSTracker gps;
-    private double GpsLatitude,GpsLongitude;
+    private double GpsLatitude, GpsLongitude;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
-
-
 
 
     // TODO: Rename and change types and number of parameters
@@ -144,22 +142,22 @@ public class HostPartyFragment extends BaseFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_host_party, container, false);
-        mSpinner =(Spinner) rootView.findViewById(R.id.Agespinner);
+        mSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
 
         mGoogleMapTextView = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mUserPartyPhoto = (ImageView) rootView.findViewById(R.id.userPartyPhoto);
-        mHostParty =(Button) rootView.findViewById(R.id.saveParty);
+        mHostParty = (Button) rootView.findViewById(R.id.saveParty);
         mPartyTitle = (EditText) rootView.findViewById(R.id.partyTitle);
         mPartyDescription = (EditText) rootView.findViewById(R.id.partyDescription);
         mMusicGeneration = (EditText) rootView.findViewById(R.id.musicGenerationDesc);
-        mAgeSpinner =(Spinner) rootView.findViewById(R.id.Agespinner);
-        mPartyAddress = (TextView)rootView.findViewById(R.id.partyAddressTextView);
+        mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
+        mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
 
 
-        List<String> spineerData =  new ArrayList<>();
+        List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
         spineerData.add("10+");
         spineerData.add("20+");
@@ -170,7 +168,7 @@ public class HostPartyFragment extends BaseFragment implements
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-                (getActivity(), android.R.layout.simple_spinner_item,spineerData);
+                (getActivity(), android.R.layout.simple_spinner_item, spineerData);
 
         dataAdapter.setDropDownViewResource
                 (android.R.layout.simple_spinner_dropdown_item);
@@ -185,15 +183,13 @@ public class HostPartyFragment extends BaseFragment implements
                     showTakeawayDialog(savedInstanceState);
                 }*/
                 {
-                    final LocationManager manager = (LocationManager)getContext().getSystemService( Context.LOCATION_SERVICE );
+                    final LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-                    if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                    if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         buildAlertMessageNoGps();
-                    }
-                    else
-                    {
+                    } else {
 
-                            showTakeawayDialog(savedInstanceState);
+                        showTakeawayDialog(savedInstanceState);
 
 
                     }
@@ -211,9 +207,8 @@ public class HostPartyFragment extends BaseFragment implements
         mHostParty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               boolean result =  callToValidation();
-                if(result==true)
-                {
+                boolean result = callToValidation();
+                if (result == true) {
                     callTToWebService();
                 }
             }
@@ -221,9 +216,10 @@ public class HostPartyFragment extends BaseFragment implements
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSpinnerAge=parent.getItemAtPosition(position).toString();
+                mSpinnerAge = parent.getItemAtPosition(position).toString();
                 String item = parent.getItemAtPosition(position).toString();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -232,60 +228,51 @@ public class HostPartyFragment extends BaseFragment implements
         return rootView;
     }
 
-    private boolean callToValidation()
-    {
-        if(mPartyTitle.getText().toString().trim().length()==0)
-        {
+    private boolean callToValidation() {
+        if (mPartyTitle.getText().toString().trim().length() == 0) {
             mPartyTitle.requestFocus();
             mPartyTitle.setError("Please enter party title");
-            setFlag=false;
+            setFlag = false;
             return false;
-        }
-       else if(mPartyDescription.getText().toString().trim().length()==0)
-         {
-             mPartyDescription.requestFocus();
-             mPartyDescription.setError("Please enter party description");
-             setFlag=false;
-             return false;
-         }
-       else if(mMusicGeneration.getText().toString().trim().length()==0) {
+        } else if (mPartyDescription.getText().toString().trim().length() == 0) {
+            mPartyDescription.requestFocus();
+            mPartyDescription.setError("Please enter party description");
+            setFlag = false;
+            return false;
+        } else if (mMusicGeneration.getText().toString().trim().length() == 0) {
             mMusicGeneration.requestFocus();
             mMusicGeneration.setError("Please enter music generation");
-            setFlag=false;
+            setFlag = false;
             return false;
-        }
-        else if(mAgeSpinner.getSelectedItemPosition()==0)
-        {
-            createAlertDialog("AftersApp","Please select Age Limit");
-            setFlag=false;
+        } else if (mAgeSpinner.getSelectedItemPosition() == 0) {
+            createAlertDialog("AftersApp", "Please select Age Limit");
+            setFlag = false;
             return false;
-        }else if(mUserPartyPhoto.getTag().equals("thumnel"))
-        {
-            createAlertDialog("AftersApp","Please select party image");
-            setFlag=false;
+        } else if (mUserPartyPhoto.getTag().equals("thumnel")) {
+            createAlertDialog("AftersApp", "Please select party image");
+            setFlag = false;
             return false;
-        }
-        else if(addressFlag!=true)
-        {
+        } else if (addressFlag != true) {
             mPartyAddress.setError("Please click here to get address");
-            setFlag=false;
+            setFlag = false;
             return false;
         }
-        return  true;
+        return true;
     }
+
     private void callTToWebService() {
 
         String PartTitle = mPartyTitle.getText().toString().trim();
-        String PartyDescription =mPartyDescription.getText().toString().trim();
-        double sendLat =mFinalLatititude;
-        double sendLong =mFinalLongitude;
+        String PartyDescription = mPartyDescription.getText().toString().trim();
+        double sendLat = mFinalLatititude;
+        double sendLong = mFinalLongitude;
         String PartyAddress = mFinalAddress;
-        String PartyAge =mSpinnerAge;
+        String PartyAge = mSpinnerAge;
         String MusciGeneration = mMusicGeneration.getText().toString().trim();
         int scaledHeight = 480;
         int scaledWidth = 320;
         Bitmap scaledBitmap = null;
-        String imageInBase64Format =null;
+        String imageInBase64Format = null;
 
         try {
             scaledBitmap = Bitmap.createScaledBitmap(convertedImg, scaledHeight, scaledWidth, true);
@@ -300,19 +287,15 @@ public class HostPartyFragment extends BaseFragment implements
 
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
-                PartyDescription,sendLat,sendLong,
-                PartyAddress,MusciGeneration,PartyAge,"0","0",imageInBase64Format,"2","1474354108");
-        String serlize =gson.toJson(hostPartyDTO);
+                PartyDescription, sendLat, sendLong,
+                PartyAddress, MusciGeneration, PartyAge, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
+        String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);
 
         mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_POST_PART,
                 mSessionManager.getHostPartyUrl(), baseRequestDTO);
     }
-
-
-
-
 
 
     @Override
@@ -337,12 +320,12 @@ public class HostPartyFragment extends BaseFragment implements
                 // Set the Image in ImageView after decoding the String
                 try {
                     Bitmap mBitmapString = BitmapFactory.decodeFile(imgDecodableString);
-                    mImageUri=imgDecodableString.toString();
+                    mImageUri = imgDecodableString.toString();
                     mUserPartyPhoto.setImageBitmap(mBitmapString);
                     mUserPartyPhoto.setTag("ImageSet");
 
                     BitmapFactory.Options options = new BitmapFactory.Options();
-                  //  Bitmap convertedImg = null;
+                    //  Bitmap convertedImg = null;
                     options.inJustDecodeBounds = true;
                     convertedImg = BitmapFactory.decodeFile(mImageUri, options);
                     options.inSampleSize = calculateInSampleSize(options, 480, 320);
@@ -374,15 +357,15 @@ public class HostPartyFragment extends BaseFragment implements
 
         View view = getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_google_map, null);
         dlg.setContentView(view);
-        addressFlag=false;
+        addressFlag = false;
         dlg.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        mSearchBtn =(Button) dlg.findViewById(R.id.searchBtn);
-        mMapView = (MapView)dlg.findViewById(R.id.mapViewParty);
+        mSearchBtn = (Button) dlg.findViewById(R.id.searchBtn);
+        mMapView = (MapView) dlg.findViewById(R.id.mapViewParty);
         mapOkBtn = (Button) dlg.findViewById(R.id.savePartyMap);
         mapCancelBtn = (Button) dlg.findViewById(R.id.cancelPartyMap);
-        mSearchEditText =(EditText) dlg.findViewById(R.id.searchAddress);
+        mSearchEditText = (EditText) dlg.findViewById(R.id.searchAddress);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         try {
@@ -396,11 +379,9 @@ public class HostPartyFragment extends BaseFragment implements
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
                 // For showing a move to my location button
-                try
-                {
+                try {
                     mGoogleMap.setMyLocationEnabled(true);
-                }catch (SecurityException e)
-                {
+                } catch (SecurityException e) {
 
                 }
 
@@ -415,7 +396,7 @@ public class HostPartyFragment extends BaseFragment implements
 
                         double lat = latLng.latitude;
                         double log = latLng.longitude;
-                        String mSendAddress ="";
+                        String mSendAddress = "";
                         mGoogleMap.clear();
 
                         Geocoder geocoder;
@@ -433,31 +414,25 @@ public class HostPartyFragment extends BaseFragment implements
                             String knownName = addresses.get(0).getFeatureName();
                             Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(address).draggable(false));
                             //String mSendAddress = address+" "+city+" "+state+" "+postalCode;
-                            if(!TextUtils.isEmpty(address))
-                            {
-                                mSendAddress = mSendAddress+address+"\t";
-                            }if(!TextUtils.isEmpty(city))
-                            {
-                                mSendAddress = mSendAddress+city+"\t";
+                            if (!TextUtils.isEmpty(address)) {
+                                mSendAddress = mSendAddress + address + "\t";
                             }
-                            if(!TextUtils.isEmpty(state))
-                            {
-                                mSendAddress = mSendAddress+state+"\t";
+                            if (!TextUtils.isEmpty(city)) {
+                                mSendAddress = mSendAddress + city + "\t";
                             }
-                            if(lat!=0.0||log !=0.0)
-                            {
-                                if(!mSendAddress.equals(""))
-                                {
-                                    setResult(mSendAddress,lat,log);
+                            if (!TextUtils.isEmpty(state)) {
+                                mSendAddress = mSendAddress + state + "\t";
+                            }
+                            if (lat != 0.0 || log != 0.0) {
+                                if (!mSendAddress.equals("")) {
+                                    setResult(mSendAddress, lat, log);
                                 }
                             }
 
-                          //  setResult(mSendAddress,lat,log);
+                            //  setResult(mSendAddress,lat,log);
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
-                        catch (IndexOutOfBoundsException e)
-                        {
+                        } catch (IndexOutOfBoundsException e) {
                             e.printStackTrace();
                         }
 
@@ -467,24 +442,23 @@ public class HostPartyFragment extends BaseFragment implements
                 mSearchBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!TextUtils.isEmpty(mSearchEditText.getText().toString()))
-                        {
-                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (!TextUtils.isEmpty(mSearchEditText.getText().toString())) {
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(),
                                     InputMethodManager.RESULT_UNCHANGED_SHOWN);
                             String userAddress = mSearchEditText.getText().toString();
                             Geocoder coder = new Geocoder(getContext());
                             try {
                                 ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userAddress, 50);
-                                String mSendAddress ="";
-                                double sendLatitude =0.0;
-                                double sendLongitude=0.0;
-                                for(Address add : adresses){
-                                   // if (statement) {//Controls to ensure it is right address such as country etc.
-                                        double longitude = add.getLongitude();
-                                        double latitude = add.getLatitude();
-                                    sendLatitude=latitude;
-                                    sendLongitude =longitude;
+                                String mSendAddress = "";
+                                double sendLatitude = 0.0;
+                                double sendLongitude = 0.0;
+                                for (Address add : adresses) {
+                                    // if (statement) {//Controls to ensure it is right address such as country etc.
+                                    double longitude = add.getLongitude();
+                                    double latitude = add.getLatitude();
+                                    sendLatitude = latitude;
+                                    sendLongitude = longitude;
                                     LatLng DemoLatLong = new LatLng(latitude, longitude);
                                     CameraPosition cameraPosition = new CameraPosition.Builder().target(DemoLatLong).zoom(12).build();
                                     mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -499,25 +473,21 @@ public class HostPartyFragment extends BaseFragment implements
                                     String country = addresses.get(0).getCountryName();
                                     String postalCode = addresses.get(0).getPostalCode();
                                     String knownName = addresses.get(0).getFeatureName();
-                                    Marker marker =mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title(""+addresses));
-                                   if(!TextUtils.isEmpty(address))
-                                   {
-                                       mSendAddress = mSendAddress+address+"\t";
-                                   }if(!TextUtils.isEmpty(city))
-                                    {
-                                        mSendAddress = mSendAddress+city+"\t";
+                                    Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + addresses));
+                                    if (!TextUtils.isEmpty(address)) {
+                                        mSendAddress = mSendAddress + address + "\t";
                                     }
-                                    if(!TextUtils.isEmpty(state))
-                                    {
-                                        mSendAddress = mSendAddress+state;
+                                    if (!TextUtils.isEmpty(city)) {
+                                        mSendAddress = mSendAddress + city + "\t";
                                     }
-                                   // }
+                                    if (!TextUtils.isEmpty(state)) {
+                                        mSendAddress = mSendAddress + state;
+                                    }
+                                    // }
                                 }
-                                if(sendLongitude!=0.0 ||sendLongitude!=0.0)
-                                {
-                                    if(!mSendAddress.equals(""))
-                                    {
-                                        setResult(mSendAddress,sendLatitude,sendLongitude);
+                                if (sendLongitude != 0.0 || sendLongitude != 0.0) {
+                                    if (!mSendAddress.equals("")) {
+                                        setResult(mSendAddress, sendLatitude, sendLongitude);
                                     }
                                 }
                             } catch (IOException e) {
@@ -534,7 +504,7 @@ public class HostPartyFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
 
-                addressFlag=false;
+                addressFlag = false;
                 dlg.dismiss();
             }
         });
@@ -542,19 +512,15 @@ public class HostPartyFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
 
-                if(!TextUtils.isEmpty(mFinalAddress))
-                {
-                    if(mFinalLatititude!=0.0||mFinalLongitude!=0.0)
-                    {
-                        addressFlag=true;
+                if (!TextUtils.isEmpty(mFinalAddress)) {
+                    if (mFinalLatititude != 0.0 || mFinalLongitude != 0.0) {
+                        addressFlag = true;
                         dlg.dismiss();
                     }
-                }
-                else
-                {
+                } else {
                     dlg.dismiss();
-                    Toast toast = Toast.makeText(getContext(),"Cannot able to find GPS location ",Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER,0,0);
+                    Toast toast = Toast.makeText(getContext(), "Cannot able to find GPS location ", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
 
@@ -566,14 +532,14 @@ public class HostPartyFragment extends BaseFragment implements
     }
 
 
-    public  void setResult(String address,double latitude,double longitude)
-    {
+    public void setResult(String address, double latitude, double longitude) {
 
-        mGoogleMapTextView.setText(""+address);
+        mGoogleMapTextView.setText("" + address);
         mFinalAddress = address;
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
     }
+
     private void requestGrantPermission() {
 
         requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL,
@@ -584,14 +550,13 @@ public class HostPartyFragment extends BaseFragment implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-       // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] == 0) {
             openGallery();
         }
-        if(requestCode==EDIT_LOCATION_PERMISSION_CODE&& grantResults[0]==0)
-        {
+        if (requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] == 0) {
             buildGoogleApiClient();
-        }else {
+        } else {
             Toast toast = Toast.makeText(getActivity(),
                     "User denied permission", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
@@ -609,10 +574,10 @@ public class HostPartyFragment extends BaseFragment implements
     }
 
     private void callToConnect() {
-        if(mGoogleApiClient!=null) {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
-        }else
-            Log.d("TAG","TAG");
+        } else
+            Log.d("TAG", "TAG");
     }
 
     private void openGallery() {
@@ -643,8 +608,8 @@ public class HostPartyFragment extends BaseFragment implements
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_POST_PART:
-                Toast toast = Toast.makeText(getContext(),"Party Posted Successfully",Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER,0,0);
+                Toast toast = Toast.makeText(getContext(), "Party Posted Successfully", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 HomeFragment homeFragment = new HomeFragment();
                 getFragmentManager().beginTransaction().
@@ -652,6 +617,7 @@ public class HostPartyFragment extends BaseFragment implements
                 break;
         }
     }
+
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
 
         final int height = options.outHeight;
@@ -670,6 +636,7 @@ public class HostPartyFragment extends BaseFragment implements
         }
         return inSampleSize;
     }
+
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] imageBytes = null;
@@ -703,33 +670,29 @@ public class HostPartyFragment extends BaseFragment implements
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(100); // Update location every second
 
-        try
-        {
+        try {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
 
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
-        }catch (SecurityException e)
-        {
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
 
         if (mLastLocation != null) {
-          String   lat = String.valueOf(mLastLocation.getLatitude());
-          String lon = String.valueOf(mLastLocation.getLongitude());
-            GpsLatitude= Double.parseDouble(lat );
-            GpsLongitude=Double.parseDouble(lon);
+            String lat = String.valueOf(mLastLocation.getLatitude());
+            String lon = String.valueOf(mLastLocation.getLongitude());
+            GpsLatitude = Double.parseDouble(lat);
+            GpsLongitude = Double.parseDouble(lon);
 
-        }
-        else
-        {
-            Toast toast = Toast.makeText(getContext(),"Please turn on GPS",Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
+        } else {
+            Toast toast = Toast.makeText(getContext(), "Please turn on GPS", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
-            final LocationManager manager = (LocationManager)getContext().getSystemService( Context.LOCATION_SERVICE );
+            final LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 buildAlertMessageNoGps();
             }
             //buildAlertMessageNoGps();
@@ -756,8 +719,8 @@ public class HostPartyFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mGoogleApiClient!=null)
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.disconnect();
     }
 
     private void buildAlertMessageNoGps() {

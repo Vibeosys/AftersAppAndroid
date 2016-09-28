@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by shrinivas on 20-09-2016.
  */
-public class HostPartyDTO extends BaseDTO{
+public class HostPartyDTO extends BaseDTO {
     String title;
     String desc;
     double latitude;
@@ -18,12 +18,12 @@ public class HostPartyDTO extends BaseDTO{
     String interest;
     String attending;
     String image;
-    String host;
+    long host;
     String pdate;
 
     public HostPartyDTO(String title, String desc, double latitude, double longitude, String location,
                         String music, String age, String interest, String attending, String image,
-                        String host, String pdate) {
+                        long host, String pdate) {
         this.title = title;
         this.desc = desc;
         this.latitude = latitude;
@@ -118,11 +118,11 @@ public class HostPartyDTO extends BaseDTO{
         this.image = image;
     }
 
-    public String getHost() {
+    public long getHost() {
         return host;
     }
 
-    public void setHost(String host) {
+    public void setHost(long host) {
         this.host = host;
     }
 
