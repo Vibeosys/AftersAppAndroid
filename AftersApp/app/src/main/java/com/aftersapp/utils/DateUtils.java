@@ -17,6 +17,7 @@ public class DateUtils {
     final SimpleDateFormat timeReadFormat = new SimpleDateFormat("hh:mm aa");
     final SimpleDateFormat SqlFormat = new SimpleDateFormat("yyyy-MM-dd");
     final SimpleDateFormat dateWithTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    final SimpleDateFormat swedishDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String getGMTCurrentDate() {
         dateWithTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -33,6 +34,10 @@ public class DateUtils {
 
     public String getLocalDateInFormat(java.util.Date date) {
         return dateFormat.format(date);
+    }
+
+    public String getSwedishDateInFormat(java.util.Date date) {
+        return swedishDateFormat.format(date);
     }
 
     public String getLocalDateInReadableFormat(java.util.Date date) {
@@ -123,5 +128,16 @@ public class DateUtils {
             e.printStackTrace();
         }
         return getLocalDateInFormat(date);
+    }
+
+    public String convertFbDateToSwedish(String strDate) {
+        DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        java.util.Date date = null;
+        try {
+            date = df2.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getSwedishDateInFormat(date);
     }
 }

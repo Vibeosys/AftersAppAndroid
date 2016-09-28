@@ -29,6 +29,7 @@ import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.RegisterUserDataDTO;
 import com.aftersapp.data.responsedata.RegisterResponseData;
 import com.aftersapp.helper.DataHolder;
+import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.aftersapp.utils.UserAuth;
@@ -99,6 +100,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String token = null;
     private String profileImg = null;
     private String dob = null;
+    private String formattedDob = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,13 +203,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                 }
                             }
                             dob = object.getString("birthday");
+                            if (!TextUtils.isEmpty(dob)) {
+                                DateUtils dateUtils = new DateUtils();
+                                formattedDob = dateUtils.convertFbDateToSwedish(dob);
+                            }
                             mSessionManager.setToken(token);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        callToRegister(name, email, gender, profileImg, dob, token);
+                        callToRegister(name, email, gender, profileImg, formattedDob, token);
                     }
                 });
         Bundle parameters = new Bundle();

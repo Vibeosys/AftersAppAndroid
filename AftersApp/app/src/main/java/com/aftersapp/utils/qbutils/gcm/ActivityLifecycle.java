@@ -3,11 +3,12 @@ package com.aftersapp.utils.qbutils.gcm;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.support.multidex.MultiDexApplication;
 
 /**
  * Created by akshay on 26-09-2016.
  */
-public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {
+public class ActivityLifecycle implements MultiDexApplication.ActivityLifecycleCallbacks {
 
     private static ActivityLifecycle instance;
 

@@ -289,4 +289,13 @@ public class MainActivity extends BaseActivity
                 replace(R.id.fragment_frame_lay, partyFragment, USER_LIST_FRAGEMNT).commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }
