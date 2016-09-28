@@ -38,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,6 +113,7 @@ public class HostPartyFragment extends BaseFragment implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
+    private ProgressBar mProgressBar;
 
 
     // TODO: Rename and change types and number of parameters
@@ -157,7 +159,7 @@ public class HostPartyFragment extends BaseFragment implements
         mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
-
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
         spineerData.add("10+");
@@ -212,6 +214,7 @@ public class HostPartyFragment extends BaseFragment implements
                 if (result == true) {
                     if(NetworkUtils.isActiveNetworkAvailable(getContext()))
                     {
+                        showProgress(true,mPartyTitle,mProgressBar);
                         callTToWebService();
                     }
                     else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
@@ -312,7 +315,6 @@ public class HostPartyFragment extends BaseFragment implements
         String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);
-
         mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_POST_PART,
                 mSessionManager.getHostPartyUrl(), baseRequestDTO);
     }
@@ -349,7 +351,7 @@ public class HostPartyFragment extends BaseFragment implements
                     //  Bitmap convertedImg = null;
                     options.inJustDecodeBounds = true;
                     convertedImg = BitmapFactory.decodeFile(mImageUri, options);
-                    options.inSampleSize = calculateInSampleSize(options, 480, 320);
+                    options.inSampleSize = calculateInSampleSize(options, 250, 250);
                     options.inJustDecodeBounds = false;
                     convertedImg = BitmapFactory.decodeFile(mImageUri, options);
                     System.gc();
@@ -659,6 +661,7 @@ public class HostPartyFragment extends BaseFragment implements
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_POST_PART:
                 Log.e("TAG", "##Volley Server error " + error.toString());
+                showProgress(false,mPartyTitle,mProgressBar);
                 break;
         }
     }
@@ -667,6 +670,7 @@ public class HostPartyFragment extends BaseFragment implements
     public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_POST_PART:
+                showProgress(false,mPartyTitle,mProgressBar);
                 Log.d("TAG", "##Volley Data error " + errorMessage);
                 break;
         }
