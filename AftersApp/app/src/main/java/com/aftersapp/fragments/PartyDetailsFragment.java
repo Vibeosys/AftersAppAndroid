@@ -15,6 +15,7 @@ import com.aftersapp.R;
 import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.LikePartyRequest;
+import com.aftersapp.helper.ChatHelper;
 import com.aftersapp.utils.AppConstants;
 import com.aftersapp.utils.CustomVolleyRequestQueue;
 import com.aftersapp.utils.NetworkUtils;
@@ -24,6 +25,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.model.QBDialog;
+import com.quickblox.core.LogLevel;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.QBSettings;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 
 public class PartyDetailsFragment extends BaseFragment implements View.OnClickListener,
@@ -59,7 +70,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_party_details, container, false);
-        mBtnChatHost = (Button) view.findViewById(R.id.chatHost);
+        mBtnChatHost = (Button) view.findViewById(R.id.btnChatWithHost);
         iamAttending = (Button) view.findViewById(R.id.iamAttending);
         saveFavourite = (Button) view.findViewById(R.id.saveFavourite);
         mTxtPartyName = (TextView) view.findViewById(R.id.txtPartyName);
@@ -76,6 +87,9 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mTxtAge.setText(partyData.getAge());
         mTxtAttending.setText("" + partyData.getAttending());
         setImage();
+        if (partyData.getHost() == mSessionManager.getUserId()) {
+            mBtnChatHost.setVisibility(View.INVISIBLE);
+        }
         mBtnChatHost.setOnClickListener(this);
         iamAttending.setOnClickListener(this);
         saveFavourite.setOnClickListener(this);
@@ -104,10 +118,8 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.chatHost:
-                ChatWithHostFragment chatWithHostFragment = new ChatWithHostFragment();
-                getFragmentManager().beginTransaction().
-                        replace(R.id.fragment_frame_lay, chatWithHostFragment, CHAT_HOST_FRAGMENT).commit();
+            case R.id.btnChatWithHost:
+                getHostUser();
                 break;
             case R.id.saveFavourite:
                 if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
@@ -126,6 +138,96 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 }
                 break;
         }
+    }
+
+    private void chatWithHost(final QBUser selectedUsers) {
+
+        progressDialog.show();
+        final QBChatService chatService = QBChatService.getInstance();
+        QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+        chatService.setDebugEnabled(true);
+        chatService.setDefaultPacketReplyTimeout(150000); //add this
+        chatService.setDefaultConnectionTimeout(150000); //add this
+        chatService.setUseStreamManagement(true);
+        //chatService.addConnectionListener(chatConnectionListener);
+        final QBUser user = new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId());
+        QBAuth.createSession(user, new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession session, Bundle params) {
+                // success, login to chat
+
+                user.setId(session.getUserId());
+
+                chatService.login(user, new QBEntityCallback() {
+
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+                        progressDialog.dismiss();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                createDialog(selectedUsers);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors) {
+                        Log.e("UserList", errors.getMessage());
+                        progressDialog.dismiss();
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                createDialog(selectedUsers);
+                            }
+                        });
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+
+            }
+        });
+    }
+
+    private void createDialog(final QBUser selectedUsers) {
+        progressDialog.show();
+        ChatHelper.getInstance().createDialogWithSelectedUser(selectedUsers,
+                new QBEntityCallback<QBDialog>() {
+                    @Override
+                    public void onSuccess(QBDialog dialog, Bundle args) {
+                        progressDialog.dismiss();
+                        ChatFragment chatFragment = new ChatFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ChatFragment.EXTRA_DIALOG, dialog);
+                        chatFragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction().
+                                replace(R.id.fragment_frame_lay, chatFragment, "ChatFragment").commit();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.msg_err),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void getHostUser() {
+
+        QBUsers.getUserByExternalId(String.valueOf(partyData.getHost()), new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle args) {
+                chatWithHost(user);
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+                Toast.makeText(getContext(), getContext().getResources().
+                        getString(R.string.str_host_not_found), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void addToFavParty() {

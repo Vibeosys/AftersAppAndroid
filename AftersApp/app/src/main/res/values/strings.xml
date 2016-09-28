@@ -67,6 +67,7 @@
     <string name="str_per_accept">Please allow the permission for chat</string>
     <string name="str_grant_permission">Allow the permission to send and receive images</string>
     <string name="interstial_ad_id">ca-app-pub-1303442515313304/4005685677</string>
+    <string name="str_host_not_found">Host not available for chat</string>
 
 
 </resources>
