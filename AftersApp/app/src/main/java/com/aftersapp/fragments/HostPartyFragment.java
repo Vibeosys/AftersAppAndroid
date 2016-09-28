@@ -90,7 +90,7 @@ public class HostPartyFragment extends BaseFragment implements
 
     private Spinner mSpinner;
     private TextView mGoogleMapTextView, mPartyAddress;
-    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty;
+    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty,mRemoveImg;
     private EditText mSearchEditText, mPartyTitle, mPartyDescription, mMusicGeneration;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
@@ -156,7 +156,7 @@ public class HostPartyFragment extends BaseFragment implements
         mMusicGeneration = (EditText) rootView.findViewById(R.id.musicGenerationDesc);
         mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
-
+        mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
 
         List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
@@ -178,11 +178,7 @@ public class HostPartyFragment extends BaseFragment implements
         mGoogleMapTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*if(mLastLocation!=null)
-                {
-                    showTakeawayDialog(savedInstanceState);
-                }*/
+                
                 {
                     final LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
@@ -230,6 +226,18 @@ public class HostPartyFragment extends BaseFragment implements
             }
         });
 
+        mRemoveImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!mUserPartyPhoto.getTag().equals("thumnel"))
+                {
+                    if(mUserPartyPhoto.getTag().equals("ImageSet"))
+                    {
+                        mUserPartyPhoto.setImageResource(R.drawable.default_party_image);
+                    }
+                }
+            }
+        });
         return rootView;
     }
 
@@ -329,6 +337,7 @@ public class HostPartyFragment extends BaseFragment implements
                     mImageUri = imgDecodableString.toString();
                     mUserPartyPhoto.setImageBitmap(mBitmapString);
                     mUserPartyPhoto.setTag("ImageSet");
+                    mRemoveImg.setVisibility(View.VISIBLE);
 
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     //  Bitmap convertedImg = null;
