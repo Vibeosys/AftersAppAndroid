@@ -388,7 +388,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 profileImg = String.valueOf(Img);
                 String id = acct.getId();
                 name = acct.getDisplayName();
-                callToRegister(name, email, "Male", profileImg, "", id);
+                callToRegister(name, email, "Male", profileImg, dob, id);
 
 
             }

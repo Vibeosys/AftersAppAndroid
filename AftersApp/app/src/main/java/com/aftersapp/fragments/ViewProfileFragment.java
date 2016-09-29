@@ -126,7 +126,7 @@ public class ViewProfileFragment extends BaseFragment {
         {
             mUserGender.setText(""+mSessionManager.getGender());
         }
-        if(TextUtils.isEmpty(mSessionManager.getDob()))
+        if(TextUtils.isEmpty(mSessionManager.getDob())||mSessionManager.getDob().equals("0000-00-00 00:00:00"))
         {
             mUserDateOfBirth.setText("");
         }else
