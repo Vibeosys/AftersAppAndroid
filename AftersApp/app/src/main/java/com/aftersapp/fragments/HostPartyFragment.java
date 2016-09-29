@@ -92,7 +92,7 @@ public class HostPartyFragment extends BaseFragment implements
 
     private Spinner mSpinner;
     private TextView mGoogleMapTextView, mPartyAddress;
-    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg;
+    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg,mCancelPartyBtn;
     private EditText mSearchEditText, mPartyTitle, mPartyDescription, mMusicGeneration;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
@@ -107,6 +107,7 @@ public class HostPartyFragment extends BaseFragment implements
     double mFinalLatititude, mFinalLongitude;
     private String mFinalAddress, mSpinnerAge, replaceSpinner;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
+    private static final String HOME_FRAGMENT_POST_PARTY_CANCEL = "home";
     Bitmap convertedImg = null;
     private GPSTracker gps;
     private double GpsLatitude, GpsLongitude;
@@ -160,6 +161,7 @@ public class HostPartyFragment extends BaseFragment implements
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        mCancelPartyBtn =(Button) rootView.findViewById(R.id.cancelParty);
         List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
         spineerData.add("10+");
@@ -246,6 +248,15 @@ public class HostPartyFragment extends BaseFragment implements
                         mUserPartyPhoto.setImageResource(R.drawable.default_party_image);
                     }
                 }
+            }
+        });
+        mCancelPartyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//
+                HomeFragment homeFragment = new HomeFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_POST_PARTY_CANCEL).commit();
             }
         });
         return rootView;
@@ -554,6 +565,8 @@ public class HostPartyFragment extends BaseFragment implements
 
                     addressFlag = false;
                     dlg.dismiss();
+                    //
+
                 }
             });
             mapOkBtn.setOnClickListener(new View.OnClickListener() {
