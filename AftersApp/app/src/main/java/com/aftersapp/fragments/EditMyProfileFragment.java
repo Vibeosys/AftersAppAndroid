@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -75,6 +76,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     private CircleImageView mEditUserImage;
     private static final String HOME_FRAGMENT_EDIT_PROFILE="home";
     String userEmail,userFullName,userDate;
+    private ProgressBar mProgressBar;
     int NotifyVal;
 
 
@@ -101,6 +103,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         mUserNotoficationSwitch =(Switch) rootView.findViewById(R.id.switch1);
         mUserNameFirst = (TextView) rootView.findViewById(R.id.userName);
         mEditUserImage =(CircleImageView) rootView.findViewById(R.id.circleView);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         mSaveUserProfile.setOnClickListener(this);
         mCancelUserProfile.setOnClickListener(this);
         mServerSyncManager.setOnStringErrorReceived(this);
@@ -230,6 +233,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 boolean returnVal =callToValidation();
                 if(returnVal==true)
                 {
+                    showProgress(true,mUserName,mProgressBar);
                     CallToWebServices();
                 }
                 break;
@@ -247,9 +251,12 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
          userEmail = mUserEmailId.getText().toString();
          userFullName = mUserName.getText().toString();
          userDate = mDateOfBirth.getText().toString();
+        String convertedDate = "";
+        DateUtils dateUtils =new DateUtils();
+        convertedDate = dateUtils.convertFbDateToSwedish(userDate);
          NotifyVal =(int) mSwitchValNotification;
         UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO(mSessionManager.getUserId(),userFullName,mSessionManager.getEmail(),
-                userEmail,"123456789",mSpinnerSelectionVal,mSessionManager.getProfImg(),userDate,mSessionManager.getToken(),NotifyVal);
+                userEmail,"123456789",mSpinnerSelectionVal,mSessionManager.getProfImg(),convertedDate,mSessionManager.getToken(),NotifyVal);
 
         String url = mSessionManager.getEditProfileUrl();
         Gson gson = new Gson();
@@ -310,6 +317,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
+                showProgress(false,mUserName,mProgressBar);
                 Log.d("TAG", "##Volley Data error " + errorMessage);
                 break;
         }
@@ -320,6 +328,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
+                showProgress(false,mUserName,mProgressBar);
                 Toast toast = Toast.makeText(getContext(),"Profile Updated Successfully",Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER,0,0);
                 toast.show();

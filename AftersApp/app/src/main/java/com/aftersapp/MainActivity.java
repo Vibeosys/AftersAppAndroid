@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity
         mNavigationUserName = (TextView) headerView.findViewById(R.id.userName);
         String mImageUri = mSessionManager.getProfImg();
         profileImg = (CircleImageView) headerView.findViewById(R.id.imageView);
-        mNavigationUserEmailId.setText("" + mSessionManager.getEmail());
+        mNavigationUserEmailId.setText("" + mSessionManager.getEmail2());
         mNavigationUserName.setText("" + mSessionManager.getName());
 
         if (!TextUtils.isEmpty(mImageUri)) {

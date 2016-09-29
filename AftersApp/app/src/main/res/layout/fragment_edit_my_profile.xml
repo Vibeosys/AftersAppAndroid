@@ -3,7 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.EditMyProfileFragment">
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
