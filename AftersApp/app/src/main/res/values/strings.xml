@@ -71,6 +71,7 @@
     <string name="str_filter_apply">Apply filters on party search</string>
     <string name="str_filter_reset">All Filters are reset to default</string>
     <string name="str_new_attachement">New attachment received</string>
-
+    <string name="str_err_server_err">Server Error</string>
+    <string name="str_err_server_msg">Something went wrong on server</string>
 
 </resources>

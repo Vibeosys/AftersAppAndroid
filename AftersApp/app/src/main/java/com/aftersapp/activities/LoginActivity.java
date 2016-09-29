@@ -242,6 +242,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_REGISTER:
                 Log.e(TAG, "##Volley Server error " + error.toString());
+                customAlterDialog(getResources().getString(R.string.str_err_server_err),
+                        getResources().getString(R.string.str_err_server_msg));
                 progressDialog.dismiss();
                 break;
 
@@ -253,6 +255,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_REGISTER:
                 Log.d(TAG, "##Volley Data error " + errorMessage);
+                customAlterDialog(getResources().getString(R.string.str_err_server_err),
+                        errorMessage);
                 progressDialog.dismiss();
                 break;
         }
@@ -380,6 +384,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 GoogleSignInAccount acct = result.getSignInAccount();
                 email = acct.getEmail();
                 Uri Img = acct.getPhotoUrl();
+                if(Img!=null)
                 profileImg = String.valueOf(Img);
                 String id = acct.getId();
                 name = acct.getDisplayName();
