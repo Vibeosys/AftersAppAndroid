@@ -139,7 +139,7 @@ public class GooglePlayServicesHelper {
                             qbSubscription.setNotificationChannel(QBNotificationChannel.GCM);
                             qbSubscription.setDeviceUdid(getDeviceUid());
                             qbSubscription.setRegistrationID(gcmRegId);
-                            qbSubscription.setEnvironment(QBEnvironment.DEVELOPMENT); // Don't forget to change QBEnvironment to PRODUCTION when releasing application
+                            qbSubscription.setEnvironment(QBEnvironment.PRODUCTION); // Don't forget to change QBEnvironment to PRODUCTION when releasing application
 
                             QBPushNotifications.createSubscription(qbSubscription,
                                     new QBEntityCallback<ArrayList<QBSubscription>>() {

@@ -1,6 +1,7 @@
 package com.aftersapp.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,16 +98,20 @@ public class PartyAdapter extends BaseAdapter {
         }
 
         final String url = partyData.getImage();
-        if (url != null && !url.isEmpty()) {
+        if (url == "null" || url.isEmpty() || url == null || url.equals("") || url == "") {
+            viewHolder.networkImageView.setDefaultImageResId(R.drawable.default_party_image);
+        } else if (TextUtils.isEmpty(url)) {
+            viewHolder.networkImageView.setImageResource(R.drawable.default_party_image);
+        } else if (url != null && !url.isEmpty()) {
             try {
                 mImageLoader.get(url, ImageLoader.getImageListener(viewHolder.networkImageView,
-                        R.drawable.party1, R.drawable.party1));
+                        R.drawable.default_party_image, R.drawable.default_party_image));
                 viewHolder.networkImageView.setImageUrl(url, mImageLoader);
             } catch (Exception e) {
-                viewHolder.networkImageView.setImageResource(R.drawable.party1);
+                viewHolder.networkImageView.setImageResource(R.drawable.default_party_image);
             }
         } else {
-            viewHolder.networkImageView.setImageResource(R.drawable.party1);
+            viewHolder.networkImageView.setImageResource(R.drawable.default_party_image);
         }
         viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -3,6 +3,7 @@ package com.aftersapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,7 +101,11 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mImageLoader = CustomVolleyRequestQueue.getInstance(getContext())
                 .getImageLoader();
         final String url = partyData.getImage();
-        if (url != null && !url.isEmpty()) {
+        if (url == "null" || url.isEmpty() || url == null || url.equals("") || url == "") {
+            networkImageView.setDefaultImageResId(R.drawable.default_party_image);
+        } else if (TextUtils.isEmpty(url)) {
+            networkImageView.setImageResource(R.drawable.default_party_image);
+        } else if (url != null && !url.isEmpty()) {
             try {
                 mImageLoader.get(url, ImageLoader.getImageListener(networkImageView,
                         R.drawable.party1, R.drawable.party1));

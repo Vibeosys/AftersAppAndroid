@@ -70,6 +70,7 @@
     <string name="str_host_not_found">Host not available for chat</string>
     <string name="str_filter_apply">Apply filters on party search</string>
     <string name="str_filter_reset">All Filters are reset to default</string>
+    <string name="str_new_attachement">New attachment received</string>
 
 
 </resources>

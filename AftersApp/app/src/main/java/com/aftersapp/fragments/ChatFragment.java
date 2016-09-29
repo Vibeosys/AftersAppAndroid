@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.aftersapp.AftersAppApplication;
 import com.aftersapp.R;
 import com.aftersapp.adapters.qbadapters.AttachmentPreviewAdapter;
 import com.aftersapp.adapters.qbadapters.ChatAdapter;
@@ -27,6 +28,7 @@ import com.aftersapp.interfaces.chatinterfaces.PaginationHistoryListener;
 import com.aftersapp.interfaces.chatinterfaces.QBChatMessageListener;
 import com.aftersapp.utils.Toaster;
 import com.aftersapp.utils.qbutils.QbDialogUtils;
+import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
 import com.aftersapp.utils.qbutils.VerboseQbChatConnectionListener;
 import com.aftersapp.utils.qbutils.chatutils.PrivateChatImpl;
 import com.aftersapp.views.chatviews.AttachmentPreviewAdapterView;
@@ -37,6 +39,11 @@ import com.quickblox.chat.model.QBDialog;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.messages.QBPushNotifications;
+import com.quickblox.messages.model.QBEnvironment;
+import com.quickblox.messages.model.QBEvent;
+import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.users.model.QBUser;
 
 import org.jivesoftware.smack.ConnectionListener;
@@ -438,8 +445,10 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
         QBChatMessage chatMessage = new QBChatMessage();
         if (attachment != null) {
             chatMessage.addAttachment(attachment);
+            //sendPushMessage(getResources().getString(R.string.str_new_attachement));
         } else {
             chatMessage.setBody(text);
+            //sendPushMessage(text);
         }
         chatMessage.setProperty(PROPERTY_SAVE_TO_HISTORY, "1");
         chatMessage.setDateSent(System.currentTimeMillis() / 1000);
@@ -479,5 +488,28 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
     @Override
     public void onImagePickClosed(int requestCode) {
 
+    }
+
+    private void sendPushMessage(String outMessage) {
+        // Send Push: create QuickBlox Push Notification Event
+        QBEvent qbEvent = new QBEvent();
+        qbEvent.setNotificationType(QBNotificationType.PUSH);
+        qbEvent.setEnvironment(QBEnvironment.DEVELOPMENT);
+        // Generic push - will be delivered to all platforms (Android, iOS, WP, Blackberry..)
+        qbEvent.setMessage(outMessage);
+
+        StringifyArrayList<Integer> userIds = new StringifyArrayList<>();
+        userIds.add(SharedPreferencesUtil.getQbUser().getId());
+        qbEvent.setUserIds(userIds);
+
+        QBPushNotifications.createEvent(qbEvent, new QBEntityCallback<QBEvent>() {
+            @Override
+            public void onSuccess(QBEvent qbEvent, Bundle bundle) {
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+            }
+        });
     }
 }
