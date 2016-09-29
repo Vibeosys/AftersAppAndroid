@@ -115,8 +115,16 @@ public class MainActivity extends BaseActivity
         mNavigationUserName.setText("" + mSessionManager.getName());
 
         if (!TextUtils.isEmpty(mImageUri)) {
-            DownloadImage downloadImage = new DownloadImage();
-            downloadImage.execute(mImageUri);
+            String stringImg = mSessionManager.getProfImg();
+            if(mImageUri.equals("null"))
+            {
+                profileImg.setImageResource(R.drawable.avatar_profile);
+            }else
+            {
+                DownloadImage downloadImage = new DownloadImage();
+                downloadImage.execute(mImageUri);
+            }
+
         }
         else if(TextUtils.isEmpty(mSessionManager.getProfImg()))
         {

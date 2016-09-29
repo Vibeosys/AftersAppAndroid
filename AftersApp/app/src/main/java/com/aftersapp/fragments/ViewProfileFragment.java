@@ -144,13 +144,21 @@ public class ViewProfileFragment extends BaseFragment {
         }
         if(!TextUtils.isEmpty(mSessionManager.getProfImg()))
         {
-            DownloadImage downloadImage = new DownloadImage();
-            downloadImage.execute(mSessionManager.getProfImg());
+            String stringImg = mSessionManager.getProfImg();
+            if(stringImg.equals("null"))
+            {
+                circleView.setImageResource(R.drawable.avatar_profile);
+            }else {
+                DownloadImage downloadImage = new DownloadImage();
+                downloadImage.execute(mSessionManager.getProfImg());
+            }
+
         }
         else if(TextUtils.isEmpty(mSessionManager.getProfImg()))
         {
             circleView.setImageResource(R.drawable.avatar_profile);
         }
+
     }
 
 

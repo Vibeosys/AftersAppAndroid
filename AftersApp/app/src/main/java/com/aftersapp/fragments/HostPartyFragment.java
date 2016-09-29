@@ -626,7 +626,7 @@ public class HostPartyFragment extends BaseFragment implements
         }
         if (requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] == 0) {
             buildGoogleApiClient();
-        } else {
+        } else if(requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] !=0 || requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] != 0 ){
             Toast toast = Toast.makeText(getActivity(),
                     "User denied permission", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
