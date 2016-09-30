@@ -236,4 +236,12 @@ public class SessionManager {
     public String getMusicGenre() {
         return mProjectSharedPref.getString(PropertyTypeConstants.FILTER_MUSIC, null);
     }
+
+    public int getMessageCount() {
+        return mProjectSharedPref.getInt(PropertyTypeConstants.MESSAGE_COUNT, 0);
+    }
+
+    public void setMessageCount(int messageCount) {
+        setIntValuesInSharedPrefs(PropertyTypeConstants.MESSAGE_COUNT, messageCount);
+    }
 }

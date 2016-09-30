@@ -31,6 +31,7 @@ import com.aftersapp.utils.qbutils.QbDialogUtils;
 import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
 import com.aftersapp.utils.qbutils.VerboseQbChatConnectionListener;
 import com.aftersapp.utils.qbutils.chatutils.PrivateChatImpl;
+import com.aftersapp.utils.qbutils.gcm.ActivityLifecycle;
 import com.aftersapp.views.chatviews.AttachmentPreviewAdapterView;
 import com.quickblox.chat.QBChat;
 import com.quickblox.chat.model.QBAttachment;
@@ -511,5 +512,11 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
             public void onError(QBResponseException e) {
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releaseChat();
     }
 }

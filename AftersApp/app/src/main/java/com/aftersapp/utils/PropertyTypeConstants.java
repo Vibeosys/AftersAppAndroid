@@ -36,4 +36,5 @@ public class PropertyTypeConstants {
     public static final String FILTER_RADIUS = "user.filter.radius";
     public static final String FILTER_AGE = "user.filter.age";
     public static final String FILTER_MUSIC = "user.filter.music";
+    public static final String MESSAGE_COUNT = "user.message.count";
 }

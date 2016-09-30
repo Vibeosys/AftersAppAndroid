@@ -44,6 +44,8 @@ public class GcmPushListenerService extends CoreGcmPushListenerService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        String numberOnly = message.replaceAll("[^0-9]", "");
+        AftersAppApplication.getInstance().getmSessionManager().setMessageCount(Integer.parseInt(numberOnly));
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(icon)

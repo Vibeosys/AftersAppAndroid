@@ -96,6 +96,7 @@ public class ChatsUsersList extends ChatBaseFragment {
         String email = mSessionManager.getEmail();
         String password = mSessionManager.getEmail() + mSessionManager.getUserId();
         final QBUser user = new QBUser(email, password);
+        mSessionManager.setMessageCount(0);
         QBUsers.signIn(user, new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {

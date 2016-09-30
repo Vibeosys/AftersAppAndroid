@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -43,7 +44,9 @@ import com.aftersapp.fragments.HostPartyFragment;
 import com.aftersapp.fragments.PurchaseFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
+import com.aftersapp.helper.ChatHelper;
 import com.aftersapp.helper.DataHolder;
+import com.aftersapp.interfaces.GcmConsts;
 import com.aftersapp.utils.AppConstants;
 import com.aftersapp.utils.UserAuth;
 import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
@@ -140,9 +143,17 @@ public class MainActivity extends BaseActivity
         if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
             navigationView.getMenu().clear(); //clear old inflated items.
             navigationView.inflateMenu(R.menu.activity_main_drawer);// drawer for subscribers
+            TextView view = (TextView) navigationView.getMenu().findItem(R.id.nav_messages).getActionView();
+            int messageCount = mSessionManager.getMessageCount();
+            view.setText(messageCount > 0 ? messageCount > 99 ? "" + messageCount + "+" : String.valueOf(messageCount) : null);
         } else {
             navigationView.getMenu().clear(); //clear old inflated items.
             navigationView.inflateMenu(R.menu.activity_unsubscribe_drawer);
+        }
+        if (getIntent().getExtras() != null) {
+            ChatsUsersList userListFragment = new ChatsUsersList();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, userListFragment, USER_FRAGMENT).commit();
         }
     }
 
@@ -316,4 +327,14 @@ public class MainActivity extends BaseActivity
     protected void onPause() {
         super.onPause();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            ChatHelper.getInstance().logout();
+        } catch (Exception e) {
+        }
+    }
+
 }
