@@ -250,22 +250,41 @@ public class FindPartyFragment extends BaseFragment implements
                 Log.d(TAG, "##Volley Response" + data);
                 break;
             case ServerRequestConstants.REQUEST_LIKE_PARTY:
-                if (data.equals("0")) {
-                    Toast.makeText(getContext(), getContext().getResources().
-                            getString(R.string.party_like_success), Toast.LENGTH_SHORT).show();
+                try
+                {
+                    if (data.equals("0")) {
+                        Toast.makeText(getContext(), getContext().getResources().
+                                getString(R.string.party_like_success), Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e)
+                {
+                   e.printStackTrace();
                 }
+
                 break;
             case ServerRequestConstants.REQUEST_REMOVE_FAV_PARTY:
-                if (data.equals("0")) {
-                    Toast.makeText(getContext(), getContext().getResources().
-                            getString(R.string.party_removed_fav_success), Toast.LENGTH_SHORT).show();
+                try{
+                    if (data.equals("0")) {
+                        Toast.makeText(getContext(), getContext().getResources().
+                                getString(R.string.party_removed_fav_success), Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
+
                 break;
             case ServerRequestConstants.REQUEST_ADD_FAV_PARTY:
-                if (data.equals("0")) {
-                    Toast.makeText(getContext(), getContext().getResources().
-                            getString(R.string.party_add_fav_success), Toast.LENGTH_SHORT).show();
+                try {
+                    if (data.equals("0")) {
+                        Toast.makeText(getContext(), getContext().getResources().
+                                getString(R.string.party_add_fav_success), Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
+
                 break;
         }
     }
@@ -273,15 +292,28 @@ public class FindPartyFragment extends BaseFragment implements
     @Override
     public void onLikeClickListener(PartyDataDTO partyDataDTO, int position, int value) {
         if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
-            if (value == AppConstants.ATTENDING_PARTY) {
-                Toast.makeText(getContext(), getContext().getResources().
-                        getString(R.string.str_already_like), Toast.LENGTH_SHORT).show();
-            } else {
-                attendancePartyMark(partyDataDTO);
+            try
+            {
+                if (value == AppConstants.ATTENDING_PARTY) {
+                    Toast.makeText(getContext(), getContext().getResources().
+                            getString(R.string.str_already_like), Toast.LENGTH_SHORT).show();
+                } else {
+                    attendancePartyMark(partyDataDTO);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
+
         } else {
-            Toast.makeText(getContext(), getContext().getResources().
-                    getString(R.string.str_connect_internet), Toast.LENGTH_SHORT).show();
+            try {
+                Toast.makeText(getContext(), getContext().getResources().
+                        getString(R.string.str_connect_internet), Toast.LENGTH_SHORT).show();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
         }
 
     }
