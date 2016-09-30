@@ -77,6 +77,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     private static final String HOME_FRAGMENT_EDIT_PROFILE="home";
     String userEmail,userFullName,userDate;
     private ProgressBar mProgressBar;
+    private View mView;
     int NotifyVal;
 
 
@@ -104,6 +105,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         mUserNameFirst = (TextView) rootView.findViewById(R.id.userName);
         mEditUserImage =(CircleImageView) rootView.findViewById(R.id.circleView);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        mView =rootView.findViewById(R.id.firstView);
         mSaveUserProfile.setOnClickListener(this);
         mCancelUserProfile.setOnClickListener(this);
         mServerSyncManager.setOnStringErrorReceived(this);
@@ -233,7 +235,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 boolean returnVal =callToValidation();
                 if(returnVal==true)
                 {
-                    showProgress(true,mUserName,mProgressBar);
+                    showProgress(true,mView,mProgressBar);
                     CallToWebServices();
                 }
                 break;
@@ -308,6 +310,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     public void onVolleyErrorReceived(@NonNull VolleyError error, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
+                showProgress(false,mView,mProgressBar);
                 Log.e("TAG", "##Volley Server error " + error.toString());
                 break;
         }
@@ -317,7 +320,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
-                showProgress(false,mUserName,mProgressBar);
+                showProgress(false,mView,mProgressBar);
                 Log.d("TAG", "##Volley Data error " + errorMessage);
                 break;
         }

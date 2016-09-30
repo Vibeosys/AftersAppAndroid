@@ -129,9 +129,9 @@ public class ViewProfileFragment extends BaseFragment {
         long NotificationFlg = mSessionManager.getEmailNotify();
         mUserNameFirst.setText("" + mSessionManager.getName());
         if (NotificationFlg == 1) {
-            mUserNotificationStatus.setText("Enable");
+            mUserNotificationStatus.setText("Enabled");
         } else {
-            mUserNotificationStatus.setText("Disable");
+            mUserNotificationStatus.setText("Disabled");
         }
         if (!TextUtils.isEmpty(mSessionManager.getProfImg())) {
             String stringImg = mSessionManager.getProfImg();

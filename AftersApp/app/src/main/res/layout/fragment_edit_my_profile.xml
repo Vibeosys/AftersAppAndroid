@@ -32,7 +32,7 @@
                     android:id="@+id/circleView"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/profile_new_test" />
+                    android:src="@drawable/avatar_profile" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -71,6 +71,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/firstView"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="#e2e0e0" />

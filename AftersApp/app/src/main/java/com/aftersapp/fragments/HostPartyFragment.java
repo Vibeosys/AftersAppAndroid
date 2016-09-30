@@ -499,13 +499,14 @@ public class HostPartyFragment extends BaseFragment implements
                         @Override
                         public void onClick(View v) {
                             if (!TextUtils.isEmpty(mSearchEditText.getText().toString())) {
+                                String completeAddress = "";
                                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(),
                                         InputMethodManager.RESULT_UNCHANGED_SHOWN);
                                 String userAddress = mSearchEditText.getText().toString();
                                 Geocoder coder = new Geocoder(getContext());
                                 try {
-                                    ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userAddress, 50);
+                                    ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userAddress, 15);
                                     String mSendAddress = "";
                                     double sendLatitude = 0.0;
                                     double sendLongitude = 0.0;
@@ -523,33 +524,29 @@ public class HostPartyFragment extends BaseFragment implements
                                         List<Address> addresses;
                                         geocoder = new Geocoder(getContext(), Locale.getDefault());
                                         addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                                        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                                        String city = addresses.get(0).getLocality();
-                                        String state = addresses.get(0).getAdminArea();
-                                        String country = addresses.get(0).getCountryName();
-                                        String postalCode = addresses.get(0).getPostalCode();
-                                        String knownName = addresses.get(0).getFeatureName();
-                                        Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + addresses));
-                                        if (!TextUtils.isEmpty(address)) {
-                                            mSendAddress = mSendAddress + address + "\t";
+                                        int addressLine = add.getMaxAddressLineIndex();
+
+                                        for (int i = 0; i <= addressLine; i++) {
+
+                                            String address = add.getAddressLine(i);
+                                            completeAddress =  completeAddress+"\t" + address;
+                                            Log.d("TAG", "TAG");
                                         }
-                                        if (!TextUtils.isEmpty(city)) {
-                                            mSendAddress = mSendAddress + "," + city + "\t";
-                                        }
-                                        if (!TextUtils.isEmpty(state)) {
-                                            mSendAddress = mSendAddress + "," + state + "\t";
-                                        }
-                                        if (!TextUtils.isEmpty(postalCode)) {
-                                            mSendAddress = mSendAddress + "," + postalCode;
-                                        }
-                                        // }
+
+                                         Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + completeAddress));
+
+
                                     }
                                     if (sendLongitude != 0.0 || sendLongitude != 0.0) {
-                                        if (!mSendAddress.equals("")) {
-                                            setResult(mSendAddress, sendLatitude, sendLongitude);
+                                        if (!completeAddress.equals("")) {
+                                            setResult(completeAddress, sendLatitude, sendLongitude);
                                         }
                                     }
+
                                 } catch (IOException e) {
+                                    e.printStackTrace();
+                                }catch (Exception e)
+                                {
                                     e.printStackTrace();
                                 }
                             }
@@ -564,6 +561,7 @@ public class HostPartyFragment extends BaseFragment implements
                 public void onClick(View v) {
 
                     addressFlag = false;
+                    setResult( 0.0, 0.0);
                     dlg.dismiss();
                     //
 
@@ -622,7 +620,16 @@ public class HostPartyFragment extends BaseFragment implements
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
     }
+    public void setResult( double latitude, double longitude) {
 
+
+
+        /*mFinalAddress = address;*/
+        mGoogleMapTextView.setText("");
+        mGoogleMapTextView.setHint("Click here for party address");
+        mFinalLatititude = latitude;
+        mFinalLongitude = longitude;
+    }
     private void requestGrantPermission() {
 
         requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL,
