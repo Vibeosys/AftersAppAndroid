@@ -34,6 +34,7 @@
             android:hint="Search Party Location"
             android:textColorHint="@android:color/white"
             android:textAllCaps="false"
+            android:singleLine="true"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
         <Button

@@ -71,7 +71,7 @@
 
                 <EditText
                     android:id="@+id/partyTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:background="@android:color/transparent"
@@ -108,7 +108,7 @@
 
                 <EditText
                     android:id="@+id/partyDescription"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:background="@android:color/transparent"
@@ -143,7 +143,7 @@
 
                 <EditText
                     android:id="@+id/musicGenerationDesc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:background="@android:color/transparent"
@@ -217,7 +217,7 @@
 
                 <TextView
                     android:id="@+id/partyAddressTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:text="Click here for party address"

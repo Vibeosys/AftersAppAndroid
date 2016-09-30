@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -114,8 +115,7 @@ public class HostPartyFragment extends BaseFragment implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
-    private ProgressBar mProgressBar;
-
+    ProgressDialog dialog;
 
     // TODO: Rename and change types and number of parameters
     public static HostPartyFragment newInstance(String param1, String param2) {
@@ -160,8 +160,14 @@ public class HostPartyFragment extends BaseFragment implements
         mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         mCancelPartyBtn =(Button) rootView.findViewById(R.id.cancelParty);
+
+        dialog = new ProgressDialog(getContext()); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Loading. Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+
         List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
         spineerData.add("10+");
@@ -215,9 +221,8 @@ public class HostPartyFragment extends BaseFragment implements
                 boolean result = callToValidation();
                 if (result == true) {
                     if(NetworkUtils.isActiveNetworkAvailable(getContext()))
-                    {
-                        showProgress(true,mPartyTitle,mProgressBar);
-                        callTToWebService();
+                    {    dialog.show();
+                         callTToWebService();
                     }
                     else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
                     {
@@ -275,7 +280,7 @@ public class HostPartyFragment extends BaseFragment implements
             return false;
         } else if (mMusicGeneration.getText().toString().trim().length() == 0) {
             mMusicGeneration.requestFocus();
-            mMusicGeneration.setError("Please enter music generation");
+            mMusicGeneration.setError("Please enter music genre");
             setFlag = false;
             return false;
         } else if (mAgeSpinner.getSelectedItemPosition() == 0) {
@@ -615,7 +620,8 @@ public class HostPartyFragment extends BaseFragment implements
 
     public void setResult(String address, double latitude, double longitude) {
 
-        mGoogleMapTextView.setText("" + address);
+        String trimString = address.trim();
+        mGoogleMapTextView.setText("" + trimString);
         mFinalAddress = address;
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
@@ -681,7 +687,7 @@ public class HostPartyFragment extends BaseFragment implements
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_POST_PART:
                 Log.e("TAG", "##Volley Server error " + error.toString());
-                showProgress(false,mPartyTitle,mProgressBar);
+                dialog.cancel();
                 break;
         }
     }
@@ -690,7 +696,7 @@ public class HostPartyFragment extends BaseFragment implements
     public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_POST_PART:
-                showProgress(false,mPartyTitle,mProgressBar);
+                dialog.cancel();
                 Log.d("TAG", "##Volley Data error " + errorMessage);
                 break;
         }
@@ -700,9 +706,10 @@ public class HostPartyFragment extends BaseFragment implements
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_POST_PART:
-                Toast toast = Toast.makeText(getContext(), "Party Posted Successfully", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getContext(), "Party Hosted Successfully", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
+                dialog.cancel();
                 HomeFragment homeFragment = new HomeFragment();
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_POST_PARTY).commit();

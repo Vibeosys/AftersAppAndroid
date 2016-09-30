@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,10 +34,11 @@ import java.util.UUID;
  * Created by shrinivas on 24-09-2016.
  */
 public class PurchaseFragment extends BaseFragment implements View.OnClickListener {
-    private TextView mPurchaseTextView;
+    private Button mPurchaseTextView,mCancelPurchase;
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     String mPrice;
+    private static final String PURCHASE_HOME_FRAGMENT = "home";
     private UUID mTransactionId;
 
     @Override
@@ -63,13 +65,14 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.purchase_fragment, container, false);
-        mPurchaseTextView = (TextView) view.findViewById(R.id.purchase);
+        mPurchaseTextView = (Button) view.findViewById(R.id.purchase);
+        mCancelPurchase = (Button) view.findViewById(R.id.cancelProduct);
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
         getActivity().bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
         mPurchaseTextView.setOnClickListener(this);
-
+        mCancelPurchase.setOnClickListener(this);
         return view;
     }
 
@@ -86,6 +89,9 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                     e.printStackTrace();
                 }
                 if (isBillingSupported != 0) {
+                    HomeFragment homeFragment = new HomeFragment();
+                    getFragmentManager().beginTransaction().
+                            replace(R.id.fragment_frame_lay, homeFragment, PURCHASE_HOME_FRAGMENT).commit();
                     Log.d("Billing", "NA");
                     Log.d("Billing", "NA");
                 } else {
@@ -93,6 +99,12 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                 }
 
                 break;
+            case R.id.cancelProduct:
+                HomeFragment homeFragment = new HomeFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, homeFragment, PURCHASE_HOME_FRAGMENT).commit();
+                break;
+
         }
 
 

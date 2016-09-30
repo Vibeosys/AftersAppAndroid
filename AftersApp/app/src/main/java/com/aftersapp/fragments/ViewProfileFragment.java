@@ -90,7 +90,7 @@ public class ViewProfileFragment extends BaseFragment {
         circleView = (CircleImageView) view.findViewById(R.id.circleView);
         mUserNotificationStatus = (TextView) view.findViewById(R.id.notificationStatusView);
         mUserNameFirst = (TextView) view.findViewById(R.id.userName);
-
+        mAdView = (AdView) view.findViewById(R.id.adView);
         CallToViewProfile();
         mRemoveAds.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +101,7 @@ public class ViewProfileFragment extends BaseFragment {
             }
         });
         if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {
-            mAdView = (AdView) view.findViewById(R.id.adView);
+
             adRequest = new AdRequest.Builder().addTestDevice("DC7854A3ADFE5403F956AFB5B83C7391")
                     .build();
             mAdView.loadAd(adRequest);
