@@ -207,7 +207,7 @@ public class FindPartyFragment extends BaseFragment implements
         }
         txtErrorMsg.setVisibility(View.VISIBLE);
         mListParties.setVisibility(View.GONE);
-        txtErrorMsg.setText(getString(R.string.str_err_msg));
+        txtErrorMsg.setText(getString(R.string.str_err_server_msg));
     }
 
     @Override

@@ -80,8 +80,8 @@ public class PartyAdapter extends BaseAdapter {
         int isLike = partyData.getIsLike();
         viewHolder.txtPartyName.setText(partyName);
         viewHolder.txtPartyDesc.setText(partyDesc);
-        viewHolder.txtAgeLimit.setText(age);
-        viewHolder.txtAttending.setText(attendance + "+");
+        viewHolder.txtAgeLimit.setText(""+age);
+        viewHolder.txtAttending.setText(""+attendance);
         mImageLoader = CustomVolleyRequestQueue.getInstance(mContext)
                 .getImageLoader();
 

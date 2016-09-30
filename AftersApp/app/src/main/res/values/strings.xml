@@ -29,24 +29,23 @@
     <string name="str_age_selected">Default age selected</string>
     <string name="show_result">Show result</string>
     <string name="reset_all_filters">Reset all filters</string>
-    <string name="str_already_like">You already attending party</string>
-    <string name="party_like_success">Thanks for attending party</string>
-    <string name="str_already_removed_fav">Already removed from favourite</string>
-    <string name="str_already_fav">Already mark as favouirte</string>
-    <string name="party_removed_fav_success">Remove from favourite</string>
-    <string name="party_add_fav_success">Party added in favourite</string>
-    <string name="str_connect_internet">Please connect internet</string>
-    <string name="str_err_no_party_in_location">There is no any event or party in your location</string>
-    <string name="str_err_msg">Somthing went wrong on server</string>
-    <string name="please_wait">Please Wait</string>
+    <string name="str_already_like">Attending the party, Confirmed!!</string>
+    <string name="party_like_success">Attending the party, Confirmed!!</string>
+    <string name="str_already_removed_fav">Removed from your favourites..</string>
+    <string name="str_already_fav">It’s your favourite party now</string>
+    <string name="party_removed_fav_success">Removed from your favourites..</string>
+    <string name="party_add_fav_success">It’s your favourite party now</string>
+    <string name="str_connect_internet">Please connect to internet…</string>
+    <string name="str_err_no_party_in_location">There are no parties happening around, Hang on for a while…</string>
+    <string name="please_wait">Please wait…</string>
     <string name="dlg_ok">Ok</string>
     <string name="dlg_cancel">Cancel</string>
     <string name="select">Selected</string>
     <string name="str_name">Name</string>
     <string name="full_name">Full Name</string>
-    <string name="chat_empty_you_are_alone_here">You are alone here</string>
+    <string name="chat_empty_you_are_alone_here">Nobody is around yet…</string>
     <string name="chat_empty_start_new_chat">Start new chat</string>
-    <string name="connection_error">Connection failed</string>
+    <string name="connection_error">Sorry, we lost connection to server  !!</string>
     <string name="reconnect_alert">Reconnecting in %s seconds</string>
     <string name="chat_attachment">Attachment</string>
     <string name="menu_dialogs_delete">Delete</string>
@@ -60,7 +59,7 @@
     <string name="banner_home_footer">ca-app-pub-1336083592322757/2867596220</string>
     <string name="msg_err">Server connection fails</string>
     <string name="chat_wait_for_attachments_to_upload">Wait for all attachments to upload</string>
-    <string name="chat_send_message_error">Failed to send message</string>
+    <string name="chat_send_message_error">Failed to send message, please try again later..</string>
     <string name="dlg_choose_image_from">Select photo from…</string>
     <string name="dlg_loading">Loading...</string>
     <string name="notification_title">Aftersapp Chat notification</string>
@@ -68,10 +67,10 @@
     <string name="str_grant_permission">Allow the permission to send and receive images</string>
     <string name="interstial_ad_id">ca-app-pub-1336083592322757/4344329429</string>
     <string name="str_host_not_found">Host not available for chat</string>
-    <string name="str_filter_apply">Apply filters on party search</string>
+    <string name="str_filter_apply">Result filters applied.</string>
     <string name="str_filter_reset">All Filters are reset to default</string>
     <string name="str_new_attachement">New attachment received</string>
     <string name="str_err_server_err">Server Error</string>
-    <string name="str_err_server_msg">Something went wrong on server</string>
+    <string name="str_err_server_msg">Something went wrong on server, please try again later..</string>
 
 </resources>

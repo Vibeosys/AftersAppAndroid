@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
     private Button mBtnChatHost, iamAttending, saveFavourite;
     private TextView mTxtPartyName, mTxtDesc, mTxtAddress, mTxtAge, mTxtAttending;
     private NetworkImageView networkImageView;
+    private LinearLayout layAttending;
 
     public PartyDetailsFragment() {
         // Required empty public constructor
@@ -80,13 +82,21 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mTxtAge = (TextView) view.findViewById(R.id.txtAge);
         mTxtAttending = (TextView) view.findViewById(R.id.txtAttending);
         networkImageView = (NetworkImageView) view.findViewById(R.id.imgPartyImage);
+        layAttending = (LinearLayout) view.findViewById(R.id.layAttending);
         mTxtPartyName.setText(partyData.getTitle());
         mTxtDesc.setText(partyData.getDesc());
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         mTxtAddress.setText(partyData.getLocation());
         mTxtAge.setText(partyData.getAge());
-        mTxtAttending.setText("" + partyData.getAttending());
+        int attending = partyData.getAttending();
+        if (attending == 0) {
+            layAttending.setVisibility(View.GONE);
+        } else {
+            layAttending.setVisibility(View.VISIBLE);
+            mTxtAttending.setText("" + attending);
+        }
+
         setImage();
         if (partyData.getHost() == mSessionManager.getUserId() ||
                 mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {

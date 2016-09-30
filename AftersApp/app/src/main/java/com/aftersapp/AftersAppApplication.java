@@ -58,7 +58,7 @@ public class AftersAppApplication extends MultiDexApplication {
 
     public void setAddClickCount() {
         clickCount = clickCount + 1;
-        if (clickCount == 3) {
+        if (clickCount == 6) {
             AdRequest adRequest = new AdRequest.Builder().addTestDevice("1C22DEC8AEF4249E83143364E2E5AC32").build();
             mInterstitialAd.loadAd(adRequest);
             clickCount = 0;
