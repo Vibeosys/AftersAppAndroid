@@ -206,11 +206,11 @@ public class SessionManager {
     }
 
     public void setIsPurchased(int isPurchased) {
-        setValuesInSharedPrefs(PropertyTypeConstants.IS_PURCHASED, isPurchased);
+        setIntValuesInSharedPrefs(PropertyTypeConstants.IS_PURCHASED, isPurchased);
     }
 
     public int getIsPurchased() {
-        return mProjectSharedPref.getInt(PropertyTypeConstants.IS_PURCHASED, -1);
+        return mProjectSharedPref.getInt(PropertyTypeConstants.IS_PURCHASED, 0);
     }
 
     public void setRadius(int radius) {

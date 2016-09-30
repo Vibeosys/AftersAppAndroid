@@ -2,12 +2,16 @@ package com.aftersapp;
 
 import android.*;
 import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,8 +44,10 @@ import com.aftersapp.fragments.PurchaseFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.helper.DataHolder;
+import com.aftersapp.utils.AppConstants;
 import com.aftersapp.utils.UserAuth;
 import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
+import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -53,6 +59,7 @@ import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -71,7 +78,6 @@ public class MainActivity extends BaseActivity
 
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,18 +122,14 @@ public class MainActivity extends BaseActivity
 
         if (!TextUtils.isEmpty(mImageUri)) {
             String stringImg = mSessionManager.getProfImg();
-            if(mImageUri.equals("null"))
-            {
+            if (mImageUri.equals("null")) {
                 profileImg.setImageResource(R.drawable.avatar_profile);
-            }else
-            {
+            } else {
                 DownloadImage downloadImage = new DownloadImage();
                 downloadImage.execute(mImageUri);
             }
 
-        }
-        else if(TextUtils.isEmpty(mSessionManager.getProfImg()))
-        {
+        } else if (TextUtils.isEmpty(mSessionManager.getProfImg())) {
             profileImg.setImageResource(R.drawable.avatar_profile);
         }
         mHomeLay.setOnClickListener(this);
@@ -135,9 +137,14 @@ public class MainActivity extends BaseActivity
         mHostLay.setOnClickListener(this);
         mMoreLay.setOnClickListener(this);
         setUpFragment(R.id.homeLay);
-
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
+            navigationView.getMenu().clear(); //clear old inflated items.
+            navigationView.inflateMenu(R.menu.activity_main_drawer);// drawer for subscribers
+        } else {
+            navigationView.getMenu().clear(); //clear old inflated items.
+            navigationView.inflateMenu(R.menu.activity_unsubscribe_drawer);
+        }
     }
-
 
     public void callLogin() {
         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -169,7 +176,8 @@ public class MainActivity extends BaseActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        AftersAppApplication.getInstance().setAddClickCount();
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
+            AftersAppApplication.getInstance().setAddClickCount();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_filter) {
             FilterFragment filterFragment = new FilterFragment();
@@ -186,7 +194,8 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        AftersAppApplication.getInstance().setAddClickCount();
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
+            AftersAppApplication.getInstance().setAddClickCount();
         if (id == R.id.nav_home) {
             // Handle the camera action
             HomeFragment homeFragment = new HomeFragment();
@@ -225,7 +234,8 @@ public class MainActivity extends BaseActivity
     }
 
     private void setUpFragment(int i) {
-        AftersAppApplication.getInstance().setAddClickCount();
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
+            AftersAppApplication.getInstance().setAddClickCount();
         switch (i) {
             case R.id.homeLay:
                 HomeFragment homeFragment = new HomeFragment();

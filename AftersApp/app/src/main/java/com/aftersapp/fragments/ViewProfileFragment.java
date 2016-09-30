@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.aftersapp.MainActivity;
 import com.aftersapp.R;
+import com.aftersapp.utils.AppConstants;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -34,8 +35,7 @@ public class ViewProfileFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private TextView mUserName, mUserEmailId, mUserDateOfBirth, mUserGender,mUserNotificationStatus
-            ,mUserNameFirst;
+    private TextView mUserName, mUserEmailId, mUserDateOfBirth, mUserGender, mUserNotificationStatus, mUserNameFirst;
     private CircleImageView circleView;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -82,80 +82,67 @@ public class ViewProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
-        int val = mSessionManager.getIsPurchased();
-        if(mSessionManager.getIsPurchased()==-1)
-        {
-            mAdView = (AdView) view.findViewById(R.id.adView);
-            adRequest = new AdRequest.Builder().addTestDevice("DC7854A3ADFE5403F956AFB5B83C7391")
-                    .build();
-            mAdView.loadAd(adRequest);
-        }
-
-
         mRemoveAds = (Button) view.findViewById(R.id.removeAD);
-
-
         mUserName = (TextView) view.findViewById(R.id.userFullNameView);
         mUserEmailId = (TextView) view.findViewById(R.id.userEmailIdView);
         mUserDateOfBirth = (TextView) view.findViewById(R.id.userDOBView);
         mUserGender = (TextView) view.findViewById(R.id.userGendarView);
         circleView = (CircleImageView) view.findViewById(R.id.circleView);
         mUserNotificationStatus = (TextView) view.findViewById(R.id.notificationStatusView);
-        mUserNameFirst =(TextView) view.findViewById(R.id.userName);
+        mUserNameFirst = (TextView) view.findViewById(R.id.userName);
 
         CallToViewProfile();
         mRemoveAds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PurchaseFragment purchaseFragment= new PurchaseFragment();
+                PurchaseFragment purchaseFragment = new PurchaseFragment();
                 getFragmentManager().beginTransaction().
-                        replace(R.id.fragment_frame_lay,purchaseFragment,"Remove Ads").commit();
+                        replace(R.id.fragment_frame_lay, purchaseFragment, "Remove Ads").commit();
             }
         });
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {
+            mAdView = (AdView) view.findViewById(R.id.adView);
+            adRequest = new AdRequest.Builder().addTestDevice("DC7854A3ADFE5403F956AFB5B83C7391")
+                    .build();
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView.setVisibility(View.GONE);
+            mRemoveAds.setVisibility(View.GONE);
+        }
         return view;
     }
 
     private void CallToViewProfile() {
-        mUserName.setText(""+mSessionManager.getName());
-        mUserEmailId.setText(""+mSessionManager.getEmail2());
+        mUserName.setText("" + mSessionManager.getName());
+        mUserEmailId.setText("" + mSessionManager.getEmail2());
 
-        if(TextUtils.isEmpty(mSessionManager.getGender()))
-        {
+        if (TextUtils.isEmpty(mSessionManager.getGender())) {
             mUserGender.setText("");
-        }else
-        {
-            mUserGender.setText(""+mSessionManager.getGender());
+        } else {
+            mUserGender.setText("" + mSessionManager.getGender());
         }
-        if(TextUtils.isEmpty(mSessionManager.getDob())||mSessionManager.getDob().equals("0000-00-00 00:00:00"))
-        {
+        if (TextUtils.isEmpty(mSessionManager.getDob()) || mSessionManager.getDob().equals("0000-00-00 00:00:00")) {
             mUserDateOfBirth.setText("");
-        }else
-        {
-            mUserDateOfBirth.setText(""+mSessionManager.getDob());
+        } else {
+            mUserDateOfBirth.setText("" + mSessionManager.getDob());
         }
         long NotificationFlg = mSessionManager.getEmailNotify();
-        mUserNameFirst.setText(""+mSessionManager.getName());
-        if(NotificationFlg==1)
-        {
+        mUserNameFirst.setText("" + mSessionManager.getName());
+        if (NotificationFlg == 1) {
             mUserNotificationStatus.setText("Enable");
-        }
-        else {
+        } else {
             mUserNotificationStatus.setText("Disable");
         }
-        if(!TextUtils.isEmpty(mSessionManager.getProfImg()))
-        {
+        if (!TextUtils.isEmpty(mSessionManager.getProfImg())) {
             String stringImg = mSessionManager.getProfImg();
-            if(stringImg.equals("null"))
-            {
+            if (stringImg.equals("null")) {
                 circleView.setImageResource(R.drawable.avatar_profile);
-            }else {
+            } else {
                 DownloadImage downloadImage = new DownloadImage();
                 downloadImage.execute(mSessionManager.getProfImg());
             }
 
-        }
-        else if(TextUtils.isEmpty(mSessionManager.getProfImg()))
-        {
+        } else if (TextUtils.isEmpty(mSessionManager.getProfImg())) {
             circleView.setImageResource(R.drawable.avatar_profile);
         }
 

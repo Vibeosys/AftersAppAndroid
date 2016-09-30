@@ -38,10 +38,11 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
     ServiceConnection mServiceConn;
     String mPrice;
     private UUID mTransactionId;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         mServiceConn = new ServiceConnection() {
+        mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mService = null;
@@ -61,7 +62,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.purchase_fragment,container,false);
+        View view = inflater.inflate(R.layout.purchase_fragment, container, false);
         mPurchaseTextView = (TextView) view.findViewById(R.id.purchase);
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -75,12 +76,8 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id)
-        {
+        switch (id) {
             case R.id.purchase:
-                Toast toast = Toast.makeText(getContext(),"Purchase button is clicked",Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER,0,0);
-                toast.show();
                 String packageName = getActivity().getPackageName();
                 int isBillingSupported = -1;
                 try {
@@ -89,11 +86,9 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                     e.printStackTrace();
                 }
                 if (isBillingSupported != 0) {
-                    Log.d("Billing","NA");
-                    Log.d("Billing","NA");
-                }
-                else
-                {
+                    Log.d("Billing", "NA");
+                    Log.d("Billing", "NA");
+                } else {
                     getInAppPurchase();
                 }
 
@@ -112,6 +107,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                 ArrayList<String> items = purchaseItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
                 if (items.contains("com.aftersapp.noads")) {
                     Toast.makeText(getContext(), "Product is already purchased", Toast.LENGTH_SHORT).show();
+                    mSessionManager.setIsPurchased(AppConstants.ITEM_PURCHASED);
                 } else {
                     purchaseAvailableProduct();
                 }
@@ -144,6 +140,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
             }
             return bundle;
         }
+
         @Override
         protected void onPostExecute(Bundle bundle) {
             super.onPostExecute(bundle);
@@ -159,7 +156,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                         String price = object.getString("price");
                         if (productId.equals("com.aftersapp.noads"))
 
-                mPrice = price;
+                            mPrice = price;
                         mTransactionId = UUID.randomUUID();
                         Bundle buyIntentBundle = mService.getBuyIntent(3, getActivity().getPackageName(),
                                 productId, "inapp", mTransactionId.toString());
@@ -175,7 +172,7 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
-            }catch (RemoteException e) {
+            } catch (RemoteException e) {
                 e.printStackTrace();
             }
 
@@ -209,11 +206,9 @@ public class PurchaseFragment extends BaseFragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        }
-        else
-        {
-            Toast toast = Toast.makeText(getContext(),"In else part of result activity",Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
+        } else {
+            Toast toast = Toast.makeText(getContext(), "In else part of result activity", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
     }

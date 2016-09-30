@@ -57,7 +57,7 @@
         WITH JUST \u20AC0.99 AND YOU WILL NEVER HAVE TO SEE ANOTHER AD AGAIN</string>
     <string name="str_remove_ads">REMOVE ADS</string>
 
-    <string name="banner_home_footer">ca-app-pub-1303442515313304/7146112072</string>
+    <string name="banner_home_footer">ca-app-pub-1336083592322757/2867596220</string>
     <string name="msg_err">Server connection fails</string>
     <string name="chat_wait_for_attachments_to_upload">Wait for all attachments to upload</string>
     <string name="chat_send_message_error">Failed to send message</string>
@@ -66,7 +66,7 @@
     <string name="notification_title">Aftersapp Chat notification</string>
     <string name="str_per_accept">Please allow the permission for chat</string>
     <string name="str_grant_permission">Allow the permission to send and receive images</string>
-    <string name="interstial_ad_id">ca-app-pub-1303442515313304/4005685677</string>
+    <string name="interstial_ad_id">ca-app-pub-1336083592322757/4344329429</string>
     <string name="str_host_not_found">Host not available for chat</string>
     <string name="str_filter_apply">Apply filters on party search</string>
     <string name="str_filter_reset">All Filters are reset to default</string>

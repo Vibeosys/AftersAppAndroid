@@ -88,7 +88,8 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mTxtAge.setText(partyData.getAge());
         mTxtAttending.setText("" + partyData.getAttending());
         setImage();
-        if (partyData.getHost() == mSessionManager.getUserId()) {
+        if (partyData.getHost() == mSessionManager.getUserId() ||
+                mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {
             mBtnChatHost.setVisibility(View.INVISIBLE);
         }
         mBtnChatHost.setOnClickListener(this);
