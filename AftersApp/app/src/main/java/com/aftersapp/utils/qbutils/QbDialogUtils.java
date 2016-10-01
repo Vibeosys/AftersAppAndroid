@@ -154,6 +154,21 @@ public class QbDialogUtils {
         }
     }
 
+    public static String getDialogImage(QBDialog dialog) {
+        if (dialog.getType().equals(QBDialogType.GROUP)) {
+            return dialog.getPhoto();
+        } else {
+            // It's a private dialog, let's use opponent's name as chat name
+            Integer opponentId = getOpponentIdForPrivateDialog(dialog);
+            QBUser user = QbUsersHolder.getInstance().getUserById(opponentId);
+            if (user != null) {
+                return user.getCustomData();
+            } else {
+                return dialog.getPhoto();
+            }
+        }
+    }
+
     private static List<QBUser> getQbUsersFromQbDialog(QBDialog dialog) {
         List<QBUser> previousDialogUsers = new ArrayList<>();
         for (Integer id : dialog.getOccupants()) {

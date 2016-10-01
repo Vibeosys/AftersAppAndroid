@@ -33,12 +33,17 @@ import com.aftersapp.utils.qbutils.VerboseQbChatConnectionListener;
 import com.aftersapp.utils.qbutils.chatutils.PrivateChatImpl;
 import com.aftersapp.utils.qbutils.gcm.ActivityLifecycle;
 import com.aftersapp.views.chatviews.AttachmentPreviewAdapterView;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
 import com.quickblox.chat.QBChat;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.chat.model.QBDialogType;
+import com.quickblox.core.LogLevel;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.QBSettings;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.QBPushNotifications;
@@ -95,6 +100,7 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        signInChat();
         if (getArguments() != null) {
             qbDialog = (QBDialog) getArguments().getSerializable(EXTRA_DIALOG);
 
@@ -310,6 +316,7 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
             case PRIVATE:
                 chat = new PrivateChatImpl(chatMessageListener, QbDialogUtils.getOpponentIdForPrivateDialog(qbDialog));
                 loadDialogUsers();
+
                 break;
 
             default:
@@ -317,6 +324,48 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
                 //finish();
                 break;
         }
+    }
+
+    public void signInChat() {
+        progressDialog.show();
+        final QBChatService chatService = QBChatService.getInstance();
+        QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+        chatService.setDebugEnabled(true);
+        chatService.setDefaultPacketReplyTimeout(150000); //add this
+        chatService.setDefaultConnectionTimeout(150000); //add this
+        chatService.setUseStreamManagement(true);
+        //chatService.addConnectionListener(chatConnectionListener);
+        final QBUser user = new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId());
+        QBAuth.createSession(user, new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession session, Bundle params) {
+                // success, login to chat
+
+                user.setId(session.getUserId());
+
+                chatService.login(user, new QBEntityCallback() {
+
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+                        progressDialog.dismiss();
+                        chat = new PrivateChatImpl(chatMessageListener, QbDialogUtils.getOpponentIdForPrivateDialog(qbDialog));
+                        loadDialogUsers();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors) {
+                        Log.e("UserList", errors.getMessage());
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), getResources().getString(R.string.str_err_try_again), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+
+            }
+        });
     }
 
     private void loadDialogUsers() {

@@ -105,7 +105,7 @@ public class SplashScreenActivity extends BaseActivity {
                 if (items.contains("com.aftersapp.noads")) {
                     mSessionManager.setIsPurchased(AppConstants.ITEM_PURCHASED);
                 } else {
-                    mSessionManager.setIsPurchased(AppConstants.ITEM_NOT_PURCHASED);
+                    mSessionManager.setIsPurchased(AppConstants.ITEM_PURCHASED);
                 }
             }
         } catch (RemoteException e) {

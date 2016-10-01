@@ -9,8 +9,11 @@ import android.widget.TextView;
 
 import com.aftersapp.AftersAppApplication;
 import com.aftersapp.R;
+import com.aftersapp.utils.CustomVolleyRequestQueue;
 import com.aftersapp.utils.qbutils.QbDialogUtils;
 import com.aftersapp.utils.qbutils.UiUtils;
+import com.aftersapp.views.NetworkRoundImageView;
+import com.android.volley.toolbox.ImageLoader;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.chat.model.QBDialogType;
 
@@ -18,9 +21,14 @@ import java.util.List;
 
 public class DialogsAdapter extends BaseSelectableListAdapter<QBDialog> {
 
+    Context mContext;
+
     public DialogsAdapter(Context context, List<QBDialog> dialogs) {
         super(context, dialogs);
+        this.mContext = context;
     }
+
+    private ImageLoader mImageLoader;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -32,7 +40,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBDialog> {
             holder.rootLayout = (ViewGroup) convertView.findViewById(R.id.root);
             holder.nameTextView = (TextView) convertView.findViewById(R.id.text_dialog_name);
             holder.lastMessageTextView = (TextView) convertView.findViewById(R.id.text_dialog_last_message);
-            holder.dialogImageView = (ImageView) convertView.findViewById(R.id.image_dialog_icon);
+            holder.profileImg = (NetworkRoundImageView) convertView.findViewById(R.id.image_dialog_icon);
             holder.unreadCounterTextView = (TextView) convertView.findViewById(R.id.text_dialog_unread_count);
 
             convertView.setTag(holder);
@@ -42,9 +50,31 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBDialog> {
 
         QBDialog dialog = getItem(position);
 
-        holder.dialogImageView.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
-        holder.dialogImageView.setImageDrawable(null);
+        /*holder.dialogImageView.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
+        holder.dialogImageView.setImageDrawable(null);*/
+        mImageLoader = CustomVolleyRequestQueue.getInstance(mContext)
+                .getImageLoader();
 
+        try {
+            String url = QbDialogUtils.getDialogImage(dialog);
+            if (url == "null" || url.isEmpty() || url == null || url.equals("") || url == "") {
+                holder.profileImg.setDefaultImageResId(R.drawable.avatar_profile);
+            } else if (TextUtils.isEmpty(url)) {
+                holder.profileImg.setDefaultImageResId(R.drawable.avatar_profile);
+            } else if (url != null && !url.isEmpty()) {
+                try {
+                    mImageLoader.get(url, ImageLoader.getImageListener(holder.profileImg,
+                            R.drawable.avatar_profile, R.drawable.avatar_profile));
+                    holder.profileImg.setImageUrl(url, mImageLoader);
+                } catch (Exception e) {
+                    holder.profileImg.setDefaultImageResId(R.drawable.avatar_profile);
+                }
+            } else {
+                holder.profileImg.setDefaultImageResId(R.drawable.avatar_profile);
+            }
+        } catch (NullPointerException e) {
+            holder.profileImg.setDefaultImageResId(R.drawable.avatar_profile);
+        }
         holder.nameTextView.setText(QbDialogUtils.getDialogName(dialog));
         if (isLastMessageAttachment(dialog)) {
             holder.lastMessageTextView.setText(R.string.chat_attachment);
@@ -74,9 +104,10 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBDialog> {
 
     private static class ViewHolder {
         ViewGroup rootLayout;
-        ImageView dialogImageView;
+        //ImageView dialogImageView;
         TextView nameTextView;
         TextView lastMessageTextView;
         TextView unreadCounterTextView;
+        NetworkRoundImageView profileImg;
     }
 }

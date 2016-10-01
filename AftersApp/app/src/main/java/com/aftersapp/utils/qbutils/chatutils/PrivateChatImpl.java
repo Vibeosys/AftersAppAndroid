@@ -33,6 +33,7 @@ public class PrivateChatImpl extends BaseChatImpl<QBPrivateChat>
 
     @Override
     protected void initManagerIfNeed() {
+
         if (qbPrivateChatManager == null) {
             qbPrivateChatManager = QBChatService.getInstance().getPrivateChatManager();
             qbPrivateChatManager.addPrivateChatManagerListener(this);

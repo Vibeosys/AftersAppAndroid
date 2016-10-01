@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -55,6 +56,10 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.model.QBEntity;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import org.jivesoftware.smack.SmackException;
@@ -69,6 +74,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private LinearLayout mHomeLay, mSearchLay, mHostLay, mMoreLay;
     private static final String HOME_FRAGMENT = "home";
     private static final String SEARCH_FRAGMENT = "search";
@@ -220,17 +226,31 @@ public class MainActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, purchaseFragment, PURCHASE_FRAGMENT).commit();
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesUtil.removeQbUser();
-            DataHolder.getInstance().setSignInQbUser(null);
-            LoginActivity.LogoutFacebook();
-            UserAuth.CleanAuthenticationInfo();
-            Intent logout = new Intent(MainActivity.this, LogoutActivity.class);
-            startActivity(logout);
-            finish();
+
+            logoutFromQb();
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logoutFromQb() {
+
+        /*QBUsers.signOut(new QBEntityCallback() {
+            @Override
+            public void onSuccess(Object o, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });*/
+        AsyncSignOut signOut = new AsyncSignOut();
+        signOut.execute();
+
     }
 
     private void setUpFragment(int i) {
@@ -326,4 +346,28 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    private class AsyncSignOut extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                QBUsers.signOut();
+            } catch (QBResponseException e) {
+                Log.e(TAG, e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            SharedPreferencesUtil.removeQbUser();
+            DataHolder.getInstance().setSignInQbUser(null);
+            LoginActivity.LogoutFacebook();
+            UserAuth.CleanAuthenticationInfo();
+            Intent logout = new Intent(MainActivity.this, LogoutActivity.class);
+            startActivity(logout);
+            finish();
+        }
+    }
 }

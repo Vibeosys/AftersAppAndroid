@@ -4,12 +4,16 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:background="@color/user_item_back"
+    android:gravity="center_vertical"
+    android:padding="10dp"
     tools:ignore="RtlHardcoded">
 
-    <ImageView
+    <com.aftersapp.views.NetworkRoundImageView
         android:id="@+id/image_dialog_icon"
         style="@style/ListItemIconStyle"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         tools:ignore="ContentDescription"
         tools:src="@drawable/ic_action_timer_auto" />
 

@@ -94,6 +94,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private boolean mSignInClicked;
     private boolean mIntentInProgress;
     private ConnectionResult mConnectionResult;
+    private long userId = 0;
     private String email = null;
     private String name = null;
     private String gender = null;
@@ -266,10 +267,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_REGISTER:
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 RegisterResponseData registerResponseData = RegisterResponseData.deserializeJson(data);
                 UserDTO userDTO = new UserDTO();
-                userDTO.setUserId(registerResponseData.getUserId());
+                userId = registerResponseData.getUserId();
+                userDTO.setUserId(userId);
                 userDTO.setName(name);
                 userDTO.setEmail(email);
                 userDTO.setEmail2(email);
@@ -289,15 +291,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void registerDataOnQb() {
-        progressDialog.show();
+        //progressDialog.show();
         QBUser qbUser = new QBUser();
         qbUser.setFullName(name);
         qbUser.setEmail(email);
         qbUser.setLogin(email);
-        qbUser.setPassword(email + mSessionManager.getUserId());
-        qbUser.setId(Integer.parseInt(String.valueOf(mSessionManager.getUserId())));
+        qbUser.setPassword(email + userId);
+        qbUser.setId((int) (userId));
         qbUser.setCustomData(profileImg);
-        qbUser.setExternalId(String.valueOf(mSessionManager.getUserId()));
+        qbUser.setExternalId(String.valueOf(userId));
         QBUsers.signUpSignInTask(qbUser, this);
     }
 
@@ -438,36 +440,36 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onError(QBResponseException e) {
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         signIn();
     }
 
     public void signIn() {
 
-        progressDialog.show();
+        //progressDialog.show();
 
-        QBUser qbUser = new QBUser(email, email + mSessionManager.getUserId());
+        QBUser qbUser = new QBUser(email, email + userId);
         QBUsers.signIn(qbUser, new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 DataHolder.getInstance().setSignInQbUser(qbUser);
                 signInChat();
             }
 
             @Override
             public void onError(QBResponseException errors) {
-                progressDialog.dismiss();
-                signIn();
+                //progressDialog.dismiss();
+                //signInChat();
             }
         });
     }
 
     public void signInChat() {
-        progressDialog.show();
+        // progressDialog.show();
         final QBChatService chatService = QBChatService.getInstance();
 
-        final QBUser user = new QBUser(email, email + mSessionManager.getUserId());
+        final QBUser user = new QBUser(email, email + userId);
         QBAuth.createSession(user, new QBEntityCallback<QBSession>() {
             @Override
             public void onSuccess(QBSession session, Bundle params) {

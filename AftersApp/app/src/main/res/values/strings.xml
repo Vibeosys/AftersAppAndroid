@@ -72,5 +72,6 @@
     <string name="str_new_attachement">New attachment received</string>
     <string name="str_err_server_err">Server Error</string>
     <string name="str_err_server_msg">Something went wrong on server, please try again later..</string>
+    <string name="str_err_try_again">Try again later..</string>
 
 </resources>
