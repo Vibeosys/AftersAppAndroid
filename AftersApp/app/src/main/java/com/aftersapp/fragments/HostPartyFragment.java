@@ -306,6 +306,7 @@ public class HostPartyFragment extends BaseFragment implements
         String PartyAge = replaceSpinner;
         int spinnerConv = Integer.parseInt(PartyAge);
         String MusciGeneration = mMusicGeneration.getText().toString().trim();
+        String LowerCaseMusicGener = MusciGeneration.toLowerCase();
         int scaledHeight = 480;
         int scaledWidth = 320;
         Bitmap scaledBitmap = null;
@@ -327,7 +328,7 @@ public class HostPartyFragment extends BaseFragment implements
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
                 PartyDescription, sendLat, sendLong,
-                PartyAddress, MusciGeneration, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
+                PartyAddress, LowerCaseMusicGener, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
         String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);
@@ -622,7 +623,7 @@ public class HostPartyFragment extends BaseFragment implements
 
         String trimString = address.trim();
         mGoogleMapTextView.setText("" + trimString);
-        mFinalAddress = address;
+        mFinalAddress = trimString;
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
     }
