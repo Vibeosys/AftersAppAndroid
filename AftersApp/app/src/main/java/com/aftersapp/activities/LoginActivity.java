@@ -296,6 +296,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         qbUser.setLogin(email);
         qbUser.setPassword(email + mSessionManager.getUserId());
         qbUser.setId(Integer.parseInt(String.valueOf(mSessionManager.getUserId())));
+        qbUser.setCustomData(profileImg);
         qbUser.setExternalId(String.valueOf(mSessionManager.getUserId()));
         QBUsers.signUpSignInTask(qbUser, this);
     }
@@ -384,8 +385,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 GoogleSignInAccount acct = result.getSignInAccount();
                 email = acct.getEmail();
                 Uri Img = acct.getPhotoUrl();
-                if(Img!=null)
-                profileImg = String.valueOf(Img);
+                if (Img != null)
+                    profileImg = String.valueOf(Img);
                 String id = acct.getId();
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, dob, id);
@@ -485,14 +486,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
                     @Override
                     public void onError(QBResponseException errors) {
-
+                        progressDialog.dismiss();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
                     }
                 });
             }
 
             @Override
             public void onError(QBResponseException errors) {
-
+                progressDialog.dismiss();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
             }
         });
     }

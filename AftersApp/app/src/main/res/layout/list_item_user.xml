@@ -2,54 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/user_avatar2_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:padding="16dp"
-        android:src="@drawable/shape_circle"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
-        android:id="@+id/user_avatar_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:paddingLeft="23dp"
-        android:paddingTop="26dp"
-        android:src="@drawable/ic_action_timer_auto"
-        tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry" />
+    android:layout_height="match_parent"
+    android:background="@color/user_item_back">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        tools:ignore="RtlHardcoded">
+        android:orientation="horizontal">
 
-        <com.aftersapp.views.RobotoTextView
-            android:id="@+id/user_name_text_item_view"
+        <com.aftersapp.views.NetworkRoundImageView
+            android:id="@+id/profileImg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="6dp"
+            android:padding="3dp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/str_name"
-            android:singleLine="true"
-            android:textColor="@color/primaryText"
-            android:textSize="16sp" />
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            tools:ignore="RtlHardcoded">
 
-        <com.aftersapp.views.RobotoTextView
-            android:id="@+id/full_name_text_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:hint="@string/full_name"
-            android:singleLine="true"
-            android:textColor="@color/secondaryText"
-            android:textSize="14sp" />
+            <com.aftersapp.views.RobotoTextView
+                android:id="@+id/user_name_text_item_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/str_name"
+                android:singleLine="true"
+                android:textColor="@color/primaryText"
+                android:textSize="16sp" />
 
+            <com.aftersapp.views.RobotoTextView
+                android:id="@+id/full_name_text_item_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:hint="@string/full_name"
+                android:singleLine="true"
+                android:textColor="@color/secondaryText"
+                android:textSize="14sp" />
+
+        </LinearLayout>
     </LinearLayout>
+
 
 </RelativeLayout>
