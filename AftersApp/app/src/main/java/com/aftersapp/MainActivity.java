@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -186,17 +186,6 @@ public class MainActivity extends BaseActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
-            AftersAppApplication.getInstance().setAddClickCount();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_filter) {
-            FilterFragment filterFragment = new FilterFragment();
-            getSupportFragmentManager().beginTransaction().
-                    replace(R.id.fragment_frame_lay, filterFragment, MORE_FRAGMENT).commit();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

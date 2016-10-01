@@ -10,6 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aftersapp.AftersAppApplication;
 import com.aftersapp.R;
 import com.aftersapp.adapters.PartyAdapter;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
@@ -115,7 +119,7 @@ public class FindPartyFragment extends BaseFragment implements
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
 
-
+        setHasOptionsMenu(true);
         if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
             showProgress(true, mListParties, progressBar);
             GetPartyDTO getPartyDTO = null;
@@ -250,26 +254,23 @@ public class FindPartyFragment extends BaseFragment implements
                 Log.d(TAG, "##Volley Response" + data);
                 break;
             case ServerRequestConstants.REQUEST_LIKE_PARTY:
-                try
-                {
+                try {
                     if (data.equals("0")) {
                         Toast.makeText(getContext(), getContext().getResources().
                                 getString(R.string.party_like_success), Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e)
-                {
-                   e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 break;
             case ServerRequestConstants.REQUEST_REMOVE_FAV_PARTY:
-                try{
+                try {
                     if (data.equals("0")) {
                         Toast.makeText(getContext(), getContext().getResources().
                                 getString(R.string.party_removed_fav_success), Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -280,8 +281,7 @@ public class FindPartyFragment extends BaseFragment implements
                         Toast.makeText(getContext(), getContext().getResources().
                                 getString(R.string.party_add_fav_success), Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -292,16 +292,14 @@ public class FindPartyFragment extends BaseFragment implements
     @Override
     public void onLikeClickListener(PartyDataDTO partyDataDTO, int position, int value) {
         if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
-            try
-            {
+            try {
                 if (value == AppConstants.ATTENDING_PARTY) {
                     Toast.makeText(getContext(), getContext().getResources().
                             getString(R.string.str_already_like), Toast.LENGTH_SHORT).show();
                 } else {
                     attendancePartyMark(partyDataDTO);
                 }
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -309,8 +307,7 @@ public class FindPartyFragment extends BaseFragment implements
             try {
                 Toast.makeText(getContext(), getContext().getResources().
                         getString(R.string.str_connect_internet), Toast.LENGTH_SHORT).show();
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -415,5 +412,31 @@ public class FindPartyFragment extends BaseFragment implements
         baseRequestDTO.setData(serializedJsonString);
         mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_ADD_FAV_PARTY,
                 mSessionManager.addFavPartyUrl(), baseRequestDTO);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
+            AftersAppApplication.getInstance().setAddClickCount();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_filter) {
+            FilterFragment filterFragment = new FilterFragment();
+            getFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, filterFragment, "FilterFragment").commit();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
