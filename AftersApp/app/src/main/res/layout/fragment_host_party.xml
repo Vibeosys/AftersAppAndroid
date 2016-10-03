@@ -34,7 +34,7 @@
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
                     android:tag="thumnel"
-                    android:src="@drawable/default_party_image" />
+                    android:src="@drawable/ic_add" />
                 <Button
                     android:id="@+id/removeImage"
                     android:layout_width="36dp"

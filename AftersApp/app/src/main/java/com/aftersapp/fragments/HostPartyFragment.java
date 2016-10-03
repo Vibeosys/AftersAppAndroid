@@ -170,12 +170,12 @@ public class HostPartyFragment extends BaseFragment implements
 
         List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
-        spineerData.add("10+");
-        spineerData.add("20+");
-        spineerData.add("30+");
-        spineerData.add("40+");
-        spineerData.add("50+");
-        spineerData.add("60+");
+        spineerData.add("18+");
+        spineerData.add("25+");
+        spineerData.add("35+");
+        spineerData.add("45+");
+        spineerData.add("55+");
+        spineerData.add("65+");
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
