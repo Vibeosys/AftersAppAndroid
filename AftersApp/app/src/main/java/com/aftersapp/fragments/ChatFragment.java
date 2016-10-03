@@ -100,7 +100,7 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signInChat();
+        //signInChat();
         if (getArguments() != null) {
             qbDialog = (QBDialog) getArguments().getSerializable(EXTRA_DIALOG);
 
@@ -334,7 +334,7 @@ public class ChatFragment extends ChatBaseFragment implements View.OnClickListen
         chatService.setDefaultPacketReplyTimeout(150000); //add this
         chatService.setDefaultConnectionTimeout(150000); //add this
         chatService.setUseStreamManagement(true);
-        //chatService.addConnectionListener(chatConnectionListener);
+        chatService.addConnectionListener(chatConnectionListener);
         final QBUser user = new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId());
         QBAuth.createSession(user, new QBEntityCallback<QBSession>() {
             @Override

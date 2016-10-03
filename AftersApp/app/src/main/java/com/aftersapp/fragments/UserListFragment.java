@@ -180,8 +180,8 @@ public class UserListFragment extends BaseFragment implements AdapterView.OnItem
         final QBChatService chatService = QBChatService.getInstance();
         QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
         chatService.setDebugEnabled(true);
-        chatService.setDefaultPacketReplyTimeout(150000); //add this
-        chatService.setDefaultConnectionTimeout(150000); //add this
+        chatService.setDefaultPacketReplyTimeout(330000); //add this
+        chatService.setDefaultConnectionTimeout(330000); //add this
         chatService.setUseStreamManagement(true);
         //chatService.addConnectionListener(chatConnectionListener);
         final QBUser user = new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId());
@@ -208,11 +208,16 @@ public class UserListFragment extends BaseFragment implements AdapterView.OnItem
                     public void onError(QBResponseException errors) {
                         Log.e("UserList", errors.getMessage());
                         progressDialog.dismiss();
-                        getActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                createDialog(selectedUsers);
-                            }
-                        });
+                        if (errors.getMessage().contains("You have already logged in chat")) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    createDialog(selectedUsers);
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), getResources().getString(R.string.str_err_server_msg),
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }

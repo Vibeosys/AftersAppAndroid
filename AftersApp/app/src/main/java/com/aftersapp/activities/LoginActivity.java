@@ -297,7 +297,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         qbUser.setEmail(email);
         qbUser.setLogin(email);
         qbUser.setPassword(email + userId);
-        qbUser.setId((int) (userId));
+        //qbUser.setId((int) (userId));
         qbUser.setCustomData(profileImg);
         qbUser.setExternalId(String.valueOf(userId));
         QBUsers.signUpSignInTask(qbUser, this);
@@ -454,18 +454,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 //progressDialog.dismiss();
                 DataHolder.getInstance().setSignInQbUser(qbUser);
-                signInChat();
+                progressDialog.dismiss();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+                // signInChat();
             }
 
             @Override
             public void onError(QBResponseException errors) {
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), getResources()
+                        .getString(R.string.str_err_server_msg), Toast.LENGTH_SHORT).show();
                 //signInChat();
             }
         });
     }
 
-    public void signInChat() {
+    /*public void signInChat() {
         // progressDialog.show();
         final QBChatService chatService = QBChatService.getInstance();
 
@@ -502,5 +507,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 finish();
             }
         });
-    }
+    }*/
 }

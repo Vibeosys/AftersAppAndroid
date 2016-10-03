@@ -190,11 +190,16 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                     public void onError(QBResponseException errors) {
                         Log.e("UserList", errors.getMessage());
                         progressDialog.dismiss();
-                        getActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                createDialog(selectedUsers);
-                            }
-                        });
+                        if (errors.getMessage().contains("You have already logged in chat")) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    createDialog(selectedUsers);
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), getResources().getString(R.string.str_err_server_msg),
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
