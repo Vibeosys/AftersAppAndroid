@@ -35,6 +35,7 @@
                     android:scaleType="fitXY"
                     android:tag="thumnel"
                     android:src="@drawable/ic_add" />
+
                 <Button
                     android:id="@+id/removeImage"
                     android:layout_width="36dp"
@@ -43,8 +44,8 @@
                     android:layout_marginRight="4dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:visibility="invisible"
-                    android:background="@drawable/remove" />
+                    android:background="@drawable/remove"
+                    android:visibility="invisible" />
             </LinearLayout>
 
             <View
@@ -141,7 +142,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
 
-                <EditText
+                <!--<EditText
                     android:id="@+id/musicGenerationDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,7 +150,11 @@
                     android:background="@android:color/transparent"
                     android:textColor="@color/secondaryText"
                     android:textSize="14sp"
-                    android:hint="Enter music generation"/>
+                    android:hint="Enter music generation"/>-->
+                <Spinner
+                    android:id="@+id/musicGenre"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

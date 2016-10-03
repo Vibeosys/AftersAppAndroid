@@ -91,10 +91,10 @@ public class HostPartyFragment extends BaseFragment implements
     private String mParam1;
     private String mParam2;
 
-    private Spinner mSpinner;
+    private Spinner mSpinner,mMusicGenre;
     private TextView mGoogleMapTextView, mPartyAddress;
     private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg,mCancelPartyBtn;
-    private EditText mSearchEditText, mPartyTitle, mPartyDescription, mMusicGeneration;
+    private EditText mSearchEditText, mPartyTitle, mPartyDescription;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
     private boolean setFlag = true;
@@ -106,7 +106,7 @@ public class HostPartyFragment extends BaseFragment implements
     private int EDIT_SELECT_IMAGE = 20;
     private String mImageUri, imgDecodableString;
     double mFinalLatititude, mFinalLongitude;
-    private String mFinalAddress, mSpinnerAge, replaceSpinner;
+    private String mFinalAddress, mSpinnerAge, replaceSpinner,mMusicGenreStr;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     private static final String HOME_FRAGMENT_POST_PARTY_CANCEL = "home";
     Bitmap convertedImg = null;
@@ -150,13 +150,14 @@ public class HostPartyFragment extends BaseFragment implements
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_host_party, container, false);
         mSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
+        mMusicGenre = (Spinner) rootView.findViewById(R.id.musicGenre);
 
         mGoogleMapTextView = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mUserPartyPhoto = (ImageView) rootView.findViewById(R.id.userPartyPhoto);
         mHostParty = (Button) rootView.findViewById(R.id.saveParty);
         mPartyTitle = (EditText) rootView.findViewById(R.id.partyTitle);
         mPartyDescription = (EditText) rootView.findViewById(R.id.partyDescription);
-        mMusicGeneration = (EditText) rootView.findViewById(R.id.musicGenerationDesc);
+       // mMusicGeneration = (EditText) rootView.findViewById(R.id.musicGenerationDesc);
         mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
@@ -167,6 +168,34 @@ public class HostPartyFragment extends BaseFragment implements
         dialog.setMessage("Loading. Please wait...");
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
+        List<String> mGenre= new ArrayList<>();
+        mGenre.add(getResources().getString(R.string.str_music_validation));
+        mGenre.add(getResources().getString(R.string.str_music_alter));
+        mGenre.add(getResources().getString(R.string.str_music_blues));
+        mGenre.add(getResources().getString(R.string.str_music_classical));
+        mGenre.add(getResources().getString(R.string.str_music_country));
+        mGenre.add(getResources().getString(R.string.str_music_dance));
+        mGenre.add(getResources().getString(R.string.str_music_easy));
+        mGenre.add(getResources().getString(R.string.str_music_electronic));
+        mGenre.add(getResources().getString(R.string.str_music_house));
+        mGenre.add(getResources().getString(R.string.str_music_hip_hop));
+        mGenre.add(getResources().getString(R.string.str_music_indie));
+        mGenre.add(getResources().getString(R.string.str_music_jazz));
+        mGenre.add(getResources().getString(R.string.str_music_latin));
+        mGenre.add(getResources().getString(R.string.str_music_new_age));
+        mGenre.add(getResources().getString(R.string.str_music_opera));
+        mGenre.add(getResources().getString(R.string.str_music_pop));
+        mGenre.add(getResources().getString(R.string.str_music_r_n_b));
+        mGenre.add(getResources().getString(R.string.str_music_reggae));
+        mGenre.add(getResources().getString(R.string.str_music_rock));
+        mGenre.add(getResources().getString(R.string.str_music_techno));
+        mGenre.add(getResources().getString(R.string.str_music_beat));
+        ArrayAdapter<String> musicGenreAdapter = new ArrayAdapter<String>
+                (getActivity(), android.R.layout.simple_spinner_item, mGenre);
+        musicGenreAdapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+        mMusicGenre.setAdapter(musicGenreAdapter);
+
 
         List<String> spineerData = new ArrayList<>();
         spineerData.add("--Please select Age--");
@@ -244,7 +273,18 @@ public class HostPartyFragment extends BaseFragment implements
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        /* Music Genre Spinner */
+        mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mMusicGenreStr =parent.getItemAtPosition(position).toString().toLowerCase();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         mRemoveImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,9 +318,8 @@ public class HostPartyFragment extends BaseFragment implements
             mPartyDescription.setError("Please enter party description");
             setFlag = false;
             return false;
-        } else if (mMusicGeneration.getText().toString().trim().length() == 0) {
-            mMusicGeneration.requestFocus();
-            mMusicGeneration.setError("Please enter music genre");
+        } else if (mMusicGenre.getSelectedItemPosition() == 0) {
+            createAlertDialog("AftersApp", "Please select Music genre");
             setFlag = false;
             return false;
         } else if (mAgeSpinner.getSelectedItemPosition() == 0) {
@@ -305,8 +344,8 @@ public class HostPartyFragment extends BaseFragment implements
         //String PartyAge = mSpinnerAge;
         String PartyAge = replaceSpinner;
         int spinnerConv = Integer.parseInt(PartyAge);
-        String MusciGeneration = mMusicGeneration.getText().toString().trim();
-        String LowerCaseMusicGener = MusciGeneration.toLowerCase();
+     //   String MusciGeneration = mMusicGeneration.getText().toString().trim();
+       // String LowerCaseMusicGener = MusciGeneration.toLowerCase();
         int scaledHeight = 480;
         int scaledWidth = 320;
         Bitmap scaledBitmap = null;
@@ -328,7 +367,7 @@ public class HostPartyFragment extends BaseFragment implements
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
                 PartyDescription, sendLat, sendLong,
-                PartyAddress, LowerCaseMusicGener, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
+                PartyAddress, mMusicGenreStr, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
         String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);

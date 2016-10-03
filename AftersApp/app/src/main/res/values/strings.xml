@@ -36,7 +36,7 @@
     <string name="party_removed_fav_success">Removed from your favourites..</string>
     <string name="party_add_fav_success">It’s your favourite party now</string>
     <string name="str_connect_internet">Please connect to internet…</string>
-    <string name="str_err_no_party_in_location">There are no parties happening around, Hang on for a while…</string>
+    <string name="str_err_no_party_in_location">There are currently no parties within your desired radius please check again soon.</string>
     <string name="please_wait">Please wait…</string>
     <string name="dlg_ok">Ok</string>
     <string name="dlg_cancel">Cancel</string>
@@ -73,5 +73,33 @@
     <string name="str_err_server_err">Server Error</string>
     <string name="str_err_server_msg">Something went wrong on server, please try again later..</string>
     <string name="str_err_try_again">Try again later..</string>
-
+    <!--Music Genre -->
+    <string name="str_music_alter">Alternative Music</string>
+    <string name="str_music_blues">Blues</string>
+    <string name="str_music_classical">Classical Music</string>
+    <string name="str_music_country">Country Music</string>
+    <string name="str_music_dance">Dance Music</string>
+    <string name="str_music_easy">Easy Listening</string>
+    <string name="str_music_electronic">Electronic Music</string>
+    <string name="str_music_house">House</string>
+    <string name="str_music_hip_hop">Hip Hop / Rap</string>
+    <string name="str_music_indie">Indie Pop</string>
+    <string name="str_music_jazz">Jazz</string>
+    <string name="str_music_latin">Latin Music</string>
+    <string name="str_music_new_age">New Age</string>
+    <string name="str_music_opera">Opera</string>
+    <string name="str_music_pop">Pop</string>
+    <string name="str_music_r_n_b">R&amp;B / Soul</string>
+    <string name="str_music_reggae">Reggae</string>
+    <string name="str_music_rock">Rock</string>
+    <string name="str_music_techno">Techno</string>
+    <string name="str_music_beat">World Music / Beats</string>
+    <string name="str_music_validation">--Please select music genre--</string>
+    <string name="str_party_attending">Party Attending</string>
+    <string name="str_party_age">Age</string>
+    <string name="str_party_Address">Party Address</string>
+    <string name="str_chat_with_host">Chat With Host</string>
+    <string name="str_attend_party">Attend Party </string>
+    <string name="str_add_favourites">Add To Favourites</string>
+    <string name="str_add_party_direction">Party direction</string>
 </resources>
