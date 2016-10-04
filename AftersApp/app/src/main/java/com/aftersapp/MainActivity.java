@@ -10,7 +10,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -52,6 +54,7 @@ import com.aftersapp.fragments.ViewProfileFragment;
 import com.aftersapp.helper.ChatHelper;
 import com.aftersapp.helper.DataHolder;
 import com.aftersapp.interfaces.GcmConsts;
+import com.aftersapp.services.AdService;
 import com.aftersapp.utils.AppConstants;
 import com.aftersapp.utils.UserAuth;
 import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
@@ -88,9 +91,10 @@ public class MainActivity extends BaseActivity
     private static final String USER_PROFILE = "viewProfile";
     private static final String PURCHASE_FRAGMENT = "purchase";
     private static final String USER_LIST_FRAGEMNT = "user_list";
-
+    public static InterstitialAd mInterstitialAd;
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
+    public static Handler UIHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +154,19 @@ public class MainActivity extends BaseActivity
         mHostLay.setOnClickListener(this);
         mMoreLay.setOnClickListener(this);
         setUpFragment(R.id.homeLay);
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstial_ad_id));
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // super.onAdLoaded();
+                showIntestititalCase();
+            }
+        });
+       /* AdRequest adRequest = new AdRequest.Builder().addTestDevice("1C22DEC8AEF4249E83143364E2E5AC32").build();
+        mInterstitialAd.loadAd(adRequest);*/
+        startService(new Intent(getApplicationContext(), AdService.class));
+
         if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
             navigationView.getMenu().clear(); //clear old inflated items.
             navigationView.inflateMenu(R.menu.activity_main_drawer);// drawer for subscribers
@@ -172,6 +189,15 @@ public class MainActivity extends BaseActivity
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
         finish();
+    }
+
+    static {
+        UIHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public static void loadAd(Runnable runnable) {
+        UIHandler.post(runnable);
+
     }
 
     @Override
@@ -358,6 +384,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopService(new Intent(getApplicationContext(), AdService.class));
         try {
             ChatHelper.getInstance().logout();
         } catch (Exception e) {
@@ -386,6 +413,12 @@ public class MainActivity extends BaseActivity
             Intent logout = new Intent(MainActivity.this, LogoutActivity.class);
             startActivity(logout);
             finish();
+        }
+    }
+
+    public void showIntestititalCase() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
         }
     }
 }
