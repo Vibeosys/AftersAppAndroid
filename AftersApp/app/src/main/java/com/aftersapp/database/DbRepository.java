@@ -58,6 +58,28 @@ public class DbRepository extends SQLiteOpenHelper {
 
     }
 
+    public boolean deleteParties() {
+        SQLiteDatabase sqLiteDatabase = null;
+        sqLiteDatabase = getWritableDatabase();
+        long count = -1;
+
+        try {
+            synchronized (sqLiteDatabase) {
+                count = sqLiteDatabase.delete(SqlContract.Party.TABLE_NAME, null, null);
+                Log.d(TAG, " ## delete parties data successfully");
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            Log.d(TAG, "## Error to delete Party data" + e.toString());
+        } finally {
+            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
+                sqLiteDatabase.close();
+        }
+        return count != -1;
+    }
+
     public void getDatabaseStructure() {
         final ArrayList<String> dirArray = new ArrayList<String>();
 

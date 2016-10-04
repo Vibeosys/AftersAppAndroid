@@ -45,7 +45,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.layoutFindParty:
-                FindPartyFragment partyFragment = new FindPartyFragment();
+                FindPartyFragment partyFragment = new AllPartiesFragment();
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
                 break;

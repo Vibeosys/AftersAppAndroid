@@ -102,4 +102,13 @@
     <string name="str_attend_party">Attend Party </string>
     <string name="str_add_favourites">Add To Favourites</string>
     <string name="str_add_party_direction">Party direction</string>
+
+    <string name="str_err_not_attending_any_party">Not attending any party</string>
+    <string name="str_err_no_fav_party">No favourite party</string>
+    <string name="str_err_no_host_party">You are not hosting any party</string>
+    <string name="str_edit_party">Edit party</string>
+    <string name="str_no_music_selected">Not selected</string>
+    <string name="str_date">Date</string>
+    <string name="date_selected">Selected date</string>
+
 </resources>

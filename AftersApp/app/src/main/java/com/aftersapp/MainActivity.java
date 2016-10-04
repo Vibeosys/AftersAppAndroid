@@ -36,12 +36,16 @@ import android.widget.Toast;
 import com.aftersapp.activities.BaseActivity;
 import com.aftersapp.activities.LoginActivity;
 import com.aftersapp.activities.LogoutActivity;
+import com.aftersapp.fragments.AllPartiesFragment;
+import com.aftersapp.fragments.AttendingPartiesFragment;
 import com.aftersapp.fragments.ChatsUsersList;
 import com.aftersapp.fragments.EditMyProfileFragment;
+import com.aftersapp.fragments.FavPartiesFragment;
 import com.aftersapp.fragments.FilterFragment;
 import com.aftersapp.fragments.FindPartyFragment;
 import com.aftersapp.fragments.HomeFragment;
 import com.aftersapp.fragments.HostPartyFragment;
+import com.aftersapp.fragments.HostingPartyFragment;
 import com.aftersapp.fragments.PurchaseFragment;
 import com.aftersapp.fragments.UserListFragment;
 import com.aftersapp.fragments.ViewProfileFragment;
@@ -225,6 +229,20 @@ public class MainActivity extends BaseActivity
             PurchaseFragment purchaseFragment = new PurchaseFragment();
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_frame_lay, purchaseFragment, PURCHASE_FRAGMENT).commit();
+        } else if (id == R.id.nav_hosting) {
+            FindPartyFragment partyFragment = new HostingPartyFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
+        } else if (id == R.id.nav_fav) {
+
+            FindPartyFragment partyFragment = new FavPartiesFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
+        } else if (id == R.id.nav_attending) {
+
+            FindPartyFragment partyFragment = new AttendingPartiesFragment();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
         } else if (id == R.id.nav_logout) {
 
             logoutFromQb();
@@ -263,7 +281,7 @@ public class MainActivity extends BaseActivity
                         replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT).commit();
                 break;
             case R.id.searchLay:
-                FindPartyFragment partyFragment = new FindPartyFragment();
+                FindPartyFragment partyFragment = new AllPartiesFragment();
                 getSupportFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, partyFragment, SEARCH_FRAGMENT).commit();
                 break;

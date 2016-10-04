@@ -12,8 +12,8 @@ public class AppConstants {
     public final static int ITEM_PURCHASED = 1;
     public final static int ITEM_NOT_PURCHASED = 0;
     public final static int MIN_RADIUS_VALUE = 1;
-    public final static int MAX_RADIUS_VALUE = 100;
-    public final static int DEFAULT_RADIUS_VALUE = 100;
+    public final static int MAX_RADIUS_VALUE = 40075;
+    public final static int DEFAULT_RADIUS_VALUE = 1000;
     public final static int DEFAULT_AGE_VALUE = 0;
 
 }

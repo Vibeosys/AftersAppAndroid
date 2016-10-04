@@ -49,7 +49,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
     private ImageLoader mImageLoader;
     private long mPartyId;
     private PartyDataDTO partyData;
-    private Button mBtnChatHost, iamAttending, saveFavourite;
+    private Button mBtnChatHost, iamAttending, saveFavourite, btnEdit;
     private TextView mTxtPartyName, mTxtDesc, mTxtAddress, mTxtAge, mTxtAttending;
     private NetworkImageView networkImageView;
     private LinearLayout layAttending;
@@ -76,6 +76,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mBtnChatHost = (Button) view.findViewById(R.id.btnChatWithHost);
         iamAttending = (Button) view.findViewById(R.id.iamAttending);
         saveFavourite = (Button) view.findViewById(R.id.saveFavourite);
+        btnEdit = (Button) view.findViewById(R.id.btnEdit);
         mTxtPartyName = (TextView) view.findViewById(R.id.txtPartyName);
         mTxtDesc = (TextView) view.findViewById(R.id.txtDesc);
         mTxtAddress = (TextView) view.findViewById(R.id.txtAddress);
@@ -98,9 +99,12 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         }
 
         setImage();
-        if (partyData.getHost() == mSessionManager.getUserId() ||
-                mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {
-            mBtnChatHost.setVisibility(View.INVISIBLE);
+        if (partyData.getHost() == mSessionManager.getUserId()) {
+            mBtnChatHost.setVisibility(View.GONE);
+            btnEdit.setVisibility(View.VISIBLE);
+        } else {
+            mBtnChatHost.setVisibility(View.VISIBLE);
+            btnEdit.setVisibility(View.GONE);
         }
         mBtnChatHost.setOnClickListener(this);
         iamAttending.setOnClickListener(this);
@@ -152,6 +156,9 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                     Toast.makeText(getContext(), getContext().getResources().
                             getString(R.string.str_connect_internet), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.btnEdit:
+                //call to the edit party fragment
                 break;
         }
     }

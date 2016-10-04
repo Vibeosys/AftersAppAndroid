@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
@@ -10,11 +11,28 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_contacts_black_24dp"
             android:title="Profile" />
+        <item
+            android:id="@+id/nav_hosting"
+            android:icon="@drawable/ic_library_add_black_24dp"
+            android:title="Hosting" />
+        <item
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="Favourites" />
+        <item
+            android:id="@+id/nav_attending"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
+            android:title="Attending" />
 
-        <item android:id="@+id/nav_removeAd"
-
+        <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/ic_message_white_24dp"
+            android:title="Chats"
+            app:actionLayout="@layout/message_counter" />
+        <item
+            android:id="@+id/nav_removeAd"
             android:icon="@drawable/ic_touch_app_white_24dp"
-            android:title="@string/removeAds"/>
+            android:title="@string/removeAds" />
 
         <item
             android:id="@+id/nav_logout"

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,9 +37,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private SeekBar mSeekBar;
     private int mSeekBarStep = 1, mSeekBarMax, mSeekBarMin;
     private TextView mFilterVal, mFilterAge, mSelectMusicSelect;
-    private EditText mUserMusicGenre;
-    private Spinner mSpnAge;
+    private Spinner mSpnAge, mMusicGenre;
     private AgeSpinnerAdapter ageSpinnerAdapter;
+    private ArrayAdapter<String> musicGenreAdapter;
     private int selectedAge = AppConstants.DEFAULT_AGE_VALUE;
     private int selectedRadius = AppConstants.DEFAULT_RADIUS_VALUE;
     private String musicGenre = "";
@@ -72,12 +73,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         imgMusciGener = (ImageView) rootView.findViewById(R.id.musciAgeArrow);
         mFilterAge = (TextView) rootView.findViewById(R.id.defaultAge);
         mSelectMusicSelect = (TextView) rootView.findViewById(R.id.editMusicSetText);
-        mUserMusicGenre = (EditText) rootView.findViewById(R.id.MusicGenreEdit);
         mSpnAge = (Spinner) rootView.findViewById(R.id.spnAge);
+        mMusicGenre = (Spinner) rootView.findViewById(R.id.musicGenre);
         btnShowResult = (Button) rootView.findViewById(R.id.btnShowResult);
         btnResetFilter = (Button) rootView.findViewById(R.id.btnResetAllFilters);
 
-        setSpinner();
+        setAgeSpinner();
+        setMusicSpinner();
         layRadius.setOnClickListener(this);
         layAge.setOnClickListener(this);
         btnShowResult.setOnClickListener(this);
@@ -115,25 +117,55 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-
-        mUserMusicGenre.addTextChangedListener(new TextWatcher() {
+        mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    musicGenre = "";
+                    mSelectMusicSelect.setText("No music Selected");
+                } else {
+                    musicGenre = musicGenreAdapter.getItem(position);
+                    mSelectMusicSelect.setText(musicGenre + " music Selected");
+                }
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s.toString()))
-                    mSelectMusicSelect.setText(s.toString() + " Music Selected");
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
         return rootView;
+    }
+
+    private void setMusicSpinner() {
+        List<String> mGenre = new ArrayList<>();
+        mGenre.add(getResources().getString(R.string.str_no_music_selected));
+        mGenre.add(getResources().getString(R.string.str_music_alter));
+        mGenre.add(getResources().getString(R.string.str_music_blues));
+        mGenre.add(getResources().getString(R.string.str_music_classical));
+        mGenre.add(getResources().getString(R.string.str_music_country));
+        mGenre.add(getResources().getString(R.string.str_music_dance));
+        mGenre.add(getResources().getString(R.string.str_music_easy));
+        mGenre.add(getResources().getString(R.string.str_music_electronic));
+        mGenre.add(getResources().getString(R.string.str_music_house));
+        mGenre.add(getResources().getString(R.string.str_music_hip_hop));
+        mGenre.add(getResources().getString(R.string.str_music_indie));
+        mGenre.add(getResources().getString(R.string.str_music_jazz));
+        mGenre.add(getResources().getString(R.string.str_music_latin));
+        mGenre.add(getResources().getString(R.string.str_music_new_age));
+        mGenre.add(getResources().getString(R.string.str_music_opera));
+        mGenre.add(getResources().getString(R.string.str_music_pop));
+        mGenre.add(getResources().getString(R.string.str_music_r_n_b));
+        mGenre.add(getResources().getString(R.string.str_music_reggae));
+        mGenre.add(getResources().getString(R.string.str_music_rock));
+        mGenre.add(getResources().getString(R.string.str_music_techno));
+        mGenre.add(getResources().getString(R.string.str_music_beat));
+        musicGenreAdapter = new ArrayAdapter<String>
+                (getActivity(), android.R.layout.simple_spinner_item, mGenre);
+        musicGenreAdapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+        mMusicGenre.setAdapter(musicGenreAdapter);
     }
 
     private void setResetValues() {
@@ -142,17 +174,18 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         if (selectedAge != 0)
             mFilterAge.setText("" + selectedAge + "+ age selected");
         if (!TextUtils.isEmpty(musicGenre))
-            mSelectMusicSelect.setText(musicGenre + " Music Selected");
+            mSelectMusicSelect.setText(musicGenre + " music Selected");
     }
 
-    private void setSpinner() {
+    private void setAgeSpinner() {
         List<AgeData> ageDataList = new ArrayList<>();
-        ageDataList.add(new AgeData("10+", 10));
-        ageDataList.add(new AgeData("20+", 20));
-        ageDataList.add(new AgeData("30+", 30));
-        ageDataList.add(new AgeData("40+", 40));
-        ageDataList.add(new AgeData("50+", 50));
-        ageDataList.add(new AgeData("60+", 60));
+        ageDataList.add(new AgeData("select Age", 0));
+        ageDataList.add(new AgeData("18+", 18));
+        ageDataList.add(new AgeData("25+", 25));
+        ageDataList.add(new AgeData("35+", 35));
+        ageDataList.add(new AgeData("45+", 45));
+        ageDataList.add(new AgeData("55+", 55));
+        ageDataList.add(new AgeData("65+", 65));
         ageSpinnerAdapter = new AgeSpinnerAdapter(getContext(), ageDataList);
         mSpnAge.setAdapter(ageSpinnerAdapter);
     }
@@ -189,11 +222,10 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 }
                 break;
             case R.id.btnShowResult: {
-                musicGenre = mUserMusicGenre.getText().toString();
                 mSessionManager.setMusicGenre(musicGenre);
                 mSessionManager.setRadius(selectedRadius);
                 mSessionManager.setAge(selectedAge);
-                FindPartyFragment findPartyFragment = new FindPartyFragment();
+                FindPartyFragment findPartyFragment = new AllPartiesFragment();
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, findPartyFragment, "FindPArty").commit();
                 Toast.makeText(getContext(), getResources().getString(R.string.str_filter_apply), Toast.LENGTH_SHORT).show();
@@ -204,7 +236,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 mSessionManager.setMusicGenre(null);
                 mSessionManager.setRadius(AppConstants.DEFAULT_RADIUS_VALUE);
                 mSessionManager.setAge(AppConstants.DEFAULT_AGE_VALUE);
-                FindPartyFragment findPartyFragment = new FindPartyFragment();
+                FindPartyFragment findPartyFragment = new AllPartiesFragment();
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, findPartyFragment, "FindPArty").commit();
                 Toast.makeText(getContext(), getResources().getString(R.string.str_filter_reset), Toast.LENGTH_SHORT).show();

@@ -13,10 +13,23 @@
             android:title="Profile" />
 
         <item
+            android:id="@+id/nav_hosting"
+            android:icon="@drawable/ic_library_add_black_24dp"
+            android:title="Hosting" />
+        <item
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="Favourites" />
+        <item
+            android:id="@+id/nav_attending"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
+            android:title="Attending" />
+
+        <item
             android:id="@+id/nav_messages"
-            app:actionLayout="@layout/message_counter"
             android:icon="@drawable/ic_message_white_24dp"
-            android:title="Messages" />
+            android:title="Chats"
+            app:actionLayout="@layout/message_counter" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_power_settings_new_white_24dp"

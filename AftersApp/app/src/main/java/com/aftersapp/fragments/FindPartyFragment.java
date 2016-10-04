@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * Created by akshay on 16-09-2016.
  */
-public class FindPartyFragment extends BaseFragment implements
+public abstract class FindPartyFragment extends BaseFragment implements
         OnMapReadyCallback, ServerSyncManager.OnSuccessResultReceived,
         ServerSyncManager.OnErrorResultReceived, PartyAdapter.OnLikeOrFavClick {
 
@@ -60,19 +60,19 @@ public class FindPartyFragment extends BaseFragment implements
     public static final String PARTY_RADIUS = "party_radius";
     public static final String PARTY_AGE = "party_age";
     public static final String PARTY_MUSIC = "party_music";
-    private MapView mMapView;
-    private GoogleMap mGoogleMap;
-    private PartyAdapter mPartyAdapter;
-    private ListView mListParties;
-    private ArrayList<PartyDataDTO> partyDataDTOs = new ArrayList<>();
-    private ProgressBar progressBar;
-    private GPSTracker gps;
-    private double latitude;
-    double longitude;
-    private TextView txtErrorMsg;
-    private int filterAge = AppConstants.DEFAULT_AGE_VALUE;
-    private int filterRadius = AppConstants.DEFAULT_RADIUS_VALUE;
-    private String musicGenre = "";
+    protected MapView mMapView;
+    protected GoogleMap mGoogleMap;
+    protected PartyAdapter mPartyAdapter;
+    protected ListView mListParties;
+    protected ArrayList<PartyDataDTO> partyDataDTOs = new ArrayList<>();
+    protected ProgressBar progressBar;
+    protected GPSTracker gps;
+    protected double latitude;
+    protected double longitude;
+    protected TextView txtErrorMsg;
+    protected int filterAge = AppConstants.DEFAULT_AGE_VALUE;
+    protected int filterRadius = AppConstants.DEFAULT_RADIUS_VALUE;
+    protected String musicGenre = "";
 
 
     @Override
@@ -135,7 +135,7 @@ public class FindPartyFragment extends BaseFragment implements
             mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_GET_PARTY,
                     mSessionManager.getPartyUrl(), baseRequestDTO);
         } else {
-            partyDataDTOs = mDbRepository.getParties();
+            partyDataDTOs = setSortedList(mDbRepository.getParties());
             setAdapter(false);
         }
 
@@ -357,6 +357,12 @@ public class FindPartyFragment extends BaseFragment implements
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDbRepository.deleteParties();
+        }
+
+        @Override
         protected Boolean doInBackground(Void... params) {
             boolean flagQuery = mDbRepository.insertParty(partyDatas);
             return flagQuery;
@@ -371,12 +377,22 @@ public class FindPartyFragment extends BaseFragment implements
     }
 
     private void setAdapter(boolean netFlag) {
-        mPartyAdapter = new PartyAdapter(partyDataDTOs, getContext());
-        mListParties.setAdapter(mPartyAdapter);
-        mPartyAdapter.setLikeOrFavClick(this);
-        if (netFlag)
-            drawMarker(0);
+        partyDataDTOs = setSortedList(partyDataDTOs);
+        if (partyDataDTOs.size() == 0) {
+            txtErrorMsg.setVisibility(View.VISIBLE);
+            mListParties.setVisibility(View.GONE);
+            txtErrorMsg.setText(getErrorMessage());
+        } else {
+            mPartyAdapter = new PartyAdapter(partyDataDTOs, getContext());
+            mListParties.setAdapter(mPartyAdapter);
+            mPartyAdapter.setLikeOrFavClick(this);
+            if (netFlag)
+                drawMarker(0);
+        }
+
     }
+
+    protected abstract String getErrorMessage();
 
     private void attendancePartyMark(PartyDataDTO partyDataDTO) {
         partyDataDTO.setIsLike(AppConstants.ATTENDING_PARTY);
@@ -439,4 +455,6 @@ public class FindPartyFragment extends BaseFragment implements
 
         return super.onOptionsItemSelected(item);
     }
+
+    protected abstract ArrayList<PartyDataDTO> setSortedList(ArrayList<PartyDataDTO> allParties);
 }
