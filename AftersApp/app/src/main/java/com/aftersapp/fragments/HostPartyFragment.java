@@ -3,8 +3,10 @@ package com.aftersapp.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,11 +27,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentContainer;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -37,11 +41,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.aftersapp.R;
@@ -50,6 +56,7 @@ import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.responsedata.HostPartyDTO;
 import com.aftersapp.services.GPSTracker;
+import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.NetworkUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
@@ -73,9 +80,16 @@ import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class HostPartyFragment extends BaseFragment implements
@@ -94,7 +108,7 @@ public class HostPartyFragment extends BaseFragment implements
     private Spinner mSpinner,mMusicGenre;
     private TextView mGoogleMapTextView, mPartyAddress;
     private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg,mCancelPartyBtn;
-    private EditText mSearchEditText, mPartyTitle, mPartyDescription;
+    private EditText mSearchEditText, mPartyTitle, mPartyDescription,mPartyDatePicker,mPartyTimePicker;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
     private boolean setFlag = true;
@@ -106,7 +120,7 @@ public class HostPartyFragment extends BaseFragment implements
     private int EDIT_SELECT_IMAGE = 20;
     private String mImageUri, imgDecodableString;
     double mFinalLatititude, mFinalLongitude;
-    private String mFinalAddress, mSpinnerAge, replaceSpinner,mMusicGenreStr;
+    private String mFinalAddress, replaceSpinner,mMusicGenreStr,mStringDate,mStringTime,mStringDateTime,mSpinnerAge;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     private static final String HOME_FRAGMENT_POST_PARTY_CANCEL = "home";
     Bitmap convertedImg = null;
@@ -116,6 +130,7 @@ public class HostPartyFragment extends BaseFragment implements
     private LocationRequest mLocationRequest;
     Location mLastLocation;
     ProgressDialog dialog;
+    private Calendar mCalendar;
 
     // TODO: Rename and change types and number of parameters
     public static HostPartyFragment newInstance(String param1, String param2) {
@@ -162,6 +177,13 @@ public class HostPartyFragment extends BaseFragment implements
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
         mCancelPartyBtn =(Button) rootView.findViewById(R.id.cancelParty);
+        mPartyDatePicker = (EditText) rootView.findViewById(R.id.partyDatePicker);
+        mPartyTimePicker = (EditText) rootView.findViewById(R.id.partyTimePicker);
+
+        mPartyDatePicker.setInputType(InputType.TYPE_NULL);
+        mPartyTimePicker.setInputType(InputType.TYPE_NULL);
+
+        mCalendar = Calendar.getInstance();
 
         dialog = new ProgressDialog(getContext()); // this = YourActivity
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -214,6 +236,52 @@ public class HostPartyFragment extends BaseFragment implements
                 (android.R.layout.simple_spinner_dropdown_item);
 
         mSpinner.setAdapter(dataAdapter);
+        mPartyDatePicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mCalendar = Calendar.getInstance();
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    new DatePickerDialog(getContext(), date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+                return false;
+            }
+        });
+        mPartyTimePicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction()==MotionEvent.ACTION_DOWN)
+                {
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            if(selectedHour > 12)
+                            {   int timeIn12 = selectedHour-12;
+                                mPartyTimePicker.setText( timeIn12 + ":" + selectedMinute+" PM");
+                                mStringTime = String.valueOf(selectedHour)+":"+String.valueOf(selectedMinute);
+
+                                mPartyTimePicker.setError(null);
+                            }
+                            else
+                            {
+                                mPartyTimePicker.setText( selectedHour + ":" + selectedMinute+" AM");
+                                mStringTime = String.valueOf(selectedHour)+":"+String.valueOf(selectedMinute);
+                                mPartyTimePicker.setError(null);
+                            }
+                        }
+                    }, hour, minute, false);//Yes 24 hour time
+                    mTimePicker.setTitle("Select Time");
+                    mTimePicker.show();
+                }
+                return false;
+
+            }
+        });
         mGoogleMapTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,8 +298,6 @@ public class HostPartyFragment extends BaseFragment implements
                         {
                             createAlertDialog("AftersApp","Internet connection is not available");
                         }
-
-
                     }
 
                 }
@@ -304,6 +370,8 @@ public class HostPartyFragment extends BaseFragment implements
                         replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_POST_PARTY_CANCEL).commit();
             }
         });
+
+
         return rootView;
     }
 
@@ -330,6 +398,17 @@ public class HostPartyFragment extends BaseFragment implements
             mPartyAddress.setError("Please click here to get address");
             setFlag = false;
             return false;
+        }else  if(TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim()))
+        {
+            mPartyDatePicker.setError("Please select Party date");
+            setFlag=false;
+            return false;
+        }
+        else  if(TextUtils.isEmpty(mPartyTimePicker.getText().toString().trim()))
+        {
+            mPartyTimePicker.setError("Please select Party time");
+            setFlag =false;
+            return false;
         }
         return true;
     }
@@ -343,6 +422,44 @@ public class HostPartyFragment extends BaseFragment implements
         String PartyAddress = mFinalAddress;
         //String PartyAge = mSpinnerAge;
         String PartyAge = replaceSpinner;
+        mStringDateTime = mStringDate+" "+mStringTime+":00";
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.US);
+        Date StrDate,mConvertGmtDate;
+        String formatDate="";
+        String newDate="";
+        long DateTime=0000000;
+        try {
+
+            //mCalendar.getTime().getTime();
+          //  mConvertGmtDate = cvtToGmt( mCalendar.getTime());
+          //  DateTime = mCalendar.getTime().getTime();
+            StrDate = dateFormat.parse(mStringDateTime);
+
+            mConvertGmtDate = cvtToGmt(StrDate);
+            DateTime = mConvertGmtDate.getTime()/1000;
+             StrDate.getTime();
+            Log.d("TAG",""+StrDate);
+            //formatDate =String.valueOf(StrDate.getTime());
+           // DateTime=StrDate.getTime()/1000;
+         //   formatDate= String.valueOf(str);
+           //  newDate =  dateFormat.format(StrDate);
+
+          //  Date returnDate =  cvtToGmt(StrDate);
+            //Date test_date = cvtToGmt(returnDate);
+            //formatDate = simpleDateFormat.format(returnDate);
+            //String inputText = String.valueOf(returnDate);
+            //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+           /* Log.d("TAG",""+StrDate);
+            Log.d("TAG",""+StrDate);
+            Log.d("TAG",""+StrDate);*/
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         int spinnerConv = Integer.parseInt(PartyAge);
      //   String MusciGeneration = mMusicGeneration.getText().toString().trim();
        // String LowerCaseMusicGener = MusciGeneration.toLowerCase();
@@ -367,7 +484,7 @@ public class HostPartyFragment extends BaseFragment implements
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
                 PartyDescription, sendLat, sendLong,
-                PartyAddress, mMusicGenreStr, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), "1474354108");
+                PartyAddress, mMusicGenreStr, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), DateTime);
         String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);
@@ -874,5 +991,42 @@ public class HostPartyFragment extends BaseFragment implements
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+    };
+    private void updateLabel() {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+        mPartyDatePicker.setText(sdf.format(mCalendar.getTime()));
+        mStringDate=sdf.format(mCalendar.getTime());
+        mPartyDatePicker.setError(null);
+
+    }
+
+    private Date cvtToGmt(Date date ){
+        TimeZone tz = TimeZone.getDefault();
+        Date ret = new Date( date.getTime() - tz.getRawOffset() );
+
+        // if we are now in DST, back off by the delta.  Note that we are checking the GMT date, this is the KEY.
+        if ( tz.inDaylightTime( ret )){
+            Date dstDate = new Date( ret.getTime() - tz.getDSTSavings() );
+
+            // check to make sure we have not crossed back into standard time
+            // this happens when we are on the cusp of DST (7pm the day before the change for PDT)
+            if ( tz.inDaylightTime( dstDate )){
+                ret = dstDate;
+            }
+        }
+        return ret;
     }
 }

@@ -113,5 +113,9 @@
     <string name="str_edit">Edit</string>
     <string name="str_user_not_updated_try_again">User is not updated try again...</string>
     <string name="str_user_updated">Profile updated successfully</string>
-
+    <!--Host party -->
+    <string name="str_party_date_title">Party Date</string>
+    <string name="str_party_date_descr">Click here for Party date</string>
+    <string name="str_party_time_title">Party Time</string>
+    <string name="str_party_time_descr">Click here for Party time</string>
 </resources>
