@@ -110,5 +110,8 @@
     <string name="str_no_music_selected">Not selected</string>
     <string name="str_date">Date</string>
     <string name="date_selected">Selected date</string>
+    <string name="str_edit">Edit</string>
+    <string name="str_user_not_updated_try_again">User is not updated try again...</string>
+    <string name="str_user_updated">Profile updated successfully</string>
 
 </resources>

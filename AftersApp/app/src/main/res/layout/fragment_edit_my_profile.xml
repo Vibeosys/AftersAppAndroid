@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.EditMyProfileFragment">
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
@@ -28,11 +29,30 @@
                 android:layout_margin="16dp"
                 android:orientation="horizontal">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/circleView"
+                <FrameLayout
                     android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:src="@drawable/avatar_profile" />
+                    android:layout_height="120dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/circleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/avatar_profile" />
+
+                    <TextView
+                        android:id="@+id/txtEditPic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="6dp"
+                        android:background="@color/loginBackgroundTransperant"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="@string/str_edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </FrameLayout>
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"

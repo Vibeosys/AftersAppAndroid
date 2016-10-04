@@ -1,18 +1,23 @@
 package com.aftersapp.fragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -38,13 +43,22 @@ import com.aftersapp.data.UserDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.UpdateProfileDTO;
 import com.aftersapp.data.responsedata.RegisterResponseData;
+import com.aftersapp.data.responsedata.UpdateUserResponse;
 import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.aftersapp.utils.UserAuth;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBSession;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,11 +68,14 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditMyProfileFragment extends BaseFragment implements View.OnClickListener, ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived {
+public class EditMyProfileFragment extends BaseFragment implements View.OnClickListener,
+        ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int EDIT_PROFILE_MEDIA_PERMISSION_CODE = 1000;
+    private static final int PICK_IMAGE_REQUEST = 1001;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -73,7 +90,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     private static final String HOME_FRAGMENT_CANCEL_PROFILE = "home";
     private String mSpinnerSelectionVal;
     private long mSwitchValNotification;
-    private TextView mUserNameFirst;
+    private TextView mUserNameFirst, mTxtEditPic;
     private CircleImageView mEditUserImage;
     private static final String HOME_FRAGMENT_EDIT_PROFILE = "home";
     String userEmail, userFullName, userDate;
@@ -81,7 +98,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     int NotifyVal;
     int mPosition;
     ProgressDialog dialog;
-
+    private Bitmap profileBitmap = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,9 +121,11 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         mCancelUserProfile = (Button) rootView.findViewById(R.id.cancelProfile);
         mUserNotoficationSwitch = (Switch) rootView.findViewById(R.id.switch1);
         mUserNameFirst = (TextView) rootView.findViewById(R.id.userName);
+        mTxtEditPic = (TextView) rootView.findViewById(R.id.txtEditPic);
         mEditUserImage = (CircleImageView) rootView.findViewById(R.id.circleView);
 
         mView = rootView.findViewById(R.id.firstView);
+        mTxtEditPic.setOnClickListener(this);
         mSaveUserProfile.setOnClickListener(this);
         mCancelUserProfile.setOnClickListener(this);
         mServerSyncManager.setOnStringErrorReceived(this);
@@ -239,7 +258,49 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_CANCEL_PROFILE).commit();
                 break;
+            case R.id.txtEditPic:
+                requestGrantPermission();
+                break;
 
+        }
+    }
+
+    private void requestGrantPermission() {
+
+        requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL,
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                EDIT_PROFILE_MEDIA_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] == 0) {
+            openGallery();
+        }
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK &&
+                data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                profileBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                mEditUserImage.setImageBitmap(profileBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -248,12 +309,13 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         userEmail = mUserEmailId.getText().toString();
         userFullName = mUserName.getText().toString();
         userDate = mDateOfBirth.getText().toString();
+        String bitmapString = getStringImage(profileBitmap);
         String convertedDate = "";
         DateUtils dateUtils = new DateUtils();
-        convertedDate = dateUtils.convertFbDateToSwedish(userDate);
+        convertedDate = dateUtils.convertServerDateToSwedish(userDate);
         NotifyVal = (int) mSwitchValNotification;
         UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO(mSessionManager.getUserId(), userFullName, mSessionManager.getEmail(),
-                userEmail, "123456789", mSpinnerSelectionVal, mSessionManager.getProfImg(), convertedDate, mSessionManager.getToken(), NotifyVal);
+                userEmail, "123456789", mSpinnerSelectionVal, bitmapString, convertedDate, mSessionManager.getToken(), NotifyVal);
 
         String url = mSessionManager.getEditProfileUrl();
         Gson gson = new Gson();
@@ -264,6 +326,25 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 mSessionManager.getEditProfileUrl(), baseRequestDTO);
         Log.d("TAG", "TAG");
         Log.d("TAG", "TAG");
+
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        bmp = Bitmap.createScaledBitmap(bmp, 380, 380, true);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] imageBytes = null;
+        try {
+            System.gc();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            imageBytes = baos.toByteArray();
+
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            Log.d("TAG", "## ");
+        }
+
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
 
     }
 
@@ -305,7 +386,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     public void onVolleyErrorReceived(@NonNull VolleyError error, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
-                dialog.cancel();
+                dialog.dismiss();
                 Log.e("TAG", "##Volley Server error " + error.toString());
                 break;
         }
@@ -315,7 +396,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
-                dialog.cancel();
+                dialog.dismiss();
                 Log.d("TAG", "##Volley Data error " + errorMessage);
                 break;
         }
@@ -327,31 +408,89 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PROFILE:
 
-                Toast toast = Toast.makeText(getContext(), "Profile Updated Successfully", Toast.LENGTH_LONG);
+               /* Toast toast = Toast.makeText(getContext(), "Profile Updated Successfully", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                dialog.cancel();
-                RegisterResponseData registerResponseData = RegisterResponseData.deserializeJson(data);
+                toast.show();*/
+                UpdateUserResponse userResponse = UpdateUserResponse.deserializeJson(data);
                 UserDTO userDTO = new UserDTO();
-                userDTO.setUserId(registerResponseData.getUserId());
-                userDTO.setName(userFullName);
-                userDTO.setEmail(mSessionManager.getEmail());
-                userDTO.setEmail2(userEmail);
-                userDTO.setPhone("1234567890");
-                userDTO.setGender(mSpinnerSelectionVal);
-                userDTO.setProfImage(mSessionManager.getProfImg());
-                userDTO.setDob(userDate);
-                userDTO.setToken(mSessionManager.getToken());
-                userDTO.setEmailNotify(NotifyVal);
+                userDTO.setUserId(userResponse.getUserId());
+                userDTO.setName(userResponse.getName());
+                userDTO.setEmail(userResponse.getEmail());
+                userDTO.setEmail2(userResponse.getEmail2());
+                userDTO.setPhone(userResponse.getPhone());
+                userDTO.setGender(userResponse.getGender());
+                userDTO.setProfImage(userResponse.getProfileImage());
+                userDTO.setDob(userResponse.getDob());
+                userDTO.setToken(userResponse.getToken());
+                userDTO.setEmailNotify(userResponse.getEmailNotify());
 
                 UserAuth userAuth = new UserAuth();
-                userAuth.saveAuthenticationInfo(userDTO, getActivity());
-
-                HomeFragment homeFragment = new HomeFragment();
-                getFragmentManager().beginTransaction().
-                        replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_EDIT_PROFILE).commit();
+                userAuth.saveAuthenticationInfo(userDTO, getContext());
+                updateOnQuickBlocx(userResponse);
                 break;
         }
+    }
+
+    private void updateOnQuickBlocx(final UpdateUserResponse userResponse) {
+        QBAuth.createSession(new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId()), new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+                QBUser updateUser = new QBUser();
+                updateUser.setId(qbSession.getUserId());
+                updateUser.setCustomData(userResponse.getProfileImage());
+                QBUsers.updateUser(updateUser, new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser user, Bundle args) {
+                        dialog.dismiss();
+                        Toast.makeText(getContext(), getContext().getResources().
+                                getString(R.string.str_user_updated), Toast.LENGTH_SHORT).show();
+                        HomeFragment homeFragment = new HomeFragment();
+                        getFragmentManager().beginTransaction().
+                                replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_EDIT_PROFILE).commit();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors) {
+                        Toast.makeText(getContext(), getContext().getResources().
+                                getString(R.string.str_user_not_updated_try_again), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+        /*QBUsers.getUserByExternalId(String.valueOf(userResponse.getUserId()), new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle args) {
+                QBUser updateUser = new QBUser(mSessionManager.getEmail(), mSessionManager.getEmail() + mSessionManager.getUserId());
+                updateUser.setId(user.getId());
+                updateUser.setCustomData(userResponse.getProfileImage());
+                QBUsers.updateUser(updateUser, new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser user, Bundle args) {
+                        dialog.dismiss();
+                        HomeFragment homeFragment = new HomeFragment();
+                        getFragmentManager().beginTransaction().
+                                replace(R.id.fragment_frame_lay, homeFragment, HOME_FRAGMENT_EDIT_PROFILE).commit();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors) {
+                        Toast.makeText(getContext(), getContext().getResources().
+                                getString(R.string.str_user_not_updated_try_again), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+                Toast.makeText(getContext(), getContext().getResources().
+                        getString(R.string.str_host_not_found), Toast.LENGTH_SHORT).show();
+            }
+        });*/
     }
 
     // DownloadImage AsyncTask
@@ -367,14 +506,13 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
 
             String imageURL = URL[0];
 
-            Bitmap bitmap = null;
             try {
                 InputStream input = new java.net.URL(imageURL).openStream();
-                bitmap = BitmapFactory.decodeStream(input);
+                profileBitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return bitmap;
+            return profileBitmap;
         }
 
         @Override

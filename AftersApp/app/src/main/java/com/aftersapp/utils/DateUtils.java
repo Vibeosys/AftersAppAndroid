@@ -140,4 +140,15 @@ public class DateUtils {
         }
         return getSwedishDateInFormat(date);
     }
+
+    public String convertServerDateToSwedish(String strDate) {
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        java.util.Date date = null;
+        try {
+            date = df2.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getSwedishDateInFormat(date);
+    }
 }
