@@ -101,12 +101,12 @@
     <string name="str_chat_with_host">Chat With Host</string>
     <string name="str_attend_party">Attend Party </string>
     <string name="str_add_favourites">Add To Favourites</string>
-    <string name="str_add_party_direction">Party direction</string>
+    <string name="str_add_party_direction">Get directions</string>
 
     <string name="str_err_not_attending_any_party">Not attending any party</string>
     <string name="str_err_no_fav_party">No favourite party</string>
     <string name="str_err_no_host_party">You are not hosting any party</string>
-    <string name="str_edit_party">Edit party</string>
+    <string name="str_edit_party">Edit</string>
     <string name="str_no_music_selected">Not selected</string>
     <string name="str_date">Date</string>
     <string name="date_selected">Selected date</string>
@@ -119,4 +119,8 @@
     <string name="str_party_time_title">Party Time</string>
     <string name="str_party_time_descr">Click here for Party time</string>
     <string name="title_activity_disclaimer">DisclaimerActivity</string>
+    <string name="str_msg_no_direction_msg">No direction found</string>
+    <string name="str_no_direction_found">Direction is not found on given location</string>
+    <string name="str_delete">Delete</string>
+    <string name="party_delete_success">Deleted successfully !!</string>
 </resources>

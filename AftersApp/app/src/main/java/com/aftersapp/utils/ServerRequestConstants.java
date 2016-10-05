@@ -11,4 +11,5 @@ public class ServerRequestConstants {
     public static final int REQUEST_POST_PART = 115;
     public static final int REQUEST_REGISTER = 116;
     public static final int REQUEST_EDIT_PROFILE = 117;
+    public static final int REQUEST_DELETE_PARTY = 118;
 }

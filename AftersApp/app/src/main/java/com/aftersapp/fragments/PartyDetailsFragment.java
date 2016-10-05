@@ -2,7 +2,6 @@ package com.aftersapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aftersapp.R;
+import com.aftersapp.data.MapDirectionData;
 import com.aftersapp.data.PartyDataDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
+import com.aftersapp.data.requestdata.DeletePartyDTO;
 import com.aftersapp.data.requestdata.LikePartyRequest;
 import com.aftersapp.helper.ChatHelper;
 import com.aftersapp.utils.AppConstants;
@@ -26,6 +27,7 @@ import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBSession;
@@ -46,13 +48,16 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
     public static final String PARTY_ID = "party_id";
     private static final String CHAT_HOST_FRAGMENT = "Chat with host";
     private static final String TAG = PartyDetailsFragment.class.getSimpleName();
+    public static final String USER_LOCATION = "user_location";
     private ImageLoader mImageLoader;
     private long mPartyId;
     private PartyDataDTO partyData;
-    private Button mBtnChatHost, iamAttending, saveFavourite, btnEdit;
-    private TextView mTxtPartyName, mTxtDesc, mTxtAddress, mTxtAge, mTxtAttending;
+    private Button mBtnChatHost, iamAttending, saveFavourite, btnEdit, mPartyDirection, btnDelete;
+    private TextView mTxtPartyName, mTxtDesc, mTxtAddress, mTxtAge, mTxtAttending, mTxtDate;
     private NetworkImageView networkImageView;
     private LinearLayout layAttending;
+    private MapDirectionData userLocation;
+    private LinearLayout userLay, ownerLay;
 
     public PartyDetailsFragment() {
         // Required empty public constructor
@@ -65,6 +70,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         if (getArguments() != null) {
             mPartyId = getArguments().getLong(PARTY_ID);
             partyData = mDbRepository.getPartyData(mPartyId);
+            userLocation = (MapDirectionData) getArguments().getSerializable(USER_LOCATION);
         }
     }
 
@@ -76,16 +82,22 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mBtnChatHost = (Button) view.findViewById(R.id.btnChatWithHost);
         iamAttending = (Button) view.findViewById(R.id.iamAttending);
         saveFavourite = (Button) view.findViewById(R.id.saveFavourite);
+        mPartyDirection = (Button) view.findViewById(R.id.btnPartyDirection);
+        btnDelete = (Button) view.findViewById(R.id.btnDelete);
         btnEdit = (Button) view.findViewById(R.id.btnEdit);
         mTxtPartyName = (TextView) view.findViewById(R.id.txtPartyName);
+        mTxtDate = (TextView) view.findViewById(R.id.txtDate);
         mTxtDesc = (TextView) view.findViewById(R.id.txtDesc);
         mTxtAddress = (TextView) view.findViewById(R.id.txtAddress);
         mTxtAge = (TextView) view.findViewById(R.id.txtAge);
         mTxtAttending = (TextView) view.findViewById(R.id.txtAttending);
         networkImageView = (NetworkImageView) view.findViewById(R.id.imgPartyImage);
         layAttending = (LinearLayout) view.findViewById(R.id.layAttending);
+        userLay = (LinearLayout) view.findViewById(R.id.userLayout);
+        ownerLay = (LinearLayout) view.findViewById(R.id.ownerLayout);
         mTxtPartyName.setText(partyData.getTitle());
         mTxtDesc.setText(partyData.getDesc());
+        //mTxtDate.setText(partyData.getD);
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         mTxtAddress.setText(partyData.getLocation());
@@ -100,15 +112,18 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
 
         setImage();
         if (partyData.getHost() == mSessionManager.getUserId()) {
-            mBtnChatHost.setVisibility(View.GONE);
-            btnEdit.setVisibility(View.VISIBLE);
+            userLay.setVisibility(View.GONE);
+            ownerLay.setVisibility(View.VISIBLE);
         } else {
-            mBtnChatHost.setVisibility(View.VISIBLE);
-            btnEdit.setVisibility(View.GONE);
+            userLay.setVisibility(View.VISIBLE);
+            ownerLay.setVisibility(View.GONE);
         }
         mBtnChatHost.setOnClickListener(this);
         iamAttending.setOnClickListener(this);
         saveFavourite.setOnClickListener(this);
+        btnEdit.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
+        mPartyDirection.setOnClickListener(this);
         return view;
     }
 
@@ -160,8 +175,22 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
             case R.id.btnEdit:
                 //call to the edit party fragment
                 break;
+            case R.id.btnDelete:
+                deleteParty();
+                break;
+            case R.id.btnPartyDirection:
+                ShowDirectionFragment showDirection = new ShowDirectionFragment();
+                Bundle bundle = new Bundle();
+                bundle.putLong(PartyDetailsFragment.PARTY_ID, partyData.getPartyId());
+                userLocation.setDestinationLatLng(new LatLng(partyData.getLatitude(), partyData.getLongitude()));
+                bundle.putSerializable(ShowDirectionFragment.DIRECTION_DATA, userLocation);
+                showDirection.setArguments(bundle);
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, showDirection, "PartDirection").commit();
+                break;
         }
     }
+
 
     private void chatWithHost(final QBUser selectedUsers) {
 
@@ -269,6 +298,16 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 mSessionManager.addFavPartyUrl(), baseRequestDTO);
     }
 
+    private void deleteParty() {
+        DeletePartyDTO deletePartyDTO = new DeletePartyDTO(partyData.getPartyId());
+        Gson gson = new Gson();
+        String serializedJsonString = gson.toJson(deletePartyDTO);
+        BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
+        baseRequestDTO.setData(serializedJsonString);
+        mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_DELETE_PARTY,
+                mSessionManager.getDeletePartyUrl(), baseRequestDTO);
+    }
+
     private void attendancePartyMark() {
         partyData.setAttending(AppConstants.ATTENDING_PARTY);
         LikePartyRequest likePartyRequest = new LikePartyRequest(mSessionManager.getUserId(), partyData.getPartyId());
@@ -289,6 +328,9 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
             case ServerRequestConstants.REQUEST_ADD_FAV_PARTY:
                 Log.e(TAG, "##Volley Server error " + error.toString());
                 break;
+            case ServerRequestConstants.REQUEST_DELETE_PARTY:
+                Log.e(TAG, "##Volley Server error " + error.toString());
+                break;
         }
     }
 
@@ -305,6 +347,9 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 Log.d(TAG, "##Volley Data error " + errorMessage);
                 Toast.makeText(getContext(), getContext().getResources().
                         getString(R.string.str_already_fav), Toast.LENGTH_SHORT).show();
+                break;
+            case ServerRequestConstants.REQUEST_DELETE_PARTY:
+
                 break;
         }
     }
@@ -323,6 +368,15 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 if (data.equals("0")) {
                     Toast.makeText(getContext(), getContext().getResources().
                             getString(R.string.party_add_fav_success), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case ServerRequestConstants.REQUEST_DELETE_PARTY:
+                if (data.equals("0")) {
+                    Toast.makeText(getContext(), getContext().getResources().
+                            getString(R.string.party_delete_success), Toast.LENGTH_SHORT).show();
+                    HomeFragment homeFragment = new HomeFragment();
+                    getFragmentManager().beginTransaction().
+                            replace(R.id.fragment_frame_lay, homeFragment, "Home").commit();
                 }
                 break;
         }

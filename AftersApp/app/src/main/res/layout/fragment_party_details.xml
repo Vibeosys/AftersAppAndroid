@@ -57,6 +57,15 @@
                             android:text="Join us for a relaxed house party with some friends feel free to bring some more winel"
                             android:textSize="14sp" />
 
+                        <com.aftersapp.views.RobotoTextView
+                            android:id="@+id/txtDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:padding="2dp"
+                            android:text="12 Oct 2016 12:30 PM"
+                            android:textSize="14sp" />
+
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -177,18 +186,21 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/userLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="12dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnChatWithHost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="60dp"
-                    android:layout_marginStart="60dp"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="#9E6BD4"
                     android:padding="4dp"
@@ -198,34 +210,10 @@
                     android:textSize="16sp" />
 
                 <Button
-                    android:id="@+id/btnEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="60dp"
-                    android:layout_marginStart="60dp"
-                    android:layout_weight="1"
-                    android:background="#9E6BD4"
-                    android:padding="4dp"
-                    android:text="@string/str_edit_party"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                android:orientation="horizontal">
-
-                <Button
                     android:id="@+id/btnPartyDirection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="60dp"
-                    android:layout_marginStart="60dp"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@color/colorAccent"
                     android:padding="4dp"
@@ -238,9 +226,52 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ownerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btnEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="#9E6BD4"
+                    android:padding="4dp"
+                    android:text="@string/str_edit_party"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent"
+                    android:padding="4dp"
+                    android:text="@string/str_delete"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="6dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -248,7 +279,7 @@
                     android:id="@+id/iamAttending"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
                     android:padding="4dp"
@@ -261,7 +292,7 @@
                     android:id="@+id/saveFavourite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/cancel_btn_border"
                     android:padding="4dp"

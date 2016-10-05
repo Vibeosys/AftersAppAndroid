@@ -63,6 +63,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.POST_PART_URL, mPropertyFileReader.getHostPartyUrl());
         editor.putString(PropertyTypeConstants.REGISTER_USER, mPropertyFileReader.getRegisterUserUrl());
         editor.putString(PropertyTypeConstants.EDIT_PROFILE_URL, mPropertyFileReader.getEditProfileUrl());
+        editor.putString(PropertyTypeConstants.DELETE_PARTY_URL, mPropertyFileReader.getDeletePartyUrl());
         editor.apply();
         return true;
     }
@@ -251,5 +252,9 @@ public class SessionManager {
     public void setDisclaimerVal(int userVal)
     {
         setIntValuesInSharedPrefs(PropertyTypeConstants.DISCLAIMER_VAL,userVal);
+    }
+
+    public String getDeletePartyUrl() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.DELETE_PARTY_URL, null);
     }
 }

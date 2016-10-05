@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.aftersapp.AftersAppApplication;
 import com.aftersapp.R;
 import com.aftersapp.adapters.PartyAdapter;
+import com.aftersapp.data.MapDirectionData;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.GetPartyDTO;
 import com.aftersapp.data.PartyDataDTO;
@@ -338,6 +339,8 @@ public abstract class FindPartyFragment extends BaseFragment implements
         PartyDetailsFragment partyDetailsFragment = new PartyDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(PartyDetailsFragment.PARTY_ID, partyDataDTO.getPartyId());
+        MapDirectionData userLocation = new MapDirectionData(new LatLng(latitude, longitude));
+        bundle.putSerializable(PartyDetailsFragment.USER_LOCATION, userLocation);
         partyDetailsFragment.setArguments(bundle);
         getFragmentManager().beginTransaction().
                 replace(R.id.fragment_frame_lay, partyDetailsFragment, "PartDetails").commit();
