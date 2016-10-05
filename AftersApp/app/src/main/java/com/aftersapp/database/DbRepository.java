@@ -122,8 +122,7 @@ public class DbRepository extends SQLiteOpenHelper {
                     contentValues.put(SqlContract.Party.AGE_RANGE, partyDataDTO.getAge());
                     contentValues.put(SqlContract.Party.INTEREST, partyDataDTO.getInterest());
                     contentValues.put(SqlContract.Party.ATTENDING, partyDataDTO.getAttending());
-                    contentValues.put(SqlContract.Party.PARTY_DATE,
-                            dateUtils.getDateAndTimeFromLong(partyDataDTO.getPdate()));
+                    contentValues.put(SqlContract.Party.PARTY_DATE, partyDataDTO.getDateOfParty());
                     contentValues.put(SqlContract.Party.CREATED_DATE,
                             dateUtils.getDateAndTimeFromLong(partyDataDTO.getCreatedDate()));
                     contentValues.put(SqlContract.Party.IMAGE, partyDataDTO.getImage());
@@ -213,12 +212,10 @@ public class DbRepository extends SQLiteOpenHelper {
                         String hostName = cursor.getString(cursor.getColumnIndex(SqlContract.Party.HOST_NAME));
                         int isFavourite = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.IS_FAV));
                         int isLike = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.IS_LIKE));
-
-                        long partyDate = dateUtils.getFormattedDate(pdate).getTime();
                         long cDate = dateUtils.getFormattedDate(createdDate).getTime();
                         partyDataDTO = new PartyDataDTO(partyId, title, desc, latitude, longitude, location,
-                                music, age, interest, attending, image, host, partyDate,
-                                cDate, hostName, isFavourite, isLike);
+                                music, age, interest, attending, image, host,
+                                cDate, hostName, isFavourite, isLike, pdate);
                     }
                 } else {
                     partyDataDTO = new PartyDataDTO();
@@ -267,12 +264,10 @@ public class DbRepository extends SQLiteOpenHelper {
                             String hostName = cursor.getString(cursor.getColumnIndex(SqlContract.Party.HOST_NAME));
                             int isFavourite = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.IS_FAV));
                             int isLike = cursor.getInt(cursor.getColumnIndex(SqlContract.Party.IS_LIKE));
-
-                            long partyDate = dateUtils.getFormattedDate(pdate).getTime();
                             long cDate = dateUtils.getFormattedDate(createdDate).getTime();
                             PartyDataDTO partyDataDTO = new PartyDataDTO(id, title, desc, latitude, longitude, location,
-                                    music, age, interest, attending, image, host, partyDate,
-                                    cDate, hostName, isFavourite, isLike);
+                                    music, age, interest, attending, image, host,
+                                    cDate, hostName, isFavourite, isLike, pdate);
                             parties.add(partyDataDTO);
                         } while (cursor.moveToNext());
                     }

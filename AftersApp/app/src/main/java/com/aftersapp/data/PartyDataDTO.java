@@ -24,19 +24,19 @@ public class PartyDataDTO extends BaseDTO {
     private int attending;
     private String image;
     private int host;
-    private long pdate;
     private long createdDate;
     private String hostName;
     private int isFavourite;
     private int isLike;
+    private String dateOfParty;
 
     public PartyDataDTO() {
     }
 
     public PartyDataDTO(long partyId, String title, String desc, double latitude,
                         double longitude, String location, String music, String age,
-                        int interest, int attending, String image, int host, long pdate,
-                        long createdDate, String hostName, int isFavourite, int isLike) {
+                        int interest, int attending, String image, int host,
+                        long createdDate, String hostName, int isFavourite, int isLike, String dateOfParty) {
         this.partyId = partyId;
         this.title = title;
         this.desc = desc;
@@ -49,11 +49,11 @@ public class PartyDataDTO extends BaseDTO {
         this.attending = attending;
         this.image = image;
         this.host = host;
-        this.pdate = pdate;
         this.createdDate = createdDate;
         this.hostName = hostName;
         this.isFavourite = isFavourite;
         this.isLike = isLike;
+        this.dateOfParty = dateOfParty;
     }
 
     public long getPartyId() {
@@ -152,14 +152,6 @@ public class PartyDataDTO extends BaseDTO {
         this.host = host;
     }
 
-    public long getPdate() {
-        return pdate;
-    }
-
-    public void setPdate(long pdate) {
-        this.pdate = pdate;
-    }
-
     public long getCreatedDate() {
         return createdDate;
     }
@@ -190,6 +182,14 @@ public class PartyDataDTO extends BaseDTO {
 
     public void setIsLike(int isLike) {
         this.isLike = isLike;
+    }
+
+    public String getDateOfParty() {
+        return dateOfParty;
+    }
+
+    public void setDateOfParty(String dateOfParty) {
+        this.dateOfParty = dateOfParty;
     }
 
     public static ArrayList<PartyDataDTO> deserializeToArray(String serializedString) {

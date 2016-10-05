@@ -50,10 +50,6 @@ public class DateUtils {
         return dateReadFormat.format(date);
     }
 
-    public String getReadableDateNTimeFormat(java.util.Date date) {
-        return readableDateAndTime.format(date);
-    }
-
     public String getLocalTimeInReadableFormat(java.util.Date date) {
         return timeReadFormat.format(date);
     }
@@ -160,5 +156,20 @@ public class DateUtils {
             e.printStackTrace();
         }
         return getSwedishDateInFormat(date);
+    }
+
+    public String getReadableDateNTimeFormat(java.util.Date date) {
+        return readableDateAndTime.format(date);
+    }
+
+    public String convertFormattedDate(String strDate) {
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        java.util.Date date = null;
+        try {
+            date = df2.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getReadableDateNTimeFormat(date);
     }
 }
