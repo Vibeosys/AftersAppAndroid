@@ -57,6 +57,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadAllValues();
+        mFilterCalender.set(Calendar.DAY_OF_MONTH, mFilterCalender.get(Calendar.DAY_OF_MONTH) + 3);
     }
 
     private void loadAllValues() {
@@ -293,9 +294,11 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             }
             break;
             case R.id.imgCalender: {
-                new DatePickerDialog(getContext(), date, mFilterCalender
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), date, mFilterCalender
                         .get(Calendar.YEAR), mFilterCalender.get(Calendar.MONTH),
-                        mFilterCalender.get(Calendar.DAY_OF_MONTH)).show();
+                        mFilterCalender.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMinDate(mFilterCalender.getTimeInMillis());
+                dialog.show();
             }
             break;
             case R.id.imgCalenderClear: {

@@ -73,17 +73,17 @@ import java.util.TimeZone;
  * Created by shrinivas on 05-10-2016.
  */
 public class EditHostedParty extends BaseFragment implements LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
     private String mParam1;
     private String mParam2;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    PartyDataDTO partyDataDTO=null;
-    private Spinner mSpinner,mMusicGenre,mAgeSpinner;
+    PartyDataDTO partyDataDTO = null;
+    private Spinner mSpinner, mMusicGenre, mAgeSpinner;
     private TextView mGoogleMapTextView, mPartyAddress;
     private ImageView mUserPartyPhoto;
-    private EditText mSearchEditText, mPartyTitle, mPartyDescription,mPartyDatePicker,mPartyTimePicker;
-    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg,mCancelPartyBtn;
+    private EditText mSearchEditText, mPartyTitle, mPartyDescription, mPartyDatePicker, mPartyTimePicker;
+    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg, mCancelPartyBtn;
     ProgressDialog dialog;
     private Calendar mCalendar;
     private String spnMusicGnenr;
@@ -92,7 +92,8 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     MapView mMapView;
     GoogleMap mGoogleMap;
     double mFinalLatititude, mFinalLongitude;
-    private String mFinalAddress,mImageUri, imgDecodableString;;
+    private String mFinalAddress, mImageUri, imgDecodableString;
+    ;
     private double GpsLatitude, GpsLongitude;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
@@ -100,6 +101,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     private int EDIT_SELECT_IMAGE = 30;
     private int EDIT_PROFILE_MEDIA_PERMISSION_CODE = 39;
     Bitmap convertedImg = null;
+
     /*public static EditHostedParty newInstance(String param1, String param2) {
         EditHostedParty fragment = new EditHostedParty();
         Bundle args = new Bundle();
@@ -114,20 +116,21 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             Bundle bundle = this.getArguments();
-            Long Val =bundle.getLong("party_id");
+            Long Val = bundle.getLong("party_id");
             String strPartyId = String.valueOf(Val);
-            partyDataDTO =mDbRepository.getPartyData(Val);
-            Log.d("TAG","TAG");
-            Log.d("TAG","TAG");
+            partyDataDTO = mDbRepository.getPartyData(Val);
+            Log.d("TAG", "TAG");
+            Log.d("TAG", "TAG");
             mParam1 = getArguments().getString("party_id");
-            Log.d("TAG","TAG");
-            Log.d("TAG","TAG");
+            Log.d("TAG", "TAG");
+            Log.d("TAG", "TAG");
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
         onRequestGpsPermission();
         //mGoogleApiClient.connect();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -144,7 +147,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
-        mCancelPartyBtn =(Button) rootView.findViewById(R.id.cancelParty);
+        mCancelPartyBtn = (Button) rootView.findViewById(R.id.cancelParty);
         mPartyDatePicker = (EditText) rootView.findViewById(R.id.partyDatePicker);
         mPartyTimePicker = (EditText) rootView.findViewById(R.id.partyTimePicker);
 
@@ -161,7 +164,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         dialog.setMessage("Loading. Please wait...");
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
-        List<String> mGenre= new ArrayList<>();
+        List<String> mGenre = new ArrayList<>();
         mGenre.add(getResources().getString(R.string.str_music_validation));
         mGenre.add(getResources().getString(R.string.str_music_alter));
         mGenre.add(getResources().getString(R.string.str_music_blues));
@@ -188,13 +191,11 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         musicGenreAdapter.setDropDownViewResource
                 (android.R.layout.simple_spinner_dropdown_item);
         mMusicGenre.setAdapter(musicGenreAdapter);
-        if(!TextUtils.isEmpty(partyDataDTO.getMusic()))
-        {
+        if (!TextUtils.isEmpty(partyDataDTO.getMusic())) {
             spnMusicGnenr = partyDataDTO.getMusic();
-            if(!spnMusicGnenr.equals(null))
-            {
+            if (!spnMusicGnenr.equals(null)) {
                 //  int spineerPosition = musicGenreAdapter.getPosition(spnMusicGnenr);
-                int spineerPosition= ((ArrayAdapter<String>)mMusicGenre.getAdapter()).getPosition(spnMusicGnenr);
+                int spineerPosition = ((ArrayAdapter<String>) mMusicGenre.getAdapter()).getPosition(spnMusicGnenr);
                 mMusicGenre.setSelection(spineerPosition);
             }
 
@@ -217,24 +218,21 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                 (android.R.layout.simple_spinner_dropdown_item);
 
         mSpinner.setAdapter(dataAdapter);
-        if(TextUtils.isEmpty(partyDataDTO.getAge()))
-        {
+        if (TextUtils.isEmpty(partyDataDTO.getAge())) {
             int spineerPosition = dataAdapter.getPosition(partyDataDTO.getAge());
             mSpinner.setSelection(spineerPosition);
         }
 
-        if(partyDataDTO!=null)
-        {
-            mPartyTitle.setText(""+partyDataDTO.getTitle());
-            mPartyDescription.setText(""+partyDataDTO.getDesc());
-            mGoogleMapTextView.setText(""+partyDataDTO.getLocation());
-            long test =partyDataDTO.getCreatedDate();
-            if(!TextUtils.isEmpty(partyDataDTO.getImage()))
-            {
+        if (partyDataDTO != null) {
+            mPartyTitle.setText("" + partyDataDTO.getTitle());
+            mPartyDescription.setText("" + partyDataDTO.getDesc());
+            mGoogleMapTextView.setText("" + partyDataDTO.getLocation());
+            long test = partyDataDTO.getCreatedDate();
+            if (!TextUtils.isEmpty(partyDataDTO.getImage())) {
                 DownloadImage downloadImage = new DownloadImage();
                 downloadImage.execute(partyDataDTO.getImage());
             }
-            partyDate(partyDataDTO.getPdate());
+            // partyDate(partyDataDTO.getDateOfParty());
 
 
         }
@@ -261,13 +259,11 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             public void onClick(View v) {
                 boolean result = callToValidation();
                 if (result == true) {
-                    if(NetworkUtils.isActiveNetworkAvailable(getContext()))
-                    {    dialog.show();
+                    if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                        dialog.show();
                         //callTToWebService();
-                    }
-                    else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
-                    {
-                        createAlertDialog("AftersApp","Internet connection is not available");
+                    } else if (!NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                        createAlertDialog("AftersApp", "Internet connection is not available");
                     }
                 }
 
@@ -292,12 +288,10 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                     if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         buildAlertMessageNoGps();
                     } else {
-                        if(NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                        if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
                             showTakeawayDialog(savedInstanceState);
-                        }
-                        else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
-                        {
-                            createAlertDialog("AftersApp","Internet connection is not available");
+                        } else if (!NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                            createAlertDialog("AftersApp", "Internet connection is not available");
                         }
                     }
 
@@ -332,14 +326,11 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             mPartyAddress.setError("Please click here to get address");
 
             return false;
-        }else  if(TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim()))
-        {
+        } else if (TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim())) {
             mPartyDatePicker.setError("Please select Party date");
 
             return false;
-        }
-        else  if(TextUtils.isEmpty(mPartyTimePicker.getText().toString().trim()))
-        {
+        } else if (TextUtils.isEmpty(mPartyTimePicker.getText().toString().trim())) {
             mPartyTimePicker.setError("Please select Party time");
 
             return false;
@@ -443,7 +434,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         mFinalLatititude = GpsLatitude;
 
         if (GpsLatitude == 0.0 || GpsLongitude == 0.0) {
-            createAlertDialog("AfterApp","Cannot able to find location");
+            createAlertDialog("AfterApp", "Cannot able to find location");
             buildGoogleApiClient();
         } else {
             final Dialog dlg = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -493,10 +484,10 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                         for (int i = 0; i <= addressLine; i++) {
 
                             String address = addresses.get(0).getAddressLine(i);
-                            completeAddress = completeAddress + "\t" + address+"\t";
+                            completeAddress = completeAddress + "\t" + address + "\t";
                             Log.d("TAG", "TAG");
                         }
-                    }catch (IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     } catch (IndexOutOfBoundsException e) {
                         e.printStackTrace();
@@ -526,7 +517,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                                 for (int i = 0; i <= addressLine; i++) {
 
                                     String address = addresses.get(0).getAddressLine(i);
-                                    completeAddress =  completeAddress+"\t" + address;
+                                    completeAddress = completeAddress + "\t" + address;
                                     Log.d("TAG", "TAG");
                                 }
                                 Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(completeAddress).draggable(false));
@@ -581,7 +572,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                                         for (int i = 0; i <= addressLine; i++) {
 
                                             String address = add.getAddressLine(i);
-                                            completeAddress =  completeAddress+"\t" + address;
+                                            completeAddress = completeAddress + "\t" + address;
                                             Log.d("TAG", "TAG");
                                         }
 
@@ -597,8 +588,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
 
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                }catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -613,7 +603,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                 public void onClick(View v) {
 
                     addressFlag = false;
-                    setResult( 0.0, 0.0);
+                    setResult(0.0, 0.0);
                     dlg.dismiss();
                     //
 
@@ -672,7 +662,8 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
     }
-    public void setResult( double latitude, double longitude) {
+
+    public void setResult(double latitude, double longitude) {
 
 
 
@@ -695,10 +686,12 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         if (mGoogleApiClient != null)
             mGoogleApiClient.disconnect();
     }
+
     private void onRequestGpsPermission() {
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 EDIT_LOCATION_PERMISSION_CODE);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -751,6 +744,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                     .show();
         }
     }
+
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
 
         final int height = options.outHeight;
@@ -789,7 +783,6 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     }
 
 
-
     /*Down load image class*/
     private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
 
@@ -820,6 +813,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             mUserPartyPhoto.setTag("ImageSet");
         }
     }
+
     private void requestGrantPermission() {
 
         requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL,
@@ -836,7 +830,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         }
         if (requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] == 0) {
             buildGoogleApiClient();
-        } else if(requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] !=0 || requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] != 0 ){
+        } else if (requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] != 0 || requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] != 0) {
             Toast toast = Toast.makeText(getActivity(),
                     "User denied permission", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
@@ -849,13 +843,13 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, EDIT_SELECT_IMAGE);
     }
-    public void partyDate(long date)
-    {
+
+    public void partyDate(long date) {
         Calendar calendar = Calendar.getInstance();
         TimeZone tz = TimeZone.getDefault();
         calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        java.util.Date currenTimeZone=new java.util.Date(date*1000);
+        java.util.Date currenTimeZone = new java.util.Date(date * 1000);
         Toast.makeText(getContext(), sdf.format(currenTimeZone), Toast.LENGTH_SHORT).show();
     }
 }
