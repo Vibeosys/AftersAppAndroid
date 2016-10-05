@@ -177,7 +177,12 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 }
                 break;
             case R.id.btnEdit:
-                //call to the edit party fragment
+                partyData.getPartyId();
+                EditHostedParty editHostedParty = new EditHostedParty();
+                Bundle mBundle = new Bundle();
+                mBundle.putLong("party_id",partyData.getPartyId());
+                editHostedParty.setArguments(mBundle);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_frame_lay, editHostedParty, "EDIT").commit();
                 break;
             case R.id.btnDelete:
                 deleteParty();
