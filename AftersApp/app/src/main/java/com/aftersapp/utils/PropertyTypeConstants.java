@@ -39,4 +39,5 @@ public class PropertyTypeConstants {
     public static final String FILTER_MUSIC = "user.filter.music";
     public static final String MESSAGE_COUNT = "user.message.count";
     public static final String DISCLAIMER_VAL = "user.disclaimer";
+    public static final String FILTER_DATE = "user.filter.selecteddate";
 }

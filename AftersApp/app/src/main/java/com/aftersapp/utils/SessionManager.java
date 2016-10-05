@@ -245,16 +245,24 @@ public class SessionManager {
     public void setMessageCount(int messageCount) {
         setIntValuesInSharedPrefs(PropertyTypeConstants.MESSAGE_COUNT, messageCount);
     }
-    public int getDisclaimerVal()
-    {
+
+    public int getDisclaimerVal() {
         return mProjectSharedPref.getInt(PropertyTypeConstants.DISCLAIMER_VAL, 0);
     }
-    public void setDisclaimerVal(int userVal)
-    {
-        setIntValuesInSharedPrefs(PropertyTypeConstants.DISCLAIMER_VAL,userVal);
+
+    public void setDisclaimerVal(int userVal) {
+        setIntValuesInSharedPrefs(PropertyTypeConstants.DISCLAIMER_VAL, userVal);
     }
 
     public String getDeletePartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.DELETE_PARTY_URL, null);
+    }
+
+    public String getFilteredDate() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.FILTER_DATE, null);
+    }
+
+    public void setFilterDate(String setFilterDate) {
+        setValuesInSharedPrefs(PropertyTypeConstants.FILTER_DATE, setFilterDate);
     }
 }

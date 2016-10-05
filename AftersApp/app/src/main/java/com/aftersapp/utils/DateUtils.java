@@ -18,6 +18,8 @@ public class DateUtils {
     final SimpleDateFormat SqlFormat = new SimpleDateFormat("yyyy-MM-dd");
     final SimpleDateFormat dateWithTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     final SimpleDateFormat swedishDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    final SimpleDateFormat swedishDateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
+    final SimpleDateFormat readableDateAndTime = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
 
     public String getGMTCurrentDate() {
         dateWithTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -40,8 +42,16 @@ public class DateUtils {
         return swedishDateFormat.format(date);
     }
 
+    public String getSwedishOnlyDateFormat(java.util.Date date) {
+        return swedishDateOnlyFormat.format(date);
+    }
+
     public String getLocalDateInReadableFormat(java.util.Date date) {
         return dateReadFormat.format(date);
+    }
+
+    public String getReadableDateNTimeFormat(java.util.Date date) {
+        return readableDateAndTime.format(date);
     }
 
     public String getLocalTimeInReadableFormat(java.util.Date date) {

@@ -1,16 +1,16 @@
 package com.aftersapp.fragments;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,8 +23,10 @@ import com.aftersapp.R;
 import com.aftersapp.adapters.AgeSpinnerAdapter;
 import com.aftersapp.data.AgeData;
 import com.aftersapp.utils.AppConstants;
+import com.aftersapp.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,11 +34,12 @@ import java.util.List;
  */
 public class FilterFragment extends BaseFragment implements View.OnClickListener {
 
-    private LinearLayout layRadius, seekBarLay, layAge, seekBarAgeLay, musicGeneration, musicLayout;
-    private ImageView imgArrow, imgAgeArrow, imgMusciGener;
+    private LinearLayout layRadius, seekBarLay, layAge, seekBarAgeLay, musicGeneration,
+            musicLayout, layDate, innerDateLay;
+    private ImageView imgArrow, imgAgeArrow, imgMusciGener, imgDateArrow, imgCalender, imgCalenderClear;
     private SeekBar mSeekBar;
     private int mSeekBarStep = 1, mSeekBarMax, mSeekBarMin;
-    private TextView mFilterVal, mFilterAge, mSelectMusicSelect;
+    private TextView mFilterVal, mFilterAge, mSelectMusicSelect, filterDateVal;
     private Spinner mSpnAge, mMusicGenre;
     private AgeSpinnerAdapter ageSpinnerAdapter;
     private ArrayAdapter<String> musicGenreAdapter;
@@ -44,14 +47,23 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private int selectedRadius = AppConstants.DEFAULT_RADIUS_VALUE;
     private String musicGenre = "";
     private Button btnShowResult, btnResetFilter;
+    private EditText mTxtDateSelected;
+    private Calendar mFilterCalender = Calendar.getInstance();
+    private DateUtils dateUtils = new DateUtils();
+    private String formattedDate = "";
 
     //private
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadAllValues();
+    }
+
+    private void loadAllValues() {
         selectedAge = mSessionManager.getAge();
         selectedRadius = mSessionManager.getRadius();
         musicGenre = mSessionManager.getMusicGenre();
+        formattedDate = mSessionManager.getFilteredDate();
     }
 
     @Nullable
@@ -65,26 +77,36 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         imgArrow = (ImageView) rootView.findViewById(R.id.imgArrow);
         mFilterVal = (TextView) rootView.findViewById(R.id.filterVal);
         layAge = (LinearLayout) rootView.findViewById(R.id.layAge);
+        layDate = (LinearLayout) rootView.findViewById(R.id.layDate);
+        innerDateLay = (LinearLayout) rootView.findViewById(R.id.dateLay);
         seekBarAgeLay = (LinearLayout) rootView.findViewById(R.id.seekBarAgeLay);
         imgAgeArrow = (ImageView) rootView.findViewById(R.id.imgAgeArrow);
         mSeekBar = (SeekBar) rootView.findViewById(R.id.seekBar);
         musicGeneration = (LinearLayout) rootView.findViewById(R.id.musciGenerAge);
         musicLayout = (LinearLayout) rootView.findViewById(R.id.seekBarAgeLayMusic);
         imgMusciGener = (ImageView) rootView.findViewById(R.id.musciAgeArrow);
+        imgDateArrow = (ImageView) rootView.findViewById(R.id.imgDateArrow);
+        imgCalender = (ImageView) rootView.findViewById(R.id.imgCalender);
+        imgCalenderClear = (ImageView) rootView.findViewById(R.id.imgCalenderClear);
         mFilterAge = (TextView) rootView.findViewById(R.id.defaultAge);
+        filterDateVal = (TextView) rootView.findViewById(R.id.filterDateVal);
         mSelectMusicSelect = (TextView) rootView.findViewById(R.id.editMusicSetText);
         mSpnAge = (Spinner) rootView.findViewById(R.id.spnAge);
         mMusicGenre = (Spinner) rootView.findViewById(R.id.musicGenre);
         btnShowResult = (Button) rootView.findViewById(R.id.btnShowResult);
         btnResetFilter = (Button) rootView.findViewById(R.id.btnResetAllFilters);
+        mTxtDateSelected = (EditText) rootView.findViewById(R.id.txtDateSelected);
 
         setAgeSpinner();
         setMusicSpinner();
         layRadius.setOnClickListener(this);
         layAge.setOnClickListener(this);
+        layDate.setOnClickListener(this);
         btnShowResult.setOnClickListener(this);
         btnResetFilter.setOnClickListener(this);
         musicGeneration.setOnClickListener(this);
+        imgCalender.setOnClickListener(this);
+        imgCalenderClear.setOnClickListener(this);
         mSeekBar.setMax((mSeekBarMax - mSeekBarMin) / mSeekBarStep);
         setResetValues();
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -168,13 +190,43 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mMusicGenre.setAdapter(musicGenreAdapter);
     }
 
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mFilterCalender.set(Calendar.YEAR, year);
+            mFilterCalender.set(Calendar.MONTH, monthOfYear);
+            mFilterCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+    };
+
+    private void updateLabel() {
+        formattedDate = dateUtils.getSwedishOnlyDateFormat(mFilterCalender.getTime());
+        mTxtDateSelected.setText(formattedDate);
+        mSessionManager.setFilterDate(formattedDate);
+        filterDateVal.setText(formattedDate + " selected");
+    }
+
     private void setResetValues() {
         mSeekBar.setProgress(selectedRadius);
         mFilterVal.setText("" + selectedRadius + "-" + getResources().getString(R.string.raduis_selected));
         if (selectedAge != 0)
             mFilterAge.setText("" + selectedAge + "+ age selected");
+        else {
+            mFilterAge.setText("Age not selected");
+        }
         if (!TextUtils.isEmpty(musicGenre))
             mSelectMusicSelect.setText(musicGenre + " music Selected");
+        else {
+            mSelectMusicSelect.setText("No music Selected");
+        }
+        if (!TextUtils.isEmpty(formattedDate))
+            filterDateVal.setText(formattedDate + " Selected");
+        else {
+            filterDateVal.setText("Date not Selected");
+        }
     }
 
     private void setAgeSpinner() {
@@ -221,6 +273,15 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                     imgMusciGener.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                 }
                 break;
+            case R.id.layDate:
+                if (innerDateLay.getVisibility() == View.GONE) {
+                    innerDateLay.setVisibility(View.VISIBLE);
+                    imgDateArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                } else if (innerDateLay.getVisibility() == View.VISIBLE) {
+                    innerDateLay.setVisibility(View.GONE);
+                    imgDateArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                }
+                break;
             case R.id.btnShowResult: {
                 mSessionManager.setMusicGenre(musicGenre);
                 mSessionManager.setRadius(selectedRadius);
@@ -230,19 +291,32 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                         replace(R.id.fragment_frame_lay, findPartyFragment, "FindPArty").commit();
                 Toast.makeText(getContext(), getResources().getString(R.string.str_filter_apply), Toast.LENGTH_SHORT).show();
             }
+            break;
+            case R.id.imgCalender: {
+                new DatePickerDialog(getContext(), date, mFilterCalender
+                        .get(Calendar.YEAR), mFilterCalender.get(Calendar.MONTH),
+                        mFilterCalender.get(Calendar.DAY_OF_MONTH)).show();
+            }
+            break;
+            case R.id.imgCalenderClear: {
+                mSessionManager.setFilterDate(null);
+                filterDateVal.setText("Date not Selected");
+                mTxtDateSelected.setText("");
+            }
 
             break;
             case R.id.btnResetAllFilters: {
                 mSessionManager.setMusicGenre(null);
+                mSessionManager.setFilterDate(null);
                 mSessionManager.setRadius(AppConstants.DEFAULT_RADIUS_VALUE);
                 mSessionManager.setAge(AppConstants.DEFAULT_AGE_VALUE);
+                loadAllValues();
+                setResetValues();
                 FindPartyFragment findPartyFragment = new AllPartiesFragment();
                 getFragmentManager().beginTransaction().
                         replace(R.id.fragment_frame_lay, findPartyFragment, "FindPArty").commit();
                 Toast.makeText(getContext(), getResources().getString(R.string.str_filter_reset), Toast.LENGTH_SHORT).show();
             }
-
-
             break;
         }
     }

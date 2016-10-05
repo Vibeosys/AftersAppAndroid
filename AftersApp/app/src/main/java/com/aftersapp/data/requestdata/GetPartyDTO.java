@@ -13,14 +13,16 @@ public class GetPartyDTO extends BaseDTO {
     private int age;
     private int radiusInKm;
     private String genre;
+    private String partyDate;
 
-    public GetPartyDTO(long userId, double latitude, double longitude, int age, int radiusInKm, String genre) {
+    public GetPartyDTO(long userId, double latitude, double longitude, int age, int radiusInKm, String genre, String partyDate) {
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.age = age;
         this.radiusInKm = radiusInKm;
         this.genre = genre;
+        this.partyDate = partyDate;
     }
 
     public GetPartyDTO(long userId, double latitude, double longitude, int age, int radiusInKm) {
@@ -77,5 +79,13 @@ public class GetPartyDTO extends BaseDTO {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public String getPartyDate() {
+        return partyDate;
+    }
+
+    public void setPartyDate(String partyDate) {
+        this.partyDate = partyDate;
     }
 }

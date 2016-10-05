@@ -21,6 +21,7 @@ import com.aftersapp.data.requestdata.LikePartyRequest;
 import com.aftersapp.helper.ChatHelper;
 import com.aftersapp.utils.AppConstants;
 import com.aftersapp.utils.CustomVolleyRequestQueue;
+import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.NetworkUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
@@ -40,6 +41,8 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
+import java.util.Date;
+
 
 public class PartyDetailsFragment extends BaseFragment implements View.OnClickListener,
         ServerSyncManager.OnSuccessResultReceived,
@@ -58,6 +61,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
     private LinearLayout layAttending;
     private MapDirectionData userLocation;
     private LinearLayout userLay, ownerLay;
+    DateUtils dateUtils = new DateUtils();
 
     public PartyDetailsFragment() {
         // Required empty public constructor
@@ -97,7 +101,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         ownerLay = (LinearLayout) view.findViewById(R.id.ownerLayout);
         mTxtPartyName.setText(partyData.getTitle());
         mTxtDesc.setText(partyData.getDesc());
-        //mTxtDate.setText(partyData.getD);
+        mTxtDate.setText(dateUtils.getReadableDateNTimeFormat(new Date(partyData.getPdate())));
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         mTxtAddress.setText(partyData.getLocation());

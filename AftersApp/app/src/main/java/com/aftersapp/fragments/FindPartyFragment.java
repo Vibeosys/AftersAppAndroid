@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,7 +34,6 @@ import com.aftersapp.utils.NetworkUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
-import com.google.android.gms.games.appcontent.AppContentAction;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -74,6 +72,7 @@ public abstract class FindPartyFragment extends BaseFragment implements
     protected int filterAge = AppConstants.DEFAULT_AGE_VALUE;
     protected int filterRadius = AppConstants.DEFAULT_RADIUS_VALUE;
     protected String musicGenre = "";
+    private String currentDate = null;
 
 
     @Override
@@ -99,6 +98,7 @@ public abstract class FindPartyFragment extends BaseFragment implements
         filterAge = mSessionManager.getAge();
         filterRadius = mSessionManager.getRadius();
         musicGenre = mSessionManager.getMusicGenre();
+        currentDate = mSessionManager.getFilteredDate();
     }
 
     @Nullable
@@ -124,11 +124,14 @@ public abstract class FindPartyFragment extends BaseFragment implements
         if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
             showProgress(true, mListParties, progressBar);
             GetPartyDTO getPartyDTO = null;
-            if (!TextUtils.isEmpty(musicGenre))
-                getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), latitude,
-                        longitude, filterAge, filterRadius, musicGenre.toLowerCase());
-            else getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), latitude,
+            getPartyDTO = new GetPartyDTO(mSessionManager.getUserId(), latitude,
                     longitude, filterAge, filterRadius);
+            if (!TextUtils.isEmpty(musicGenre)) {
+                getPartyDTO.setGenre(musicGenre);
+            }
+            if (!TextUtils.isEmpty(currentDate)) {
+                getPartyDTO.setPartyDate(currentDate);
+            }
             Gson gson = new Gson();
             String serializedJsonString = gson.toJson(getPartyDTO);
             BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
