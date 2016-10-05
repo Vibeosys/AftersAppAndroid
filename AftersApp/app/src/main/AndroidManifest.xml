@@ -74,10 +74,12 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activities.AttachmentImageActivity"></activity>
+        <activity android:name=".activities.AttachmentImageActivity" />
+
         <service
             android:name=".services.AdService"
             android:exported="false" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
@@ -97,7 +99,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".utils.qbutils.gcm.GcmPushInstanceIDService"
             android:exported="false">
@@ -106,6 +107,11 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".activities.DisclaimerActivity"
+            android:label="@string/title_activity_disclaimer"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

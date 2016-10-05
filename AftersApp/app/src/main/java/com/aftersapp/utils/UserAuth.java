@@ -69,6 +69,7 @@ public class UserAuth {
         theSessionManager.setDob(null);
         theSessionManager.setToken(null);
         theSessionManager.setEmailNotify(0);
+        theSessionManager.setDisclaimerVal(0);
         return true;
     }
 }

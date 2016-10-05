@@ -15,5 +15,5 @@ public class AppConstants {
     public final static int MAX_RADIUS_VALUE = 40075;
     public final static int DEFAULT_RADIUS_VALUE = 1000;
     public final static int DEFAULT_AGE_VALUE = 0;
-
+    public static final int DISCLAIMER_FIRST_VAL = 0;
 }

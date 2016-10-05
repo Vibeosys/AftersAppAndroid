@@ -244,4 +244,12 @@ public class SessionManager {
     public void setMessageCount(int messageCount) {
         setIntValuesInSharedPrefs(PropertyTypeConstants.MESSAGE_COUNT, messageCount);
     }
+    public int getDisclaimerVal()
+    {
+        return mProjectSharedPref.getInt(PropertyTypeConstants.DISCLAIMER_VAL, 0);
+    }
+    public void setDisclaimerVal(int userVal)
+    {
+        setIntValuesInSharedPrefs(PropertyTypeConstants.DISCLAIMER_VAL,userVal);
+    }
 }

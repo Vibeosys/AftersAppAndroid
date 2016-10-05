@@ -118,4 +118,5 @@
     <string name="str_party_date_descr">Click here for Party date</string>
     <string name="str_party_time_title">Party Time</string>
     <string name="str_party_time_descr">Click here for Party time</string>
+    <string name="title_activity_disclaimer">DisclaimerActivity</string>
 </resources>

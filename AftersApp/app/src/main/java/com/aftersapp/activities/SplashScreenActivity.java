@@ -41,6 +41,7 @@ public class SplashScreenActivity extends BaseActivity {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_splash_screen);
+
         mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
@@ -69,7 +70,7 @@ public class SplashScreenActivity extends BaseActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent mainRun = new Intent(SplashScreenActivity.this, MainActivity.class);
+                Intent mainRun = new Intent(SplashScreenActivity.this, DisclaimerActivity.class);
                 startActivity(mainRun);
 
                 // close this activity
