@@ -172,4 +172,26 @@ public class DateUtils {
         }
         return getReadableDateNTimeFormat(date);
     }
+
+    public String convertOnlyDate(String strDate) {
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        java.util.Date date = null;
+        try {
+            date = df2.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getSwedishOnlyDateFormat(date);
+    }
+
+    public String convertOnlyTime(String strDate) {
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        java.util.Date date = null;
+        try {
+            date = df2.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getLocalTimeInReadableFormat(date);
+    }
 }

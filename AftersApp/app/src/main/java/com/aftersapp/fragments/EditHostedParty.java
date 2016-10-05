@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.aftersapp.R;
 import com.aftersapp.data.PartyDataDTO;
+import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.NetworkUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -62,9 +63,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -93,7 +96,6 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     GoogleMap mGoogleMap;
     double mFinalLatititude, mFinalLongitude;
     private String mFinalAddress, mImageUri, imgDecodableString;
-    ;
     private double GpsLatitude, GpsLongitude;
     private LocationRequest mLocationRequest;
     Location mLastLocation;
@@ -101,6 +103,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     private int EDIT_SELECT_IMAGE = 30;
     private int EDIT_PROFILE_MEDIA_PERMISSION_CODE = 39;
     Bitmap convertedImg = null;
+    DateUtils dateUtils = new DateUtils();
 
     /*public static EditHostedParty newInstance(String param1, String param2) {
         EditHostedParty fragment = new EditHostedParty();
@@ -227,7 +230,17 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             mPartyTitle.setText("" + partyDataDTO.getTitle());
             mPartyDescription.setText("" + partyDataDTO.getDesc());
             mGoogleMapTextView.setText("" + partyDataDTO.getLocation());
+            String date = partyDataDTO.getDateOfParty();
+            String onlyDate = dateUtils.convertOnlyDate(date);
+            String onlyTime = dateUtils.convertOnlyTime(date);
             long test = partyDataDTO.getCreatedDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM", Locale.US);
+            try {
+                Date dateTest = dateFormat.parse(date);
+                int dat = dateTest.getDate();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if (!TextUtils.isEmpty(partyDataDTO.getImage())) {
                 DownloadImage downloadImage = new DownloadImage();
                 downloadImage.execute(partyDataDTO.getImage());

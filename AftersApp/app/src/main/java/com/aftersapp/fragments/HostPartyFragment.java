@@ -105,10 +105,10 @@ public class HostPartyFragment extends BaseFragment implements
     private String mParam1;
     private String mParam2;
 
-    private Spinner mSpinner,mMusicGenre;
+    private Spinner mSpinner, mMusicGenre;
     private TextView mGoogleMapTextView, mPartyAddress;
-    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg,mCancelPartyBtn;
-    private EditText mSearchEditText, mPartyTitle, mPartyDescription,mPartyDatePicker,mPartyTimePicker;
+    private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg, mCancelPartyBtn;
+    private EditText mSearchEditText, mPartyTitle, mPartyDescription, mPartyDatePicker, mPartyTimePicker;
     private Spinner mAgeSpinner;
     private ImageView mUserPartyPhoto;
     private boolean setFlag = true;
@@ -120,7 +120,7 @@ public class HostPartyFragment extends BaseFragment implements
     private int EDIT_SELECT_IMAGE = 20;
     private String mImageUri, imgDecodableString;
     double mFinalLatititude, mFinalLongitude;
-    private String mFinalAddress, replaceSpinner,mMusicGenreStr,mStringDate,mStringTime,mStringDateTime,mSpinnerAge;
+    private String mFinalAddress, replaceSpinner, mMusicGenreStr, mStringDate, mStringTime, mStringDateTime, mSpinnerAge;
     private static final String HOME_FRAGMENT_POST_PARTY = "home";
     private static final String HOME_FRAGMENT_POST_PARTY_CANCEL = "home";
     Bitmap convertedImg = null;
@@ -131,6 +131,7 @@ public class HostPartyFragment extends BaseFragment implements
     Location mLastLocation;
     ProgressDialog dialog;
     private Calendar mCalendar;
+    DateUtils dateUtils = new DateUtils();
 
     // TODO: Rename and change types and number of parameters
     public static HostPartyFragment newInstance(String param1, String param2) {
@@ -172,11 +173,11 @@ public class HostPartyFragment extends BaseFragment implements
         mHostParty = (Button) rootView.findViewById(R.id.saveParty);
         mPartyTitle = (EditText) rootView.findViewById(R.id.partyTitle);
         mPartyDescription = (EditText) rootView.findViewById(R.id.partyDescription);
-       // mMusicGeneration = (EditText) rootView.findViewById(R.id.musicGenerationDesc);
+        // mMusicGeneration = (EditText) rootView.findViewById(R.id.musicGenerationDesc);
         mAgeSpinner = (Spinner) rootView.findViewById(R.id.Agespinner);
         mPartyAddress = (TextView) rootView.findViewById(R.id.partyAddressTextView);
         mRemoveImg = (Button) rootView.findViewById(R.id.removeImage);
-        mCancelPartyBtn =(Button) rootView.findViewById(R.id.cancelParty);
+        mCancelPartyBtn = (Button) rootView.findViewById(R.id.cancelParty);
         mPartyDatePicker = (EditText) rootView.findViewById(R.id.partyDatePicker);
         mPartyTimePicker = (EditText) rootView.findViewById(R.id.partyTimePicker);
 
@@ -190,7 +191,7 @@ public class HostPartyFragment extends BaseFragment implements
         dialog.setMessage("Loading. Please wait...");
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
-        List<String> mGenre= new ArrayList<>();
+        List<String> mGenre = new ArrayList<>();
         mGenre.add(getResources().getString(R.string.str_music_validation));
         mGenre.add(getResources().getString(R.string.str_music_alter));
         mGenre.add(getResources().getString(R.string.str_music_blues));
@@ -240,7 +241,7 @@ public class HostPartyFragment extends BaseFragment implements
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mCalendar = Calendar.getInstance();
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     new DatePickerDialog(getContext(), date, mCalendar
                             .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                             mCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -251,8 +252,7 @@ public class HostPartyFragment extends BaseFragment implements
         mPartyTimePicker.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN)
-                {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     Calendar mcurrentTime = Calendar.getInstance();
                     int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                     int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -260,17 +260,15 @@ public class HostPartyFragment extends BaseFragment implements
                     mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            if(selectedHour > 12)
-                            {   int timeIn12 = selectedHour-12;
-                                mPartyTimePicker.setText( timeIn12 + ":" + selectedMinute+" PM");
-                                mStringTime = String.valueOf(selectedHour)+":"+String.valueOf(selectedMinute);
+                            if (selectedHour > 12) {
+                                int timeIn12 = selectedHour - 12;
+                                mPartyTimePicker.setText(timeIn12 + ":" + selectedMinute + " PM");
+                                mStringTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
 
                                 mPartyTimePicker.setError(null);
-                            }
-                            else
-                            {
-                                mPartyTimePicker.setText( selectedHour + ":" + selectedMinute+" AM");
-                                mStringTime = String.valueOf(selectedHour)+":"+String.valueOf(selectedMinute);
+                            } else {
+                                mPartyTimePicker.setText(selectedHour + ":" + selectedMinute + " AM");
+                                mStringTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
                                 mPartyTimePicker.setError(null);
                             }
                         }
@@ -291,12 +289,10 @@ public class HostPartyFragment extends BaseFragment implements
                     if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         buildAlertMessageNoGps();
                     } else {
-                        if(NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                        if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
                             showTakeawayDialog(savedInstanceState);
-                        }
-                        else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
-                        {
-                            createAlertDialog("AftersApp","Internet connection is not available");
+                        } else if (!NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                            createAlertDialog("AftersApp", "Internet connection is not available");
                         }
                     }
 
@@ -315,13 +311,11 @@ public class HostPartyFragment extends BaseFragment implements
             public void onClick(View v) {
                 boolean result = callToValidation();
                 if (result == true) {
-                    if(NetworkUtils.isActiveNetworkAvailable(getContext()))
-                    {    dialog.show();
-                         callTToWebService();
-                    }
-                    else if(!NetworkUtils.isActiveNetworkAvailable(getContext()))
-                    {
-                        createAlertDialog("AftersApp","Internet connection is not available");
+                    if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                        dialog.show();
+                        callTToWebService();
+                    } else if (!NetworkUtils.isActiveNetworkAvailable(getContext())) {
+                        createAlertDialog("AftersApp", "Internet connection is not available");
                     }
                 }
             }
@@ -343,7 +337,7 @@ public class HostPartyFragment extends BaseFragment implements
         mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mMusicGenreStr =parent.getItemAtPosition(position).toString().toLowerCase();
+                mMusicGenreStr = parent.getItemAtPosition(position).toString().toLowerCase();
             }
 
             @Override
@@ -398,16 +392,13 @@ public class HostPartyFragment extends BaseFragment implements
             mPartyAddress.setError("Please click here to get address");
             setFlag = false;
             return false;
-        }else  if(TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim()))
-        {
+        } else if (TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim())) {
             mPartyDatePicker.setError("Please select Party date");
-            setFlag=false;
+            setFlag = false;
             return false;
-        }
-        else  if(TextUtils.isEmpty(mPartyTimePicker.getText().toString().trim()))
-        {
+        } else if (TextUtils.isEmpty(mPartyTimePicker.getText().toString().trim())) {
             mPartyTimePicker.setError("Please select Party time");
-            setFlag =false;
+            setFlag = false;
             return false;
         }
         return true;
@@ -422,38 +413,40 @@ public class HostPartyFragment extends BaseFragment implements
         String PartyAddress = mFinalAddress;
         //String PartyAge = mSpinnerAge;
         String PartyAge = replaceSpinner;
-        mStringDateTime = mStringDate+" "+mStringTime+":00";
+        mStringDateTime = mStringDate + " " + mStringTime + ":00";
 
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.US);
-        Date StrDate,mConvertGmtDate;
-        String formatDate="";
-        String newDate="";
-        long DateTime=0000000;
+        String partyDateStr = dateUtils.convertServerDateToSwedish(mStringDateTime);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+        Date StrDate, mConvertGmtDate;
+        String formatDate = "";
+        String newDate = "";
+        long DateTime = 0000000;
         try {
 
-            //mCalendar.getTime().getTime();
-          //  mConvertGmtDate = cvtToGmt( mCalendar.getTime());
-          //  DateTime = mCalendar.getTime().getTime();
-          //  StrDate = dateFormat.parse(mStringDateTime);
-            StrDate = dateFormat.parse(mStringDateTime);
-            DateTime = StrDate.getTime()/1000;
-          //  mConvertGmtDate = cvtToGmt(StrDate);
-          //  DateTime = mConvertGmtDate.getTime()/1000;
-            StrDate.getTime();
-            //mConvertGmtDate = cvtToGmt(StrDate);
-          //  DateTime = StrDate.getTime()/1000;
-             //StrDate.getTime();
-            Log.d("TAG",""+StrDate);
+          /*  mCalendar.getTime().getTime();
+            mConvertGmtDate = cvtToGmt( mCalendar.getTime());
+            DateTime = mCalendar.getTime().getTime();*/
 
+            StrDate = dateFormat.parse(mStringDateTime);
+            //mConvertGmtDate=cvtToGmt(StrDate);
+            DateTime = StrDate.getTime() / 1000;
+            // DateTime = StrDate.getTime()/1000;
+            //DateTime = StrDate.getTime()/1000;
+            // mConvertGmtDate = cvtToGmt(StrDate);
+            //  DateTime = mConvertGmtDate.getTime()/1000;
+            // StrDate.getTime();
+            //mConvertGmtDate = cvtToGmt(StrDate);
+            //  DateTime = StrDate.getTime()/1000;
+            //StrDate.getTime();
+            //   Log.d("TAG",""+StrDate);
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         int spinnerConv = Integer.parseInt(PartyAge);
-     //   String MusciGeneration = mMusicGeneration.getText().toString().trim();
-       // String LowerCaseMusicGener = MusciGeneration.toLowerCase();
+        //   String MusciGeneration = mMusicGeneration.getText().toString().trim();
+        // String LowerCaseMusicGener = MusciGeneration.toLowerCase();
         int scaledHeight = 480;
         int scaledWidth = 320;
         Bitmap scaledBitmap = null;
@@ -475,7 +468,7 @@ public class HostPartyFragment extends BaseFragment implements
         Gson gson = new Gson();
         HostPartyDTO hostPartyDTO = new HostPartyDTO(PartTitle,
                 PartyDescription, sendLat, sendLong,
-                PartyAddress, mMusicGenreStr, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), DateTime);
+                PartyAddress, mMusicGenreStr, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), DateTime, partyDateStr);
         String serlize = gson.toJson(hostPartyDTO);
         BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
         baseRequestDTO.setData(serlize);
@@ -544,7 +537,7 @@ public class HostPartyFragment extends BaseFragment implements
         mFinalLatititude = GpsLatitude;
 
         if (GpsLatitude == 0.0 || GpsLongitude == 0.0) {
-            createAlertDialog("AfterApp","Cannot able to find location");
+            createAlertDialog("AfterApp", "Cannot able to find location");
             buildGoogleApiClient();
         } else {
             final Dialog dlg = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -594,10 +587,10 @@ public class HostPartyFragment extends BaseFragment implements
                         for (int i = 0; i <= addressLine; i++) {
 
                             String address = addresses.get(0).getAddressLine(i);
-                            completeAddress = completeAddress + "\t" + address+"\t";
+                            completeAddress = completeAddress + "\t" + address + "\t";
                             Log.d("TAG", "TAG");
                         }
-                    }catch (IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     } catch (IndexOutOfBoundsException e) {
                         e.printStackTrace();
@@ -627,7 +620,7 @@ public class HostPartyFragment extends BaseFragment implements
                                 for (int i = 0; i <= addressLine; i++) {
 
                                     String address = addresses.get(0).getAddressLine(i);
-                                    completeAddress =  completeAddress+"\t" + address;
+                                    completeAddress = completeAddress + "\t" + address;
                                     Log.d("TAG", "TAG");
                                 }
                                 Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(completeAddress).draggable(false));
@@ -682,11 +675,11 @@ public class HostPartyFragment extends BaseFragment implements
                                         for (int i = 0; i <= addressLine; i++) {
 
                                             String address = add.getAddressLine(i);
-                                            completeAddress =  completeAddress+"\t" + address;
+                                            completeAddress = completeAddress + "\t" + address;
                                             Log.d("TAG", "TAG");
                                         }
 
-                                         Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + completeAddress));
+                                        Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(DemoLatLong).title("" + completeAddress));
 
 
                                     }
@@ -698,8 +691,7 @@ public class HostPartyFragment extends BaseFragment implements
 
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                }catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -714,7 +706,7 @@ public class HostPartyFragment extends BaseFragment implements
                 public void onClick(View v) {
 
                     addressFlag = false;
-                    setResult( 0.0, 0.0);
+                    setResult(0.0, 0.0);
                     dlg.dismiss();
                     //
 
@@ -738,7 +730,7 @@ public class HostPartyFragment extends BaseFragment implements
                             for (int i = 0; i <= addressLine; i++) {
 
                                 String address = addresses.get(0).getAddressLine(i);
-                                completeAddress = completeAddress + "\t" + address +",";
+                                completeAddress = completeAddress + "\t" + address + ",";
                                 Log.d("TAG", "TAG");
                             }
                             if (mFinalLatititude != 0.0 || mFinalLongitude != 0.0) {
@@ -768,7 +760,7 @@ public class HostPartyFragment extends BaseFragment implements
 
     public void setResult(String address, double latitude, double longitude) {
 
-       String first = address.substring(1);
+        String first = address.substring(1);
         String trimString = first.trim();
 
         mGoogleMapTextView.setText("" + trimString);
@@ -776,7 +768,8 @@ public class HostPartyFragment extends BaseFragment implements
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
     }
-    public void setResult( double latitude, double longitude) {
+
+    public void setResult(double latitude, double longitude) {
 
 
 
@@ -786,6 +779,7 @@ public class HostPartyFragment extends BaseFragment implements
         mFinalLatititude = latitude;
         mFinalLongitude = longitude;
     }
+
     private void requestGrantPermission() {
 
         requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL,
@@ -802,7 +796,7 @@ public class HostPartyFragment extends BaseFragment implements
         }
         if (requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] == 0) {
             buildGoogleApiClient();
-        } else if(requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] !=0 || requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] != 0 ){
+        } else if (requestCode == EDIT_PROFILE_MEDIA_PERMISSION_CODE && grantResults[1] != 0 || requestCode == EDIT_LOCATION_PERMISSION_CODE && grantResults[0] != 0) {
             Toast toast = Toast.makeText(getActivity(),
                     "User denied permission", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
@@ -997,26 +991,27 @@ public class HostPartyFragment extends BaseFragment implements
             updateLabel();
         }
     };
+
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
         mPartyDatePicker.setText(sdf.format(mCalendar.getTime()));
-        mStringDate=sdf.format(mCalendar.getTime());
+        mStringDate = sdf.format(mCalendar.getTime());
         mPartyDatePicker.setError(null);
 
     }
 
-    private Date cvtToGmt(Date date ){
+    private Date cvtToGmt(Date date) {
         TimeZone tz = TimeZone.getDefault();
-        Date ret = new Date( date.getTime() - tz.getRawOffset() );
+        Date ret = new Date(date.getTime() - tz.getRawOffset());
 
         // if we are now in DST, back off by the delta.  Note that we are checking the GMT date, this is the KEY.
-        if ( tz.inDaylightTime( ret )){
-            Date dstDate = new Date( ret.getTime() - tz.getDSTSavings() );
+        if (tz.inDaylightTime(ret)) {
+            Date dstDate = new Date(ret.getTime() - tz.getDSTSavings());
 
             // check to make sure we have not crossed back into standard time
             // this happens when we are on the cusp of DST (7pm the day before the change for PDT)
-            if ( tz.inDaylightTime( dstDate )){
+            if (tz.inDaylightTime(dstDate)) {
                 ret = dstDate;
             }
         }
