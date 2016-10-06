@@ -64,6 +64,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.REGISTER_USER, mPropertyFileReader.getRegisterUserUrl());
         editor.putString(PropertyTypeConstants.EDIT_PROFILE_URL, mPropertyFileReader.getEditProfileUrl());
         editor.putString(PropertyTypeConstants.DELETE_PARTY_URL, mPropertyFileReader.getDeletePartyUrl());
+        editor.putString(PropertyTypeConstants.EDIT_PARTY_URL,mPropertyFileReader.getEditPartyUrl());
         editor.apply();
         return true;
     }
@@ -146,6 +147,10 @@ public class SessionManager {
 
     public String getEditProfileUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.EDIT_PROFILE_URL, null);
+    }
+    public String getEditPartyUrl()
+    {
+        return mProjectSharedPref.getString(PropertyTypeConstants.EDIT_PARTY_URL, null);
     }
 
     private static void setValuesInSharedPrefs(String sharedPrefKey, long sharedPrefValue) {

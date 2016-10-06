@@ -98,5 +98,9 @@ public class PropertyFileReader {
     public String getDeletePartyUrl() {
         return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.DELETE_PARTY_URL);
     }
+
+    public String getEditPartyUrl() {
+        return getEndPointUri() +mProperties.getProperty(PropertyTypeConstants.EDIT_PARTY_URL);
+    }
 }
 

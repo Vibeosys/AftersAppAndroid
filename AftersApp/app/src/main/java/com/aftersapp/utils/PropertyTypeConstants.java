@@ -19,6 +19,7 @@ public class PropertyTypeConstants {
     public static final String REGISTER_USER = "api.endpoint.registeruser";
 
     public static final String POST_PART_URL = "api.endpoint.hostParty";
+    public static final String EDIT_PARTY_URL="api.endpoint.editParty";
 
     public static final String EDIT_PROFILE_URL = "api.endpoint.updateProfile";
     public static final String DELETE_PARTY_URL = "api.endpoint.deleteParty";

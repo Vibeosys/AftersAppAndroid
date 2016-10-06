@@ -46,7 +46,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/remove"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
             </LinearLayout>
 
             <View

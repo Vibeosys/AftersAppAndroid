@@ -3,8 +3,10 @@ package com.aftersapp.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +30,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -35,16 +38,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.aftersapp.R;
 import com.aftersapp.data.PartyDataDTO;
+import com.aftersapp.data.requestdata.BaseRequestDTO;
+import com.aftersapp.data.requestdata.EditPartyDTO;
+import com.aftersapp.data.responsedata.HostPartyDTO;
 import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.NetworkUtils;
+import com.aftersapp.utils.ServerRequestConstants;
+import com.aftersapp.utils.ServerSyncManager;
+import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -59,6 +70,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -76,7 +88,7 @@ import java.util.TimeZone;
  * Created by shrinivas on 05-10-2016.
  */
 public class EditHostedParty extends BaseFragment implements LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,ServerSyncManager.OnSuccessResultReceived, ServerSyncManager.OnErrorResultReceived {
     private String mParam1;
     private String mParam2;
     private static final String ARG_PARAM1 = "param1";
@@ -89,7 +101,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     private Button mSearchBtn, mapOkBtn, mapCancelBtn, mHostParty, mRemoveImg, mCancelPartyBtn;
     ProgressDialog dialog;
     private Calendar mCalendar;
-    private String spnMusicGnenr;
+    private String spnMusicGnenr,mStringDate,mStringTime,replaceSpinner,mSpinnerAge,mMusicGenreStr,mStringDateTime;
     private boolean addressFlag = false;
     private GoogleApiClient mGoogleApiClient;
     MapView mMapView;
@@ -197,8 +209,9 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         if (!TextUtils.isEmpty(partyDataDTO.getMusic())) {
             spnMusicGnenr = partyDataDTO.getMusic();
             if (!spnMusicGnenr.equals(null)) {
-                //  int spineerPosition = musicGenreAdapter.getPosition(spnMusicGnenr);
-                int spineerPosition = ((ArrayAdapter<String>) mMusicGenre.getAdapter()).getPosition(spnMusicGnenr);
+                  String val = partyDataDTO.getMusic().toString();
+                  int spineerPosition = musicGenreAdapter.getPosition(val);
+                //int spineerPosition = ((ArrayAdapter<String>) mMusicGenre.getAdapter()).getPosition(spnMusicGnenr);
                 mMusicGenre.setSelection(spineerPosition);
             }
 
@@ -212,8 +225,8 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         spineerData.add("45+");
         spineerData.add("55+");
         spineerData.add("65+");
-        /*mServerSyncManager.setOnStringErrorReceived(this);
-        mServerSyncManager.setOnStringResultReceived(this);*/
+        mServerSyncManager.setOnStringErrorReceived(this);
+        mServerSyncManager.setOnStringResultReceived(this);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                 (getContext(), android.R.layout.simple_spinner_item, spineerData);
 
@@ -221,8 +234,9 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                 (android.R.layout.simple_spinner_dropdown_item);
 
         mSpinner.setAdapter(dataAdapter);
-        if (TextUtils.isEmpty(partyDataDTO.getAge())) {
-            int spineerPosition = dataAdapter.getPosition(partyDataDTO.getAge());
+        if (!TextUtils.isEmpty(partyDataDTO.getAge())) {
+            String val = partyDataDTO.getAge().toString()+"+";
+            int spineerPosition = dataAdapter.getPosition(val);
             mSpinner.setSelection(spineerPosition);
         }
 
@@ -230,17 +244,22 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             mPartyTitle.setText("" + partyDataDTO.getTitle());
             mPartyDescription.setText("" + partyDataDTO.getDesc());
             mGoogleMapTextView.setText("" + partyDataDTO.getLocation());
+            mFinalAddress=partyDataDTO.getLocation();
             String date = partyDataDTO.getDateOfParty();
             String onlyDate = dateUtils.convertOnlyDate(date);
             String onlyTime = dateUtils.convertOnlyTime(date);
-            long test = partyDataDTO.getCreatedDate();
+            mPartyDatePicker.setText(""+onlyDate);
+            mPartyTimePicker.setText(""+onlyTime);
+
+           // mPartyTimePicker.setText(""+onlyTime);
+            /*long test = partyDataDTO.getCreatedDate();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM", Locale.US);
             try {
                 Date dateTest = dateFormat.parse(date);
                 int dat = dateTest.getDate();
             } catch (ParseException e) {
                 e.printStackTrace();
-            }
+            }*/
             if (!TextUtils.isEmpty(partyDataDTO.getImage())) {
                 DownloadImage downloadImage = new DownloadImage();
                 downloadImage.execute(partyDataDTO.getImage());
@@ -249,6 +268,49 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
 
 
         }
+        mPartyDatePicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mCalendar = Calendar.getInstance();
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    new DatePickerDialog(getContext(), date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+                return false;
+            }
+        });
+        mPartyTimePicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            if (selectedHour > 12) {
+                                int timeIn12 = selectedHour - 12;
+                                mPartyTimePicker.setText(timeIn12 + ":" + selectedMinute + " PM");
+                                mStringTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+
+                                mPartyTimePicker.setError(null);
+                            } else {
+                                mPartyTimePicker.setText(selectedHour + ":" + selectedMinute + " AM");
+                                mStringTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                                mPartyTimePicker.setError(null);
+                            }
+                        }
+                    }, hour, minute, false);//Yes 24 hour time
+                    mTimePicker.setTitle("Select Time");
+                    mTimePicker.show();
+                }
+                return false;
+
+            }
+        });
         mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -274,7 +336,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                 if (result == true) {
                     if (NetworkUtils.isActiveNetworkAvailable(getContext())) {
                         dialog.show();
-                        //callTToWebService();
+                        callTToWebService();
                     } else if (!NetworkUtils.isActiveNetworkAvailable(getContext())) {
                         createAlertDialog("AftersApp", "Internet connection is not available");
                     }
@@ -312,6 +374,47 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
 
             }
         });
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSpinnerAge = parent.getItemAtPosition(position).toString();
+                String item = parent.getItemAtPosition(position).toString();
+                replaceSpinner = item.replace("+", "");
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        /* Music Genre Spinner */
+        mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mMusicGenreStr = parent.getItemAtPosition(position).toString().toLowerCase();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        mRemoveImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mUserPartyPhoto.getTag().equals("thumnel")) {
+
+                        mUserPartyPhoto.setImageResource(R.drawable.default_party_image);
+                        mUserPartyPhoto.setTag("thumnel");
+                    Log.d("TAG","TAG");
+                    Log.d("TAG","TAG");
+
+                }
+            }
+        });
+
+
+
 
         return rootView;
     }
@@ -335,11 +438,11 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             createAlertDialog("AftersApp", "Please select Age Limit");
 
             return false;
-        } else if (addressFlag != true) {
+        } /*else if (addressFlag != true) {
             mPartyAddress.setError("Please click here to get address");
 
             return false;
-        } else if (TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim())) {
+        }*/ else if (TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim())) {
             mPartyDatePicker.setError("Please select Party date");
 
             return false;
@@ -669,7 +772,8 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
 
     public void setResult(String address, double latitude, double longitude) {
 
-        String trimString = address.trim();
+        String first = address.substring(1);
+        String trimString = first.trim();
         mGoogleMapTextView.setText("" + trimString);
         mFinalAddress = trimString;
         mFinalLatititude = latitude;
@@ -795,6 +899,41 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
 
     }
 
+    @Override
+    public void onVolleyErrorReceived(@NonNull VolleyError error, int requestToken) {
+        switch (requestToken) {
+            case ServerRequestConstants.REQUEST_EDIT_PARTY:
+                Log.e("TAG", "##Volley Server error " + error.toString());
+                dialog.cancel();
+                break;
+        }
+    }
+
+    @Override
+    public void onDataErrorReceived(int errorCode, String errorMessage, int requestToken) {
+        switch (requestToken) {
+            case ServerRequestConstants.REQUEST_EDIT_PARTY:
+                dialog.cancel();
+                Log.d("TAG", "##Volley Data error " + errorMessage);
+                break;
+        }
+    }
+
+    @Override
+    public void onResultReceived(@NonNull String data, int requestToken) {
+        switch (requestToken) {
+            case ServerRequestConstants.REQUEST_EDIT_PARTY:
+                Toast toast = Toast.makeText(getContext(), "Changes uploaded Successfully", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                dialog.cancel();
+                HomeFragment homeFragment = new HomeFragment();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_frame_lay, homeFragment, "Home Fragment").commit();
+                break;
+        }
+    }
+
 
     /*Down load image class*/
     private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
@@ -813,6 +952,8 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             try {
                 InputStream input = new java.net.URL(imageURL).openStream();
                 bitmap = BitmapFactory.decodeStream(input);
+                convertedImg=bitmap;
+                Log.d("TAG","TAG");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -823,6 +964,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         @Override
         protected void onPostExecute(Bitmap result) {
             mUserPartyPhoto.setImageBitmap(result);
+            //mUserPartyPhoto.setTag("ImageSet");
             mUserPartyPhoto.setTag("ImageSet");
         }
     }
@@ -864,5 +1006,140 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date currenTimeZone = new java.util.Date(date * 1000);
         Toast.makeText(getContext(), sdf.format(currenTimeZone), Toast.LENGTH_SHORT).show();
+    }
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+    };
+    private void updateLabel() {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+        mPartyDatePicker.setText(sdf.format(mCalendar.getTime()));
+        mStringDate = sdf.format(mCalendar.getTime());
+        mPartyDatePicker.setError(null);
+
+    }
+    private void callTToWebService() {
+
+        String PartTitle = mPartyTitle.getText().toString().trim();
+        String PartyDescription = mPartyDescription.getText().toString().trim();
+        double sendLat=0.0;
+        double sendLong=0.0;
+        if(mFinalLatititude==0.0)
+        {
+             sendLat = partyDataDTO.getLatitude();
+        }
+        if(mFinalLongitude==0.0)
+        {
+             sendLong = partyDataDTO.getLongitude();
+        }
+        if(mFinalLatititude!=0.0)
+        {
+             sendLat = mFinalLatititude;
+        }
+        if(mFinalLongitude!=0.0)
+        {
+             sendLong = mFinalLongitude;
+        }
+
+        String PartyAddress = mFinalAddress;
+        //String PartyAge = mSpinnerAge;
+        String PartyAge = replaceSpinner;
+        String string = mStringTime;
+        if(TextUtils.isEmpty(mStringTime))
+        {
+            String test = mPartyTimePicker.getText().toString().trim();
+            //mStringTime=mPartyTimePicker.getText().toString().trim();
+            String str;
+            if(test.contains("AM"))
+            {
+                str = test.replaceAll("AM","");
+                mStringTime=str.trim();
+            }else if(test.contains("PM"))
+            {
+                str = test.replaceAll("PM","");
+                mStringTime=str.trim();
+            }
+
+
+
+            Log.d("TAG","TAG");
+            Log.d("TAG","TAG");
+
+        }
+        if(TextUtils.isEmpty(mStringDate))
+        {
+            mStringDate = mPartyDatePicker.getText().toString().trim();
+        }
+        Log.d("TAG","TAG");
+        mStringDateTime = mStringDate + " " + mStringTime + ":00";
+
+        String partyDateStr = dateUtils.convertServerDateToSwedish(mStringDateTime);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+        Date StrDate, mConvertGmtDate;
+        String formatDate = "";
+        String newDate = "";
+        long DateTime = 0000000;
+        try {
+
+          /*  mCalendar.getTime().getTime();
+            mConvertGmtDate = cvtToGmt( mCalendar.getTime());
+            DateTime = mCalendar.getTime().getTime();*/
+
+            StrDate = dateFormat.parse(mStringDateTime);
+            //mConvertGmtDate=cvtToGmt(StrDate);
+            DateTime = StrDate.getTime() / 1000;
+            // DateTime = StrDate.getTime()/1000;
+            //DateTime = StrDate.getTime()/1000;
+            // mConvertGmtDate = cvtToGmt(StrDate);
+            //  DateTime = mConvertGmtDate.getTime()/1000;
+            // StrDate.getTime();
+            //mConvertGmtDate = cvtToGmt(StrDate);
+            //  DateTime = StrDate.getTime()/1000;
+            //StrDate.getTime();
+            //   Log.d("TAG",""+StrDate);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int spinnerConv = Integer.parseInt(PartyAge);
+        //   String MusciGeneration = mMusicGeneration.getText().toString().trim();
+        // String LowerCaseMusicGener = MusciGeneration.toLowerCase();
+        int scaledHeight = 480;
+        int scaledWidth = 320;
+        Bitmap scaledBitmap = null;
+        String imageInBase64Format = null;
+        if (!mUserPartyPhoto.getTag().equals("thumnel")) {
+            try {
+                scaledBitmap = Bitmap.createScaledBitmap(convertedImg, scaledHeight, scaledWidth, true);
+                System.gc();
+                imageInBase64Format = getStringImage(scaledBitmap);
+            } catch (Exception e) {
+                createAlertDialog("Host party", "Image cannot be uploaded");
+                Log.d("TAG", "##" + e.toString());
+                System.gc();
+                return;
+            }
+        }
+
+
+        Gson gson = new Gson();
+        EditPartyDTO editPartyDTO = new EditPartyDTO(PartTitle,
+                PartyDescription, sendLat, sendLong,
+                PartyAddress, mMusicGenreStr, spinnerConv, "0", "0", imageInBase64Format, mSessionManager.getUserId(), DateTime, partyDateStr,partyDataDTO.getPartyId());
+        String serlize = gson.toJson(editPartyDTO);
+        BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
+        baseRequestDTO.setData(serlize);
+        mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_EDIT_PARTY,
+                mSessionManager.getEditPartyUrl(), baseRequestDTO);
     }
 }

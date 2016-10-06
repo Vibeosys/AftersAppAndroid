@@ -337,7 +337,7 @@ public class HostPartyFragment extends BaseFragment implements
         mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mMusicGenreStr = parent.getItemAtPosition(position).toString().toLowerCase();
+                mMusicGenreStr = parent.getItemAtPosition(position).toString();
             }
 
             @Override
