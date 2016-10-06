@@ -180,7 +180,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 partyData.getPartyId();
                 EditHostedParty editHostedParty = new EditHostedParty();
                 Bundle mBundle = new Bundle();
-                mBundle.putLong("party_id",partyData.getPartyId());
+                mBundle.putLong("party_id", partyData.getPartyId());
                 editHostedParty.setArguments(mBundle);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_frame_lay, editHostedParty, "EDIT").commit();
                 break;
@@ -191,7 +191,8 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 ShowDirectionFragment showDirection = new ShowDirectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putLong(PartyDetailsFragment.PARTY_ID, partyData.getPartyId());
-                userLocation.setDestinationLatLng(new LatLng(partyData.getLatitude(), partyData.getLongitude()));
+                userLocation.setDestinationLatitude(partyData.getLatitude());
+                userLocation.setDestinationLongitude(partyData.getLongitude());
                 bundle.putSerializable(ShowDirectionFragment.DIRECTION_DATA, userLocation);
                 showDirection.setArguments(bundle);
                 getFragmentManager().beginTransaction().

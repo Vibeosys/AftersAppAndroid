@@ -342,7 +342,7 @@ public abstract class FindPartyFragment extends BaseFragment implements
         PartyDetailsFragment partyDetailsFragment = new PartyDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(PartyDetailsFragment.PARTY_ID, partyDataDTO.getPartyId());
-        MapDirectionData userLocation = new MapDirectionData(new LatLng(latitude, longitude));
+        MapDirectionData userLocation = new MapDirectionData(latitude, longitude);
         bundle.putSerializable(PartyDetailsFragment.USER_LOCATION, userLocation);
         partyDetailsFragment.setArguments(bundle);
         getFragmentManager().beginTransaction().

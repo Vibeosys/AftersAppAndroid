@@ -9,31 +9,52 @@ import java.io.Serializable;
  */
 public class MapDirectionData implements Serializable {
 
-    private LatLng sourceLatLng;
-    private LatLng destinationLatLng;
+    private double sourceLatitude;
+    private double sourceLongitude;
+    private double destinationLatitude;
+    private double destinationLongitude;
 
-    public MapDirectionData(LatLng sourceLatLng) {
-        this.sourceLatLng = sourceLatLng;
+    public MapDirectionData(double sourceLatitude, double sourceLongitude) {
+        this.sourceLatitude = sourceLatitude;
+        this.sourceLongitude = sourceLongitude;
     }
 
-    public MapDirectionData(LatLng sourceLatLng, LatLng destinationLatLng) {
-        this.sourceLatLng = sourceLatLng;
-        this.destinationLatLng = destinationLatLng;
+    public MapDirectionData(double sourceLatitude, double sourceLongitude, double destinationLatitude, double destinationLongitude) {
+        this.sourceLatitude = sourceLatitude;
+        this.sourceLongitude = sourceLongitude;
+        this.destinationLatitude = destinationLatitude;
+        this.destinationLongitude = destinationLongitude;
     }
 
-    public LatLng getSourceLatLng() {
-        return sourceLatLng;
+    public double getSourceLatitude() {
+        return sourceLatitude;
     }
 
-    public void setSourceLatLng(LatLng sourceLatLng) {
-        this.sourceLatLng = sourceLatLng;
+    public void setSourceLatitude(double sourceLatitude) {
+        this.sourceLatitude = sourceLatitude;
     }
 
-    public LatLng getDestinationLatLng() {
-        return destinationLatLng;
+    public double getSourceLongitude() {
+        return sourceLongitude;
     }
 
-    public void setDestinationLatLng(LatLng destinationLatLng) {
-        this.destinationLatLng = destinationLatLng;
+    public void setSourceLongitude(double sourceLongitude) {
+        this.sourceLongitude = sourceLongitude;
+    }
+
+    public double getDestinationLatitude() {
+        return destinationLatitude;
+    }
+
+    public void setDestinationLatitude(double destinationLatitude) {
+        this.destinationLatitude = destinationLatitude;
+    }
+
+    public double getDestinationLongitude() {
+        return destinationLongitude;
+    }
+
+    public void setDestinationLongitude(double destinationLongitude) {
+        this.destinationLongitude = destinationLongitude;
     }
 }

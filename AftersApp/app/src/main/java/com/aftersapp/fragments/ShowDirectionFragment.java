@@ -95,8 +95,8 @@ public class ShowDirectionFragment extends BaseFragment implements
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
-        LatLng source = directionData.getSourceLatLng();
-        LatLng destination = directionData.getDestinationLatLng();
+        LatLng source = new LatLng(directionData.getSourceLatitude(), directionData.getSourceLongitude());
+        LatLng destination = new LatLng(directionData.getDestinationLatitude(), directionData.getDestinationLongitude());
 
         if (source == null || destination == null) {
             createAlertDialog(getResources().getString(R.string.str_msg_no_direction_msg), getResources().getString(R.string.str_no_direction_found));
@@ -108,7 +108,7 @@ public class ShowDirectionFragment extends BaseFragment implements
             MarkerOptions markerOptions1 = new MarkerOptions().
                     position(destination).title(partyData.getTitle());
             mGoogleMap.addMarker(markerOptions1);
-            String url = getDirectionsUrl(directionData.getSourceLatLng(), directionData.getDestinationLatLng());
+            String url = getDirectionsUrl(source, destination);
             DownloadTask downloadTask = new DownloadTask();
             // Start downloading json data from Google Directions API
             downloadTask.execute(url);
