@@ -165,7 +165,13 @@ public class MainActivity extends BaseActivity
         });
        /* AdRequest adRequest = new AdRequest.Builder().addTestDevice("1C22DEC8AEF4249E83143364E2E5AC32").build();
         mInterstitialAd.loadAd(adRequest);*/
-        startService(new Intent(getApplicationContext(), AdService.class));
+        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {
+            if (!isMyServiceRunning(AdService.class))
+                startService(new Intent(getApplicationContext(), AdService.class));
+        } else if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
+            if (isMyServiceRunning(AdService.class))
+                stopService(new Intent(getApplicationContext(), AdService.class));
+        }
 
         if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
             navigationView.getMenu().clear(); //clear old inflated items.
@@ -384,7 +390,8 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(new Intent(getApplicationContext(), AdService.class));
+        if (isMyServiceRunning(AdService.class))
+            stopService(new Intent(getApplicationContext(), AdService.class));
         try {
             ChatHelper.getInstance().logout();
         } catch (Exception e) {

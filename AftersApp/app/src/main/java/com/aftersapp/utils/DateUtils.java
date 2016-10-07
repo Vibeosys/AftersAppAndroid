@@ -126,7 +126,7 @@ public class DateUtils {
     }
 
     public String convertTimeToDate(String strDate) {
-        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         java.util.Date date = null;
         try {
             date = df2.parse(strDate);

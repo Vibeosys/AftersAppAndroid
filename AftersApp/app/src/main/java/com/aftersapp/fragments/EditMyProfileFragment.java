@@ -76,6 +76,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     private static final String ARG_PARAM2 = "param2";
     private static final int EDIT_PROFILE_MEDIA_PERMISSION_CODE = 1000;
     private static final int PICK_IMAGE_REQUEST = 1001;
+    private static final String TAG = EditMyProfileFragment.class.getSimpleName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -99,6 +100,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     int mPosition;
     ProgressDialog dialog;
     private Bitmap profileBitmap = null;
+    DateUtils dateUtils = new DateUtils();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,9 +146,9 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         downloadImage.execute(mSessionManager.getProfImg());
 
         if (!TextUtils.isEmpty(mSessionManager.getDob()))
-            mDateOfBirth.setText("" + mSessionManager.getDob());
+            mDateOfBirth.setText(dateUtils.convertTimeToDate(mSessionManager.getDob()));
         else
-            mDateOfBirth.setText("Click here to enter birth date");
+            mDateOfBirth.setHint("Click here to enter birth date");
 
 
         mSwitchValNotification = mSessionManager.getEmailNotify();
@@ -235,7 +237,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
     private void updateLabel() {
         //  String myFormat = "dd-MMM-yyyy"; //In which you need put here
         //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        DateUtils dateUtils = new DateUtils();
+
         mDateOfBirth.setText(dateUtils.getLocalDateInFormat(myCalendar.getTime()));
         // mDateOfBirth.setText(sdf.format(myCalendar.getTime()));
         mDateOfBirth.setError(null);
@@ -311,8 +313,13 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         userDate = mDateOfBirth.getText().toString();
         String bitmapString = getStringImage(profileBitmap);
         String convertedDate = "";
-        DateUtils dateUtils = new DateUtils();
-        convertedDate = dateUtils.convertServerDateToSwedish(userDate);
+        try {
+            if (!TextUtils.isEmpty(userDate))
+                convertedDate = dateUtils.convertFbDateToSwedish(userDate);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
         NotifyVal = (int) mSwitchValNotification;
         UpdateProfileDTO updateProfileDTO = new UpdateProfileDTO(mSessionManager.getUserId(), userFullName, mSessionManager.getEmail(),
                 userEmail, "123456789", mSpinnerSelectionVal, bitmapString, convertedDate, mSessionManager.getToken(), NotifyVal);
@@ -459,7 +466,9 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
 
             @Override
             public void onError(QBResponseException e) {
-
+                dialog.dismiss();
+                Toast.makeText(getContext(), getContext().getResources().
+                        getString(R.string.str_user_not_updated_try_again), Toast.LENGTH_SHORT).show();
             }
         });
         /*QBUsers.getUserByExternalId(String.valueOf(userResponse.getUserId()), new QBEntityCallback<QBUser>() {

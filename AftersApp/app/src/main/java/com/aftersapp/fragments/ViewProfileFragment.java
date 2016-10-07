@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.aftersapp.MainActivity;
 import com.aftersapp.R;
 import com.aftersapp.utils.AppConstants;
+import com.aftersapp.utils.DateUtils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -44,7 +45,7 @@ public class ViewProfileFragment extends BaseFragment {
     private AdView mAdView;
     private Button mRemoveAds;
     AdRequest adRequest;
-
+    private DateUtils dateUtils = new DateUtils();
 
     public ViewProfileFragment() {
         // Required empty public constructor
@@ -124,7 +125,7 @@ public class ViewProfileFragment extends BaseFragment {
         if (TextUtils.isEmpty(mSessionManager.getDob()) || mSessionManager.getDob().equals("0000-00-00 00:00:00")) {
             mUserDateOfBirth.setText("");
         } else {
-            mUserDateOfBirth.setText("" + mSessionManager.getDob());
+            mUserDateOfBirth.setText(dateUtils.convertTimeToDate(mSessionManager.getDob()));
         }
         long NotificationFlg = mSessionManager.getEmailNotify();
         mUserNameFirst.setText("" + mSessionManager.getName());
