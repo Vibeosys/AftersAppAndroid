@@ -211,6 +211,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             if (!spnMusicGnenr.equals(null)) {
                   String val = partyDataDTO.getMusic().toString();
                   int spineerPosition = musicGenreAdapter.getPosition(val);
+                mMusicGenreStr=val;
                 //int spineerPosition = ((ArrayAdapter<String>) mMusicGenre.getAdapter()).getPosition(spnMusicGnenr);
                 mMusicGenre.setSelection(spineerPosition);
             }
@@ -314,7 +315,17 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
         mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSpinner.getItemAtPosition(position).toString();
+                try
+                {
+                    mMusicGenreStr= mMusicGenre.getItemAtPosition(position).toString();
+                    Log.d("TAG","TAG");
+                    Log.d("TAG","TAG");
+
+                }catch (Exception e)
+                {
+                    Log.d("TAG","Edit profile");
+                }
+
 
             }
 
