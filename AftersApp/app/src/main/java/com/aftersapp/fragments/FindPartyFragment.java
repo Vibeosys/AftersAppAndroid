@@ -449,8 +449,6 @@ public abstract class FindPartyFragment extends BaseFragment implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
-            AftersAppApplication.getInstance().setAddClickCount();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_filter) {
             FilterFragment filterFragment = new FilterFragment();

@@ -57,7 +57,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadAllValues();
-        mFilterCalender.set(Calendar.DAY_OF_MONTH, mFilterCalender.get(Calendar.DAY_OF_MONTH) + 3);
+        mFilterCalender.set(Calendar.DAY_OF_MONTH, mFilterCalender.get(Calendar.DAY_OF_MONTH));
     }
 
     private void loadAllValues() {

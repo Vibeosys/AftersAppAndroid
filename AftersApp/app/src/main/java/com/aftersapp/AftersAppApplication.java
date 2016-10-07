@@ -20,8 +20,6 @@ import com.quickblox.core.QBSettings;
 public class AftersAppApplication extends MultiDexApplication {
 
     private static AftersAppApplication instance;
-    private static int clickCount = 0;
-    private InterstitialAd mInterstitialAd;
     protected static SessionManager mSessionManager = null;
 
     @Override
@@ -35,15 +33,7 @@ public class AftersAppApplication extends MultiDexApplication {
         QBSettings.getInstance().init(getApplicationContext(), QuickBlocsConst.APP_ID,
                 QuickBlocsConst.AUTH_KEY, QuickBlocsConst.AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(QuickBlocsConst.ACCOUNT_KEY);
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.interstial_ad_id));
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // super.onAdLoaded();
-                showIntestititalCase();
-            }
-        });
+
         mSessionManager = SessionManager.getInstance(getApplicationContext());
     }
 
@@ -51,29 +41,7 @@ public class AftersAppApplication extends MultiDexApplication {
         return instance;
     }
 
-    public int getClickCount() {
-        return clickCount;
-    }
 
-    public void setClickCountZero() {
-        clickCount = 0;
-    }
-
-    public void setAddClickCount() {
-        clickCount = clickCount + 1;
-        if (clickCount == 3) {
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("1C22DEC8AEF4249E83143364E2E5AC32").build();
-            mInterstitialAd.loadAd(adRequest);
-            clickCount = 0;
-        }
-
-    }
-
-    public void showIntestititalCase() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-    }
 
     public static SessionManager getmSessionManager() {
         return mSessionManager;

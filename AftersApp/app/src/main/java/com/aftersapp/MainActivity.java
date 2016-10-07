@@ -246,8 +246,6 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
-            AftersAppApplication.getInstance().setAddClickCount();
         if (id == R.id.nav_home) {
             // Handle the camera action
             HomeFragment homeFragment = new HomeFragment();
@@ -314,8 +312,6 @@ public class MainActivity extends BaseActivity
     }
 
     private void setUpFragment(int i) {
-        if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED)
-            AftersAppApplication.getInstance().setAddClickCount();
         switch (i) {
             case R.id.homeLay:
                 HomeFragment homeFragment = new HomeFragment();
