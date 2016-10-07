@@ -146,7 +146,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         downloadImage.execute(mSessionManager.getProfImg());
 
         if (!TextUtils.isEmpty(mSessionManager.getDob()))
-            mDateOfBirth.setText(dateUtils.convertTimeToDate(mSessionManager.getDob()));
+            mDateOfBirth.setText(mSessionManager.getDob());
         else
             mDateOfBirth.setHint("Click here to enter birth date");
 
@@ -311,7 +311,9 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
         userEmail = mUserEmailId.getText().toString();
         userFullName = mUserName.getText().toString();
         userDate = mDateOfBirth.getText().toString();
-        String bitmapString = getStringImage(profileBitmap);
+        String bitmapString = null;
+        if (profileBitmap != null)
+            bitmapString = getStringImage(profileBitmap);
         String convertedDate = "";
         try {
             if (!TextUtils.isEmpty(userDate))
@@ -427,7 +429,9 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 userDTO.setPhone(userResponse.getPhone());
                 userDTO.setGender(userResponse.getGender());
                 userDTO.setProfImage(userResponse.getProfileImage());
-                userDTO.setDob(userResponse.getDob());
+                String dateOfBirth = userResponse.getDob();
+                if (dateOfBirth != null || !TextUtils.isEmpty(dateOfBirth))
+                    userDTO.setDob(dateUtils.convertTimeToDate(dateOfBirth));
                 userDTO.setToken(userResponse.getToken());
                 userDTO.setEmailNotify(userResponse.getEmailNotify());
 
@@ -520,6 +524,7 @@ public class EditMyProfileFragment extends BaseFragment implements View.OnClickL
                 profileBitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
+                profileBitmap = null;
             }
             return profileBitmap;
         }

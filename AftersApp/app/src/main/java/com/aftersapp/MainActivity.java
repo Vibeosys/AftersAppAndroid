@@ -360,13 +360,18 @@ public class MainActivity extends BaseActivity
                 bitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
+                bitmap = null;
             }
             return bitmap;
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            profileImg.setImageBitmap(result);
+            if (result != null) {
+                profileImg.setImageBitmap(result);
+            } else {
+                profileImg.setImageResource(R.drawable.avatar_profile);
+            }
         }
     }
 

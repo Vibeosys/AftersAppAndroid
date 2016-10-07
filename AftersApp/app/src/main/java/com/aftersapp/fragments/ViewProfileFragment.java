@@ -125,7 +125,7 @@ public class ViewProfileFragment extends BaseFragment {
         if (TextUtils.isEmpty(mSessionManager.getDob()) || mSessionManager.getDob().equals("0000-00-00 00:00:00")) {
             mUserDateOfBirth.setText("");
         } else {
-            mUserDateOfBirth.setText(dateUtils.convertTimeToDate(mSessionManager.getDob()));
+            mUserDateOfBirth.setText(mSessionManager.getDob());
         }
         long NotificationFlg = mSessionManager.getEmailNotify();
         mUserNameFirst.setText("" + mSessionManager.getName());
@@ -169,13 +169,18 @@ public class ViewProfileFragment extends BaseFragment {
                 bitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
+                bitmap = null;
             }
             return bitmap;
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            circleView.setImageBitmap(result);
+            if (result != null) {
+                circleView.setImageBitmap(result);
+            } else {
+                circleView.setImageResource(R.drawable.avatar_profile);
+            }
         }
     }
 
