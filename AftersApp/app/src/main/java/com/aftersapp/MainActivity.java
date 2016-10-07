@@ -115,11 +115,7 @@ public class MainActivity extends BaseActivity
             callLogin();
             return;
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -132,23 +128,37 @@ public class MainActivity extends BaseActivity
         View headerView = navigationView.getHeaderView(0);
         mNavigationUserEmailId = (TextView) headerView.findViewById(R.id.userEmailId);
         mNavigationUserName = (TextView) headerView.findViewById(R.id.userName);
-        String mImageUri = mSessionManager.getProfImg();
         profileImg = (CircleImageView) headerView.findViewById(R.id.imageView);
-        mNavigationUserEmailId.setText("" + mSessionManager.getEmail2());
-        mNavigationUserName.setText("" + mSessionManager.getName());
 
-        if (!TextUtils.isEmpty(mImageUri)) {
-            String stringImg = mSessionManager.getProfImg();
-            if (mImageUri.equals("null")) {
-                profileImg.setImageResource(R.drawable.avatar_profile);
-            } else {
-                DownloadImage downloadImage = new DownloadImage();
-                downloadImage.execute(mImageUri);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                String mImageUri = mSessionManager.getProfImg();
+                mNavigationUserEmailId.setText("" + mSessionManager.getEmail2());
+                mNavigationUserName.setText("" + mSessionManager.getName());
+                if (!TextUtils.isEmpty(mImageUri)) {
+                    String stringImg = mSessionManager.getProfImg();
+                    if (mImageUri.equals("null")) {
+                        profileImg.setImageResource(R.drawable.avatar_profile);
+                    } else {
+                        DownloadImage downloadImage = new DownloadImage();
+                        downloadImage.execute(mImageUri);
+                    }
+
+                } else if (TextUtils.isEmpty(mSessionManager.getProfImg())) {
+                    profileImg.setImageResource(R.drawable.avatar_profile);
+                }
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
-        } else if (TextUtils.isEmpty(mSessionManager.getProfImg())) {
-            profileImg.setImageResource(R.drawable.avatar_profile);
-        }
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
         mHomeLay.setOnClickListener(this);
         mSearchLay.setOnClickListener(this);
         mHostLay.setOnClickListener(this);
