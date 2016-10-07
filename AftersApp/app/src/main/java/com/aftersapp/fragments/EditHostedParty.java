@@ -387,18 +387,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        /* Music Genre Spinner */
-        mMusicGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mMusicGenreStr = parent.getItemAtPosition(position).toString().toLowerCase();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         mRemoveImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -438,11 +427,12 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
             createAlertDialog("AftersApp", "Please select Age Limit");
 
             return false;
-        } /*else if (addressFlag != true) {
+        } else if (mPartyAddress.getText().toString().trim().length()==0) {
+            mPartyAddress.requestFocus();
             mPartyAddress.setError("Please click here to get address");
 
             return false;
-        }*/ else if (TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim())) {
+        } else if (TextUtils.isEmpty(mPartyDatePicker.getText().toString().trim())) {
             mPartyDatePicker.setError("Please select Party date");
 
             return false;
@@ -584,32 +574,64 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                     } catch (SecurityException e) {
 
                     }
+                    if(partyDataDTO.getLatitude()!=0.0 && partyDataDTO.getLongitude()!=0.0)
+                    {
+                        LatLng selectedLocation = new LatLng(partyDataDTO.getLatitude(), partyDataDTO.getLongitude());
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
+                        mGoogleMap.clear();
+                        Geocoder geocoder;
+                        List<Address> addresses;
+                        geocoder = new Geocoder(getContext(), Locale.getDefault());
+                        String completeAddress = "";
+                        try {
 
-                    LatLng selectedLocation = new LatLng(GpsLatitude, GpsLongitude);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
-                    mGoogleMap.clear();
-                    Geocoder geocoder;
-                    List<Address> addresses;
-                    geocoder = new Geocoder(getContext(), Locale.getDefault());
-                    String completeAddress = "";
-                    try {
+                            addresses = geocoder.getFromLocation(partyDataDTO.getLatitude(), partyDataDTO.getLongitude(), 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            int addressLine = addresses.get(0).getMaxAddressLineIndex();
 
-                        addresses = geocoder.getFromLocation(GpsLatitude, GpsLongitude, 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                        int addressLine = addresses.get(0).getMaxAddressLineIndex();
+                            for (int i = 0; i <= addressLine; i++) {
 
-                        for (int i = 0; i <= addressLine; i++) {
-
-                            String address = addresses.get(0).getAddressLine(i);
-                            completeAddress = completeAddress + "\t" + address + "\t";
-                            Log.d("TAG", "TAG");
+                                String address = addresses.get(0).getAddressLine(i);
+                                completeAddress = completeAddress + "\t" + address + "\t";
+                                Log.d("TAG", "TAG");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (IndexOutOfBoundsException e) {
-                        e.printStackTrace();
+                        Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(selectedLocation).title(completeAddress).draggable(false));
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                    }else {
+
+                        LatLng selectedLocation = new LatLng(GpsLatitude, GpsLongitude);
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(selectedLocation).zoom(13).build();
+                        mGoogleMap.clear();
+                        Geocoder geocoder;
+                        List<Address> addresses;
+                        geocoder = new Geocoder(getContext(), Locale.getDefault());
+                        String completeAddress = "";
+                        try {
+
+                            addresses = geocoder.getFromLocation(GpsLatitude, GpsLongitude, 1);// Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            int addressLine = addresses.get(0).getMaxAddressLineIndex();
+
+                            for (int i = 0; i <= addressLine; i++) {
+
+                                String address = addresses.get(0).getAddressLine(i);
+                                completeAddress = completeAddress + "\t" + address + "\t";
+                                Log.d("TAG", "TAG");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                        }
+                        Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(selectedLocation).title(completeAddress).draggable(false));
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+
                     }
-                    Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(selectedLocation).title(completeAddress).draggable(false));
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
                     mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -639,9 +661,11 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
                                 Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(completeAddress).draggable(false));
 
                                 if (lat != 0.0 || log != 0.0) {
-                                    if (!completeAddress.equals("")) {
-                                        setResult(completeAddress, lat, log);
-                                    }
+
+                                    mFinalLatititude=lat;
+                                    mFinalLongitude=log;
+                                        //setResult(completeAddress, lat, log);
+
                                 }
 
 
@@ -697,9 +721,12 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
 
                                     }
                                     if (sendLongitude != 0.0 || sendLongitude != 0.0) {
-                                        if (!completeAddress.equals("")) {
-                                            setResult(completeAddress, sendLatitude, sendLongitude);
-                                        }
+
+
+                                        mFinalLatititude=sendLatitude;
+                                        mFinalLongitude=sendLongitude;
+                                        //  setResult(completeAddress, sendLatitude, sendLongitude);
+
                                     }
 
                                 } catch (IOException e) {
@@ -923,7 +950,7 @@ public class EditHostedParty extends BaseFragment implements LocationListener, G
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
             case ServerRequestConstants.REQUEST_EDIT_PARTY:
-                Toast toast = Toast.makeText(getContext(), "Changes uploaded Successfully", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getContext(), "Party details updated Successfully", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 dialog.cancel();

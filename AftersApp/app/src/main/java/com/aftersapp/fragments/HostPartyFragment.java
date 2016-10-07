@@ -626,9 +626,11 @@ public class HostPartyFragment extends BaseFragment implements
                                 Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(completeAddress).draggable(false));
 
                                 if (lat != 0.0 || log != 0.0) {
-                                    if (!mSendAddress.equals("")) {
-                                        setResult(mSendAddress, lat, log);
-                                    }
+
+                                        mFinalLatititude=lat;
+                                        mFinalLongitude=log;
+                                       //9 setResult(mSendAddress, lat, log);
+
                                 }
 
 
@@ -684,9 +686,11 @@ public class HostPartyFragment extends BaseFragment implements
 
                                     }
                                     if (sendLongitude != 0.0 || sendLongitude != 0.0) {
-                                        if (!completeAddress.equals("")) {
-                                            setResult(completeAddress, sendLatitude, sendLongitude);
-                                        }
+
+                                            mFinalLatititude=sendLatitude;
+                                            mFinalLongitude=sendLongitude;
+                                            //setResult(completeAddress, sendLatitude, sendLongitude);
+
                                     }
 
                                 } catch (IOException e) {
