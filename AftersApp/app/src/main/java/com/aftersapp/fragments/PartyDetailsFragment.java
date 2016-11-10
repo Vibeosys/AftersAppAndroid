@@ -101,7 +101,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         ownerLay = (LinearLayout) view.findViewById(R.id.ownerLayout);
         mTxtPartyName.setText(partyData.getTitle());
         mTxtDesc.setText(partyData.getDesc());
-        mTxtDate.setText(partyData.getDateOfParty());
+        mTxtDate.setText(dateUtils.convertFormattedDate(partyData.getDateOfParty()));
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         mTxtAddress.setText(partyData.getLocation());

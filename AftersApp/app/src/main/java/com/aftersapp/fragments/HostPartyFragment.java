@@ -498,7 +498,8 @@ public class HostPartyFragment extends BaseFragment implements
                 // ImageView imgView = (ImageView) findViewById(R.id.imgView);
                 // Set the Image in ImageView after decoding the String
                 try {
-                    Bitmap mBitmapString = BitmapFactory.decodeFile(imgDecodableString);
+                    Bitmap mBitmapString = null;
+                    mBitmapString = BitmapFactory.decodeFile(imgDecodableString);
                     mImageUri = imgDecodableString.toString();
                     mUserPartyPhoto.setImageBitmap(mBitmapString);
                     mUserPartyPhoto.setTag("ImageSet");
@@ -627,9 +628,9 @@ public class HostPartyFragment extends BaseFragment implements
 
                                 if (lat != 0.0 || log != 0.0) {
 
-                                        mFinalLatititude=lat;
-                                        mFinalLongitude=log;
-                                       //9 setResult(mSendAddress, lat, log);
+                                    mFinalLatititude = lat;
+                                    mFinalLongitude = log;
+                                    //9 setResult(mSendAddress, lat, log);
 
                                 }
 
@@ -687,9 +688,9 @@ public class HostPartyFragment extends BaseFragment implements
                                     }
                                     if (sendLongitude != 0.0 || sendLongitude != 0.0) {
 
-                                            mFinalLatititude=sendLatitude;
-                                            mFinalLongitude=sendLongitude;
-                                            //setResult(completeAddress, sendLatitude, sendLongitude);
+                                        mFinalLatititude = sendLatitude;
+                                        mFinalLongitude = sendLongitude;
+                                        //setResult(completeAddress, sendLatitude, sendLongitude);
 
                                     }
 
@@ -997,7 +998,7 @@ public class HostPartyFragment extends BaseFragment implements
     };
 
     private void updateLabel() {
-        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
         mPartyDatePicker.setText(sdf.format(mCalendar.getTime()));
         mStringDate = sdf.format(mCalendar.getTime());

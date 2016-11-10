@@ -19,7 +19,7 @@ public class DateUtils {
     final SimpleDateFormat dateWithTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     final SimpleDateFormat swedishDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     final SimpleDateFormat swedishDateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
-    final SimpleDateFormat readableDateAndTime = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
+    final SimpleDateFormat readableDateAndTime = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
 
     public String getGMTCurrentDate() {
         dateWithTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -148,7 +148,7 @@ public class DateUtils {
     }
 
     public String convertServerDateToSwedish(String strDate) {
-       DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH);
         java.util.Date date = null;
         try {
             date = df2.parse(strDate);
@@ -181,7 +181,7 @@ public class DateUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return getSwedishOnlyDateFormat(date);
+        return getLocalDateInFormat(date);
     }
 
     public String convertOnlyTime(String strDate) {
