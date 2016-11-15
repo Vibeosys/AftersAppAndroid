@@ -120,7 +120,7 @@ public class DbRepository extends SQLiteOpenHelper {
                     contentValues.put(SqlContract.Party.LOCATION, partyDataDTO.getLocation());
                     contentValues.put(SqlContract.Party.MUSIC, partyDataDTO.getMusic());
                     contentValues.put(SqlContract.Party.AGE_RANGE, partyDataDTO.getAge());
-                    contentValues.put(SqlContract.Party.INTEREST, partyDataDTO.getInterest());
+                    //contentValues.put(SqlContract.Party.INTEREST, partyDataDTO.getInterest());
                     contentValues.put(SqlContract.Party.ATTENDING, partyDataDTO.getAttending());
                     contentValues.put(SqlContract.Party.PARTY_DATE, partyDataDTO.getDateOfParty());
                     contentValues.put(SqlContract.Party.CREATED_DATE,

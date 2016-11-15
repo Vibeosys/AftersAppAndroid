@@ -1,7 +1,9 @@
-package com.aftersapp.data;
+package com.aftersapp.data.responsedata;
 
 import android.util.Log;
 
+import com.aftersapp.data.BaseDTO;
+import com.aftersapp.data.PartyDataDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -10,51 +12,29 @@ import java.util.ArrayList;
 /**
  * Created by akshay on 19-09-2016.
  */
-public class PartyDataDTO extends BaseDTO {
+public class TempDataDTO extends BaseDTO {
 
     private long partyId;
     private String title;
     private String desc;
-    private double latitude;
-    private double longitude;
+    private String latitude;
+    private String longitude;
     private String location;
     private String music;
     private String age;
-   // private int interest;
-    private int attending;
+    private String interest;
+    private String attending;
     private String image;
-    private int host;
-    private long createdDate;
+    private String host;
+    private String createdDate;
     private String hostName;
-    private int isFavourite;
-    private int isLike;
+    private String isFavourite;
+    private String isLike;
     private String dateOfParty;
 
-    public PartyDataDTO() {
+    public TempDataDTO() {
     }
 
-    public PartyDataDTO(long partyId, String title, String desc, double latitude,
-                        double longitude, String location, String music, String age,
-                        int interest, int attending, String image, int host,
-                        long createdDate, String hostName, int isFavourite, int isLike, String dateOfParty) {
-        this.partyId = partyId;
-        this.title = title;
-        this.desc = desc;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.location = location;
-        this.music = music;
-        this.age = age;
-        //this.interest = interest;
-        this.attending = attending;
-        this.image = image;
-        this.host = host;
-        this.createdDate = createdDate;
-        this.hostName = hostName;
-        this.isFavourite = isFavourite;
-        this.isLike = isLike;
-        this.dateOfParty = dateOfParty;
-    }
 
     public long getPartyId() {
         return partyId;
@@ -80,19 +60,19 @@ public class PartyDataDTO extends BaseDTO {
         this.desc = desc;
     }
 
-    public double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
@@ -120,19 +100,19 @@ public class PartyDataDTO extends BaseDTO {
         this.age = age;
     }
 
-   /* public int getInterest() {
+    public String getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(String interest) {
         this.interest = interest;
-    }*/
+    }
 
-    public int getAttending() {
+    public String getAttending() {
         return attending;
     }
 
-    public void setAttending(int attending) {
+    public void setAttending(String attending) {
         this.attending = attending;
     }
 
@@ -144,19 +124,19 @@ public class PartyDataDTO extends BaseDTO {
         this.image = image;
     }
 
-    public int getHost() {
+    public String getHost() {
         return host;
     }
 
-    public void setHost(int host) {
+    public void setHost(String host) {
         this.host = host;
     }
 
-    public long getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(long createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -168,19 +148,19 @@ public class PartyDataDTO extends BaseDTO {
         this.hostName = hostName;
     }
 
-    public int getIsFavourite() {
+    public String getIsFavourite() {
         return isFavourite;
     }
 
-    public void setIsFavourite(int isFavourite) {
+    public void setIsFavourite(String isFavourite) {
         this.isFavourite = isFavourite;
     }
 
-    public int getIsLike() {
+    public String getIsLike() {
         return isLike;
     }
 
-    public void setIsLike(int isLike) {
+    public void setIsLike(String isLike) {
         this.isLike = isLike;
     }
 
@@ -192,7 +172,7 @@ public class PartyDataDTO extends BaseDTO {
         this.dateOfParty = dateOfParty;
     }
 
-    public static ArrayList<PartyDataDTO> deserializeToArray(String serializedString) {
+    /*public static ArrayList<PartyDataDTO> deserializeToArray(String serializedString) {
         Gson gson = new Gson();
         ArrayList<PartyDataDTO> partyDataDTOs = null;
         try {
@@ -207,5 +187,5 @@ public class PartyDataDTO extends BaseDTO {
 
 
         return partyDataDTOs;
-    }
+    }*/
 }
