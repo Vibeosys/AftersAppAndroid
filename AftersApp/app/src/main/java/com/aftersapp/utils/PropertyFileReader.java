@@ -102,5 +102,9 @@ public class PropertyFileReader {
     public String getEditPartyUrl() {
         return getEndPointUri() +mProperties.getProperty(PropertyTypeConstants.EDIT_PARTY_URL);
     }
+    public   String getUserSignUp()
+    {
+        return getEndPointUri()+mProperties.getProperty(PropertyTypeConstants.SIGN_UP_USER);
+    }
 }
 

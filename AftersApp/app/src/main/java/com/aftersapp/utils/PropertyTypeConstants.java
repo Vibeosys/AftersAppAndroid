@@ -17,6 +17,7 @@ public class PropertyTypeConstants {
     public static final String REMOVE_FAV_PARTY_URL = "api.endpoint.removefavparty";
     public static final String ADD_FAV_PARTY_URL = "api.endpoint.addfavparty";
     public static final String REGISTER_USER = "api.endpoint.registeruser";
+    public static final String SIGN_UP_USER="api.endpoint.signup";
 
     public static final String POST_PART_URL = "api.endpoint.hostParty";
     public static final String EDIT_PARTY_URL="api.endpoint.editParty";

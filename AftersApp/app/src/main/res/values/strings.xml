@@ -123,4 +123,18 @@
     <string name="str_no_direction_found">Direction is not found on given location</string>
     <string name="str_delete">Delete</string>
     <string name="party_delete_success">Deleted successfully !!</string>
+
+    <!--user SignUp-->
+    <string name="str_first_name_hint">User Name</string>
+    <string name="str_email_hint">Email Id</string>
+    <string name="str_password_hint">Password</string>
+    <string name="str_register_hint">SignUp</string>
+    <string name="str_dob_hint">Date of Birth</string>
+    <string name="str_first_validation">Please enter user name</string>
+    <string name="str_emailId_validation">Please emailId</string>
+    <string name="str_emailId_invalid">Invalid emialId</string>
+    <string name="str_password_validation">Please enter your password</string>
+    <string name="str_dob_validation">Please select you birth date</string>
+    <string name="str_signup_user_title">Sign up user</string>
+
 </resources>

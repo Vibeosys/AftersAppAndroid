@@ -109,9 +109,10 @@
 
         <activity
             android:name=".activities.DisclaimerActivity"
-            android:label="@string/title_activity_disclaimer"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:label="@string/title_activity_disclaimer"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".activities.SignUpActivity"></activity>
     </application>
 
 </manifest>

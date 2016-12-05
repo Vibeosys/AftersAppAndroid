@@ -389,6 +389,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 Uri Img = acct.getPhotoUrl();
                 if (Img != null)
                     profileImg = String.valueOf(Img);
+                String id2 = acct.getIdToken();
                 String id = acct.getId();
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, dob, id);

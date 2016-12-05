@@ -65,6 +65,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.EDIT_PROFILE_URL, mPropertyFileReader.getEditProfileUrl());
         editor.putString(PropertyTypeConstants.DELETE_PARTY_URL, mPropertyFileReader.getDeletePartyUrl());
         editor.putString(PropertyTypeConstants.EDIT_PARTY_URL,mPropertyFileReader.getEditPartyUrl());
+        editor.putString(PropertyTypeConstants.SIGN_UP_USER,mPropertyFileReader.getUserSignUp());
         editor.apply();
         return true;
     }
@@ -140,7 +141,10 @@ public class SessionManager {
     public String getHostPartyUrl() {
         return mProjectSharedPref.getString(PropertyTypeConstants.POST_PART_URL, null);
     }
-
+    public String getSignUpUrl()
+    {
+        return mProjectSharedPref.getString(PropertyTypeConstants.SIGN_UP_USER,null);
+    }
     public void setUserId(long userId) {
         setValuesInSharedPrefs(PropertyTypeConstants.USER_ID, userId);
     }
@@ -202,7 +206,6 @@ public class SessionManager {
     public void setToken(String token) {
         setValuesInSharedPrefs(PropertyTypeConstants.USER_TOKEN, token);
     }
-
     public void setEmailNotify(int emailNotify) {
         setValuesInSharedPrefs(PropertyTypeConstants.USER_EMAIL_NOTIFY, emailNotify);
     }
@@ -270,4 +273,5 @@ public class SessionManager {
     public void setFilterDate(String setFilterDate) {
         setValuesInSharedPrefs(PropertyTypeConstants.FILTER_DATE, setFilterDate);
     }
+
 }
