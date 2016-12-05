@@ -1,16 +1,20 @@
 package com.aftersapp.activities;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -23,11 +27,16 @@ import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class SignUpActivity extends BaseActivity implements View.OnClickListener, ServerSyncManager.OnSuccessResultReceived,
         ServerSyncManager.OnErrorResultReceived {
     private EditText mUserName, mUserEmailId, mUserPassword, mUserDOB;
     private Button mSignUpBtn;
     private String TAG;
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +49,49 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         mUserPassword = (EditText) findViewById(R.id.passwordEditText);
         mUserDOB = (EditText) findViewById(R.id.dateOfBirthEditText);
         mSignUpBtn = (Button) findViewById(R.id.signUp_user);
+        mUserDOB.setInputType(InputType.TYPE_NULL);
+        mCalendar = Calendar.getInstance();
+
         mSignUpBtn.setOnClickListener(this);
+        mServerSyncManager.setOnStringErrorReceived(this);
+        mServerSyncManager.setOnStringResultReceived(this);
+
+        mUserDOB.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mCalendar = Calendar.getInstance();
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    new DatePickerDialog(SignUpActivity.this, date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+                return false;
+            }
+        });
     }
 
-    @Override
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+    };
+
+    private void updateLabel() {
+        String myFormat = "yyyy/dd/MM"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+        mUserDOB.setText(sdf.format(mCalendar.getTime()));
+        // mStringDate = sdf.format(mCalendar.getTime());
+        mUserDOB.setError(null);
+
+    }
+
+     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
@@ -72,6 +120,8 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         baseRequestDTO.setData(serializedJsonString);
         mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_SIGN_UP_USER,
                 mSessionManager.getSignUpUrl(), baseRequestDTO);
+        Log.d("TAG", "TAG");
+        Log.d("TAG", "TAG");
 
     }
 
@@ -102,13 +152,20 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onResultReceived(@NonNull String data, int requestToken) {
-        progressDialog.dismiss();
-        Toast toast = Toast.makeText(getApplicationContext(), "User Sign up Successfully..", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
-        finish();
+        switch (requestToken) {
+            case ServerRequestConstants.REQUEST_SIGN_UP_USER:
+                progressDialog.dismiss();
+                Toast toast = Toast.makeText(getApplicationContext(), "User Sign up Successfully..", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            default:
+                break;
+        }
+
     }
 
     private boolean validationMessage() {
