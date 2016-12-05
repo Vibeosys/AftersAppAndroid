@@ -163,6 +163,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 startActivity(iSignUp);
                 break;
             case R.id.txtForgotPass:
+                Intent iForgotPass = new Intent(getApplicationContext(), ForgotPassword.class);
+                startActivity(iForgotPass);
                 break;
         }
        /* startActivity(new Intent(getApplicationContext(), MainActivity.class));

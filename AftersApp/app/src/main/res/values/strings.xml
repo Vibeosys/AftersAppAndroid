@@ -128,11 +128,11 @@
     <string name="str_first_name_hint">User Name</string>
     <string name="str_email_hint">Email Id</string>
     <string name="str_password_hint">Password</string>
-    <string name="str_register_hint">SignUp</string>
+    <string name="str_register_hint">Sign Up</string>
     <string name="str_dob_hint">Date of Birth</string>
     <string name="str_first_validation">Please enter user name</string>
-    <string name="str_emailId_validation">Please emailId</string>
-    <string name="str_emailId_invalid">Invalid emialId</string>
+    <string name="str_emailId_validation">Please enter email Id</string>
+    <string name="str_emailId_invalid">Invalid email Id</string>
     <string name="str_password_validation">Please enter your password</string>
     <string name="str_dob_validation">Please select you birth date</string>
     <string name="str_signup_user_title">Sign up user</string>
@@ -146,4 +146,6 @@
     <string name="str_create_acc">Create account</string>
     <string name="txt_error_email">Please enter email id</string>
     <string name="txt_error_pass">Please enter password</string>
+    <string name="str_forgot_pwd_hint">Enter email Id</string>
+    <string name="str_resend_btn">Resend my password</string>
 </resources>

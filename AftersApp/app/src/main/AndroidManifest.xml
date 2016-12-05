@@ -112,7 +112,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_disclaimer"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".activities.SignUpActivity"></activity>
+        <activity android:name=".activities.SignUpActivity" />
+        <activity android:name=".activities.ForgotPassword"></activity>
     </application>
 
 </manifest>

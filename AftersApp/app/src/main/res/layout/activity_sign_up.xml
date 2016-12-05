@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_back"
     tools:context="com.aftersapp.activities.LoginActivity">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/loginBackgroundTransperant">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -16,9 +18,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -28,6 +30,13 @@
                     android:layout_marginRight="48dp"
                     android:layout_weight="1"
                     android:src="@drawable/after_logo_white" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
+                   
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -64,8 +73,7 @@
                                 android:singleLine="true"
                                 android:textColor="@android:color/white"
                                 android:textColorHint="@android:color/white"
-                                android:textSize="16sp"
-                                />
+                                android:textSize="16sp" />
 
                         </android.support.design.widget.TextInputLayout>
 
@@ -100,7 +108,7 @@
                                 android:paddingStart="5dp"
                                 android:singleLine="true"
                                 android:textColor="@android:color/white"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
 
                         </android.support.design.widget.TextInputLayout>
 
@@ -141,7 +149,6 @@
 
 
                     </LinearLayout>
-
 
 
                     <LinearLayout

@@ -196,7 +196,7 @@ public class DateUtils {
     }
 
     public String convertRegisterTimeToDate(String strDate) {
-        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'z'", Locale.ENGLISH);
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
         java.util.Date date = null;
         try {
             date = df2.parse(strDate);
