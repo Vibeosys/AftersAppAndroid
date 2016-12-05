@@ -1,25 +1,22 @@
 package com.aftersapp.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aftersapp.MainActivity;
@@ -27,7 +24,9 @@ import com.aftersapp.R;
 import com.aftersapp.data.UserDTO;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.RegisterUserDataDTO;
+import com.aftersapp.data.requestdata.UserLoginRequestDTO;
 import com.aftersapp.data.responsedata.RegisterResponseData;
+import com.aftersapp.data.responsedata.UpdateUserResponse;
 import com.aftersapp.helper.DataHolder;
 import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.ServerRequestConstants;
@@ -36,29 +35,19 @@ import com.aftersapp.utils.UserAuth;
 import com.aftersapp.utils.qbutils.SharedPreferencesUtil;
 import com.android.volley.VolleyError;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.People;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.google.gson.Gson;
-import com.quickblox.auth.QBAuth;
-import com.quickblox.auth.model.QBSession;
-import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -71,7 +60,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URI;
 import java.util.Arrays;
 
 /**
@@ -103,6 +91,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String dob = null;
     private String formattedDob = null;
 
+    private EditText txtEmail, txtPass;
+    private Button btnLogin;
+    private TextView txtCreateNew, txtForgotPass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -115,8 +107,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         googlePlusAPIInit();
         imgFb = (ImageView) findViewById(R.id.fbImg);
         imgGPlus = (ImageView) findViewById(R.id.gpImg);
+
+        txtEmail = (EditText) findViewById(R.id.txtEmailId);
+        txtPass = (EditText) findViewById(R.id.txtPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        txtCreateNew = (TextView) findViewById(R.id.txtCreateAccount);
+        txtForgotPass = (TextView) findViewById(R.id.txtForgotPass);
+
         imgFb.setOnClickListener(this);
         imgGPlus.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
+        txtCreateNew.setOnClickListener(this);
+        txtForgotPass.setOnClickListener(this);
+
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
         //Facebook code
@@ -152,9 +155,48 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.gpImg:
                 getAccountPermission();
                 break;
+            case R.id.btnLogin:
+                loginUser();
+                break;
+            case R.id.txtCreateAccount:
+                Intent iSignUp = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(iSignUp);
+                break;
+            case R.id.txtForgotPass:
+                break;
         }
        /* startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();*/
+    }
+
+    private void loginUser() {
+        String email = txtEmail.getText().toString();
+        String password = txtPass.getText().toString();
+
+        boolean chkFlag = false;
+        View focusView = null;
+        if (TextUtils.isEmpty(email)) {
+            txtEmail.setError(getResources().getString(R.string.txt_error_email));
+            focusView = txtEmail;
+            chkFlag = true;
+        } else if (TextUtils.isEmpty(password)) {
+            txtPass.setError(getResources().getString(R.string.txt_error_pass));
+            focusView = txtPass;
+            chkFlag = true;
+        }
+
+        if (chkFlag) {
+            focusView.requestFocus();
+        } else {
+            progressDialog.show();
+            UserLoginRequestDTO userLoginRequestDTO = new UserLoginRequestDTO(email, password);
+            Gson gson = new Gson();
+            String serializedJsonString = gson.toJson(userLoginRequestDTO);
+            BaseRequestDTO baseRequestDTO = new BaseRequestDTO();
+            baseRequestDTO.setData(serializedJsonString);
+            mServerSyncManager.uploadDataToServer(ServerRequestConstants.REQUEST_USER_LOGIN,
+                    mSessionManager.getSignInUrl(), baseRequestDTO);
+        }
     }
 
     @Override
@@ -247,6 +289,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         getResources().getString(R.string.str_err_server_msg));
                 progressDialog.dismiss();
                 break;
+            case ServerRequestConstants.REQUEST_USER_LOGIN:
+                Log.e(TAG, "##Volley Server error " + error.toString());
+                customAlterDialog(getResources().getString(R.string.str_err_server_err),
+                        getResources().getString(R.string.str_err_server_msg));
+                progressDialog.dismiss();
+                break;
 
         }
     }
@@ -260,13 +308,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         errorMessage);
                 progressDialog.dismiss();
                 break;
+            case ServerRequestConstants.REQUEST_USER_LOGIN:
+                Log.d(TAG, "##Volley Data error " + errorMessage);
+                customAlterDialog(getResources().getString(R.string.str_err_server_err),
+                        errorMessage + " Email Or Password are incorrect");
+                progressDialog.dismiss();
+                break;
         }
     }
 
     @Override
     public void onResultReceived(@NonNull String data, int requestToken) {
         switch (requestToken) {
-            case ServerRequestConstants.REQUEST_REGISTER:
+            case ServerRequestConstants.REQUEST_REGISTER: {
                 //progressDialog.dismiss();
                 RegisterResponseData registerResponseData = RegisterResponseData.deserializeJson(data);
                 UserDTO userDTO = new UserDTO();
@@ -287,6 +341,37 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 registerDataOnQb();
 
                 break;
+            }
+            case ServerRequestConstants.REQUEST_USER_LOGIN: {
+                UpdateUserResponse updateUserResponse = UpdateUserResponse.deserializeJson(data);
+                UserDTO userDTO = new UserDTO();
+                userId = updateUserResponse.getUserId();
+                name = updateUserResponse.getName();
+                email = updateUserResponse.getEmail();
+                gender = updateUserResponse.getGender();
+                profileImg = updateUserResponse.getProfileImage();
+                String birthDate = updateUserResponse.getDob();
+                if (!TextUtils.isEmpty(birthDate)) {
+                    DateUtils dateUtils = new DateUtils();
+                    dob = dateUtils.convertRegisterTimeToDate(birthDate);
+                }
+                token = updateUserResponse.getToken();
+                userDTO.setUserId(userId);
+                userDTO.setName(name);
+                userDTO.setEmail(email);
+                userDTO.setEmail2(email);
+                userDTO.setPhone("1234567890");
+                userDTO.setGender(gender);
+                userDTO.setProfImage(profileImg);
+                userDTO.setDob(dob);
+                userDTO.setToken(token);
+                userDTO.setEmailNotify(1);
+
+                UserAuth userAuth = new UserAuth();
+                userAuth.saveAuthenticationInfo(userDTO, getApplicationContext());
+                registerDataOnQb();
+                break;
+            }
         }
     }
 
@@ -389,7 +474,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 Uri Img = acct.getPhotoUrl();
                 if (Img != null)
                     profileImg = String.valueOf(Img);
-                String id2 = acct.getIdToken();
                 String id = acct.getId();
                 name = acct.getDisplayName();
                 callToRegister(name, email, "Male", profileImg, dob, id);

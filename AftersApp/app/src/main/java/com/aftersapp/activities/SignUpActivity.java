@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.aftersapp.R;
 import com.aftersapp.data.requestdata.BaseRequestDTO;
 import com.aftersapp.data.requestdata.SignUpUserDTO;
+import com.aftersapp.utils.DateUtils;
 import com.aftersapp.utils.ServerRequestConstants;
 import com.aftersapp.utils.ServerSyncManager;
 import com.android.volley.VolleyError;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class SignUpActivity extends BaseActivity implements View.OnClickListener, ServerSyncManager.OnSuccessResultReceived,
@@ -83,15 +85,15 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     };
 
     private void updateLabel() {
-        String myFormat = "yyyy/dd/MM"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
-        mUserDOB.setText(sdf.format(mCalendar.getTime()));
+        DateUtils dateUtils = new DateUtils();
+        String date = dateUtils.getLocalDateInFormat(mCalendar.getTime());
+        mUserDOB.setText(date);
         // mStringDate = sdf.format(mCalendar.getTime());
         mUserDOB.setError(null);
 
     }
 
-     @Override
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
@@ -103,7 +105,12 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                     String UserEmailId = mUserEmailId.getText().toString().trim();
                     String UserPassword = mUserPassword.getText().toString().trim();
                     String UserDOB = mUserDOB.getText().toString().trim();
-                    callToSignUpUser(UserName, UserEmailId, UserPassword, UserDOB);
+                    String formattedDob = null;
+                    if (!TextUtils.isEmpty(UserDOB)) {
+                        DateUtils dateUtils = new DateUtils();
+                        formattedDob = dateUtils.convertFbDateToSwedish(UserDOB);
+                    }
+                    callToSignUpUser(UserName, UserEmailId, UserPassword, formattedDob);
                 }
                 break;
             default:

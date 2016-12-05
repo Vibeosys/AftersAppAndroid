@@ -194,4 +194,15 @@ public class DateUtils {
         }
         return getLocalTimeInReadableFormat(date);
     }
+
+    public String convertRegisterTimeToDate(String strDate) {
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'z'", Locale.ENGLISH);
+        java.util.Date date = null;
+        try {
+            date = df2.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getLocalDateInFormat(date);
+    }
 }

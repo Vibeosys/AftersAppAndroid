@@ -137,4 +137,13 @@
     <string name="str_dob_validation">Please select you birth date</string>
     <string name="str_signup_user_title">Sign up user</string>
 
+    <!--user Sign in-->
+    <string name="str_user_name_hint">Email Id</string>
+    <string name="str_user_password">Password</string>
+    <string name="str_login_btn">Login</string>
+    <string name="str_user_forgot_password">Forgot Password</string>
+    <string name="str_new_user">New to aftersapp ?</string>
+    <string name="str_create_acc">Create account</string>
+    <string name="txt_error_email">Please enter email id</string>
+    <string name="txt_error_pass">Please enter password</string>
 </resources>

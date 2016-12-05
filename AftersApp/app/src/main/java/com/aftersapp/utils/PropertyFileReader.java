@@ -100,11 +100,15 @@ public class PropertyFileReader {
     }
 
     public String getEditPartyUrl() {
-        return getEndPointUri() +mProperties.getProperty(PropertyTypeConstants.EDIT_PARTY_URL);
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.EDIT_PARTY_URL);
     }
-    public   String getUserSignUp()
-    {
-        return getEndPointUri()+mProperties.getProperty(PropertyTypeConstants.SIGN_UP_USER);
+
+    public String getUserSignUp() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.SIGN_UP_USER);
+    }
+
+    public String getUserSignIn() {
+        return getEndPointUri() + mProperties.getProperty(PropertyTypeConstants.SIGN_IN_USER);
     }
 }
 

@@ -66,6 +66,7 @@ public class SessionManager {
         editor.putString(PropertyTypeConstants.DELETE_PARTY_URL, mPropertyFileReader.getDeletePartyUrl());
         editor.putString(PropertyTypeConstants.EDIT_PARTY_URL,mPropertyFileReader.getEditPartyUrl());
         editor.putString(PropertyTypeConstants.SIGN_UP_USER,mPropertyFileReader.getUserSignUp());
+        editor.putString(PropertyTypeConstants.SIGN_IN_USER,mPropertyFileReader.getUserSignIn());
         editor.apply();
         return true;
     }
@@ -274,4 +275,7 @@ public class SessionManager {
         setValuesInSharedPrefs(PropertyTypeConstants.FILTER_DATE, setFilterDate);
     }
 
+    public String getSignInUrl() {
+        return mProjectSharedPref.getString(PropertyTypeConstants.SIGN_IN_USER,null);
+    }
 }
