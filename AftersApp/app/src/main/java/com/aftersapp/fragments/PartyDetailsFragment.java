@@ -62,6 +62,7 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
     private MapDirectionData userLocation;
     private LinearLayout userLay, ownerLay;
     DateUtils dateUtils = new DateUtils();
+    private int isLike = AppConstants.NOT_ATTENDING_PARTY;
 
     public PartyDetailsFragment() {
         // Required empty public constructor
@@ -104,12 +105,13 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         mTxtDate.setText(dateUtils.convertFormattedDate(partyData.getDateOfParty()));
         mServerSyncManager.setOnStringErrorReceived(this);
         mServerSyncManager.setOnStringResultReceived(this);
-        mTxtAddress.setText(partyData.getLocation());
+
         mTxtAge.setText(partyData.getAge());
         int attending = partyData.getAttending();
         if (attending == 0) {
             layAttending.setVisibility(View.GONE);
         } else {
+            mTxtAddress.setText(partyData.getLocation());
             layAttending.setVisibility(View.VISIBLE);
             mTxtAttending.setText("" + attending);
         }
@@ -121,6 +123,12 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
         } else {
             userLay.setVisibility(View.VISIBLE);
             ownerLay.setVisibility(View.GONE);
+        }
+        isLike = partyData.getIsLike();
+        if (isLike == AppConstants.ATTENDING_PARTY) {
+            mTxtAddress.setText(partyData.getLocation());
+        } else if (isLike == AppConstants.NOT_ATTENDING_PARTY) {
+            mTxtAddress.setText(getResources().getString(R.string.str_loc_hidden));
         }
         mBtnChatHost.setOnClickListener(this);
         iamAttending.setOnClickListener(this);
@@ -188,15 +196,22 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
                 deleteParty();
                 break;
             case R.id.btnPartyDirection:
-                ShowDirectionFragment showDirection = new ShowDirectionFragment();
-                Bundle bundle = new Bundle();
-                bundle.putLong(PartyDetailsFragment.PARTY_ID, partyData.getPartyId());
-                userLocation.setDestinationLatitude(partyData.getLatitude());
-                userLocation.setDestinationLongitude(partyData.getLongitude());
-                bundle.putSerializable(ShowDirectionFragment.DIRECTION_DATA, userLocation);
-                showDirection.setArguments(bundle);
-                getFragmentManager().beginTransaction().
-                        replace(R.id.fragment_frame_lay, showDirection, "PartDirection").commit();
+
+                if (isLike == AppConstants.ATTENDING_PARTY) {
+                    ShowDirectionFragment showDirection = new ShowDirectionFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(PartyDetailsFragment.PARTY_ID, partyData.getPartyId());
+                    userLocation.setDestinationLatitude(partyData.getLatitude());
+                    userLocation.setDestinationLongitude(partyData.getLongitude());
+                    bundle.putSerializable(ShowDirectionFragment.DIRECTION_DATA, userLocation);
+                    showDirection.setArguments(bundle);
+                    getFragmentManager().beginTransaction().
+                            replace(R.id.fragment_frame_lay, showDirection, "PartDirection").commit();
+                } else if (isLike == AppConstants.NOT_ATTENDING_PARTY) {
+                    createAlertDialog(getResources().getString(R.string.str_error_attend_title),
+                            getResources().getString(R.string.str_errorattend_party_msg));
+                }
+
                 break;
         }
     }
@@ -370,6 +385,8 @@ public class PartyDetailsFragment extends BaseFragment implements View.OnClickLi
 
             case ServerRequestConstants.REQUEST_LIKE_PARTY:
                 if (data.equals("0")) {
+                    mTxtAddress.setText(partyData.getLocation());
+                    isLike = AppConstants.ATTENDING_PARTY;
                     Toast.makeText(getContext(), getContext().getResources().
                             getString(R.string.party_like_success), Toast.LENGTH_SHORT).show();
                 }

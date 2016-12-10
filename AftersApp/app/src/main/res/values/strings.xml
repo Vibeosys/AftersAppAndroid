@@ -148,4 +148,8 @@
     <string name="txt_error_pass">Please enter password</string>
     <string name="str_forgot_pwd_hint">Enter email Id</string>
     <string name="str_resend_btn">Resend my password</string>
+    <string name="str_loc_hidden">Hidden</string>
+    <string name="str_error_attend_title">Attend Party</string>
+    <string name="str_errorattend_party_msg">To get directions, you have to attend party</string>
+    <string name="str_error_direction">Could not calculate directions</string>
 </resources>

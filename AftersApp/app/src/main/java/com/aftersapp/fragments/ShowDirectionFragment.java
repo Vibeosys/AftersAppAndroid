@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.aftersapp.R;
 import com.aftersapp.data.MapDirectionData;
@@ -271,7 +272,11 @@ public class ShowDirectionFragment extends BaseFragment implements
             }
 
             // Drawing polyline in the Google Map for the i-th route
-            mGoogleMap.addPolyline(lineOptions);
+            if (lineOptions != null) {
+                mGoogleMap.addPolyline(lineOptions);
+            } else {
+                Toast.makeText(getContext(), getResources().getString(R.string.str_error_direction), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

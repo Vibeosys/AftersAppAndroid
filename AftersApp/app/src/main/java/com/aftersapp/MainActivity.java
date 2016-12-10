@@ -95,6 +95,7 @@ public class MainActivity extends BaseActivity
     private CircleImageView profileImg;
     private TextView mNavigationUserEmailId, mNavigationUserName;
     public static Handler UIHandler;
+    private Intent iservice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class MainActivity extends BaseActivity
                         .setAction("Action", null).show();
             }
         });*/
+        iservice = new Intent(getApplicationContext(), AdService.class);
         if (!UserAuth.isUserLoggedIn()) {
             // finish();
             callLogin();
@@ -177,10 +179,10 @@ public class MainActivity extends BaseActivity
         mInterstitialAd.loadAd(adRequest);*/
         if (mSessionManager.getIsPurchased() == AppConstants.ITEM_NOT_PURCHASED) {
             if (!isMyServiceRunning(AdService.class))
-                startService(new Intent(getApplicationContext(), AdService.class));
+                startService(iservice);
         } else if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
             if (isMyServiceRunning(AdService.class))
-                stopService(new Intent(getApplicationContext(), AdService.class));
+                stopService(iservice);
         }
 
         if (mSessionManager.getIsPurchased() == AppConstants.ITEM_PURCHASED) {
@@ -402,7 +404,7 @@ public class MainActivity extends BaseActivity
     protected void onDestroy() {
         super.onDestroy();
         if (isMyServiceRunning(AdService.class))
-            stopService(new Intent(getApplicationContext(), AdService.class));
+            stopService(iservice);
         try {
             ChatHelper.getInstance().logout();
         } catch (Exception e) {
