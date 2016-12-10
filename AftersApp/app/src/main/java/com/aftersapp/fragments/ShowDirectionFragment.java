@@ -247,33 +247,40 @@ public class ShowDirectionFragment extends BaseFragment implements
             MarkerOptions markerOptions = new MarkerOptions();
 
             // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+            if (result.size() != 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    points = new ArrayList<LatLng>();
+                    lineOptions = new PolylineOptions();
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
+                    // Fetching i-th route
+                    List<HashMap<String, String>> path = result.get(i);
 
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+                    // Fetching all the points in i-th route
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
 
-                    points.add(position);
+                        points.add(position);
+                    }
+
+                    // Adding all the points in the route to LineOptions
+                    lineOptions.addAll(points);
+                    lineOptions.width(2);
+                    lineOptions.color(Color.RED);
                 }
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(2);
-                lineOptions.color(Color.RED);
-            }
+                // Drawing polyline in the Google Map for the i-th route
+                try {
+                    mGoogleMap.addPolyline(lineOptions);
+                } catch (NullPointerException e) {
+                    Log.e("ShowDirectionFragment", e.toString());
+                } catch (Exception e) {
+                    Log.e("ShowDirectionFragment", e.toString());
+                }
 
-            // Drawing polyline in the Google Map for the i-th route
-            if (lineOptions != null) {
-                mGoogleMap.addPolyline(lineOptions);
             } else {
                 Toast.makeText(getContext(), getResources().getString(R.string.str_error_direction), Toast.LENGTH_SHORT).show();
             }
